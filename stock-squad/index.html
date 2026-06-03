@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STOCK SQUAD | 전략적 주식 드림팀</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Cache busting with version query -->
+    <link rel="stylesheet" href="style.css?v=1.1">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
     <meta name="google-adsense-account" content="ca-pub-7722735349463695">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7722735349463695"
@@ -22,7 +23,7 @@
                 </div>
             </div>
             <div class="top-controls">
-                <div class="strategy-badge" id="current-strategy">밸런스형</div>
+                <div class="strategy-badge" id="current-strategy">분석 중</div>
                 <div class="formation-selector">
                     <label>FORMATION</label>
                     <select id="formation-select">
@@ -50,7 +51,7 @@
                 <div class="coach-advice-panel">
                     <div class="coach-header">
                         <span class="coach-icon">👨‍🏫</span>
-                        <h3>SQUAD COACH ADVICE</h3>
+                        <h3>COACH ADVICE</h3>
                     </div>
                     <div id="coach-message" class="coach-content">
                         포트폴리오를 분석 중입니다. 선수를 영입해 주세요!
@@ -65,7 +66,7 @@
                 <div class="market-header">
                     <h2>TRANSFER MARKET</h2>
                     <div class="search-input-wrapper">
-                        <input type="text" id="market-search" placeholder="종목명 또는 티커 검색...">
+                        <input type="text" id="market-search" placeholder="종목명 또는 티커 검색 (예: 퀄컴, 삼성)...">
                         <span class="search-icon">🔍</span>
                     </div>
                 </div>
@@ -119,7 +120,7 @@
         </main>
     </div>
 
-    <!-- Selection Modal (Simplified for Auto-Positioning) -->
+    <!-- Player Selection Modal -->
     <div id="selection-modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-title">영입 가능한 선수 목록</h3>
@@ -128,6 +129,6 @@
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script src="main.js?v=1.1"></script>
 </body>
 </html>
