@@ -66,9 +66,8 @@ class SquadManager {
         if (!document.getElementById('search-status')) list.prepend(statusMsg);
 
         try {
-            // Yahoo Finance Search API v2
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=20&enableFuzzyQuery=true`;
-            // Using allorigins as a primary robust proxy
+            // Added lang=ko-KR and region=KR to prioritize Korean results
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=20&enableFuzzyQuery=true&lang=ko-KR&region=KR`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             
             const response = await fetch(proxyUrl);
@@ -97,23 +96,16 @@ class SquadManager {
             } else {
                 if (localResults.length > 0) {
                     this.renderMarketList(localResults);
-                    if (document.getElementById('search-status')) document.getElementById('search-status').innerText = '🔍 로컬 검색 결과만 표시합니다.';
                 } else {
                     list.innerHTML = `<p style="padding:20px; color:#999; font-size:0.8rem; text-align:center;">'${query}'에 대한 검색 결과가 없습니다.<br>티커(예: 005930 또는 AAPL)를 입력해 보세요.</p>`;
                 }
             }
         } catch (e) {
             console.error("Global search failed", e);
-            if (localResults.length > 0) {
-                this.renderMarketList(localResults);
-                if (document.getElementById('search-status')) document.getElementById('search-status').innerText = '⚠️ 통신 오류로 로컬 데이터만 표시합니다.';
-            }
         } finally {
-            // Keep status for 2 seconds then fade
             setTimeout(() => {
                 const l = document.getElementById('search-status');
-                if (l) l.style.opacity = '0';
-                setTimeout(() => l?.remove(), 500);
+                if (l) { l.style.opacity = '0'; setTimeout(() => l?.remove(), 500); }
             }, 2000);
         }
     }
@@ -124,7 +116,6 @@ class SquadManager {
         const isKR = ticker.endsWith('.KS') || ticker.endsWith('.KQ') || exchange === "KSC" || exchange === "KOE";
         const country = isKR ? "🇰🇷" : (exchange === "NMS" || exchange === "NYQ" || exchange === "NYS" ? "🇺🇸" : "🌐");
         
-        // Deep Positioning Logic based on sector, type, and name
         const name = q.shortname || q.longname || q.symbol;
         const type = q.quoteType || "";
         const sector = q.sector || "";
@@ -132,39 +123,47 @@ class SquadManager {
 
         let mainPos = "MF";
         let subPos = "중앙 미드필더";
-        let beta = 1.0;
-        let yieldVal = 1.0;
-        let grow = 2.0;
+        let beta = 1.1;
+        let yieldVal = 1.2;
+        let grow = 2.5;
 
+        // Position Logic
         if (type === "ETF" || type === "INDEX") {
             mainPos = "GK";
-            subPos = "골키퍼(지수)";
+            subPos = "스위퍼 키퍼";
             beta = 1.0; yieldVal = 1.5; grow = 1.0;
         } else if (
             sector.includes("Technology") || 
             sector.includes("Communication") || 
             industry.toLowerCase().includes("semicon") ||
-            industry.toLowerCase().includes("software") ||
             name.toLowerCase().includes("tech") || 
-            name.toLowerCase().includes("bio")
+            name.toLowerCase().includes("bio") ||
+            name.toLowerCase().includes("energy solution")
         ) {
             mainPos = "FW";
-            subPos = (Math.random() > 0.5) ? "윙어" : "타겟형 스트라이커";
-            beta = 1.8; yieldVal = 0.2; grow = 4.5;
+            // Detailed role assignment
+            if (isKR && name.includes("에코프로")) { subPos = "왼쪽 윙어"; beta = 2.5; grow = 5.0; }
+            else if (ticker === "NVDA" || ticker === "TSLA") { subPos = "타겟형 스트라이커"; beta = 2.2; grow = 5.0; }
+            else { subPos = "쉐도우 스트라이커"; beta = 1.8; grow = 4.0; }
+            yieldVal = 0.1;
         } else if (
             sector.includes("Financial") || 
             sector.includes("Utilities") || 
             sector.includes("Energy") ||
             industry.toLowerCase().includes("insurance") ||
-            industry.toLowerCase().includes("bank")
+            industry.toLowerCase().includes("bank") ||
+            industry.toLowerCase().includes("beverages")
         ) {
             mainPos = "DF";
-            subPos = (Math.random() > 0.5) ? "센터백" : "리베로";
-            beta = 0.7; yieldVal = 4.0; grow = 1.2;
+            if (industry.includes("Bank") || industry.includes("Insurance")) { subPos = "센터백"; beta = 0.5; yieldVal = 5.5; }
+            else if (name.includes("현대차") || name.includes("기아")) { subPos = "윙백"; beta = 0.8; yieldVal = 4.5; }
+            else { subPos = "리베로"; beta = 0.7; yieldVal = 3.5; }
+            grow = 1.2;
         } else {
-            mainPos = "MF";
-            subPos = "중앙 미드필더";
-            beta = 1.1; yieldVal = 1.5; grow = 2.5;
+            // General MF
+            if (name.includes("Apple") || name.includes("Microsoft")) { subPos = "공격형 미드필더"; beta = 1.2; grow = 3.5; }
+            else { subPos = "중앙 미드필더"; beta = 1.1; yieldVal = 1.5; }
+            grow = 2.5;
         }
 
         return {
