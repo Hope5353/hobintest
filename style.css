@@ -211,3 +211,8 @@ body {
 .back-btn:hover {
     color: var(--text-color);
 }
+
+.comment-section {
+    margin-top: 30px;
+    padding: 30px;
+}
