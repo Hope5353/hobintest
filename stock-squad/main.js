@@ -350,30 +350,37 @@ class SquadManager {
     analyzeSquad(players, beta, yieldVal) {
         let message = "", recs = [];
         const fwCount = players.filter(p => p.mainPos === 'FW').length;
+        const mfCount = players.filter(p => p.mainPos === 'MF').length;
         const dfCount = players.filter(p => p.mainPos === 'DF').length;
         const gkCount = players.filter(p => p.mainPos === 'GK').length;
 
-        if (players.length < 5) {
-            message = "아직 스쿼드가 완성되지 않았습니다. 다양한 포지션의 선수를 영입해 보세요!";
-            recs = [{ name: "애플", ticker: "AAPL" }, { name: "삼성전자", ticker: "005930.KS" }];
-        } else if (beta > 1.7) {
-            message = "공격력이 매우 높지만 변동성이 큽니다! 수비진(고배당/안전자산) 보강이 절실합니다.";
-            recs = [{ name: "코카콜라", ticker: "KO" }, { name: "금(Gold) ETF", ticker: "GLD" }, { name: "신한지주", ticker: "055550.KS" }];
+        // 1. Critical Gap Analysis (Primary Priority)
+        if (fwCount === 0) {
+            message = "전방 공격진이 비어 있습니다! 수익률 극대화를 위해 화끈한 공격수(엔비디아, 테슬라 등)를 영입해 보세요.";
+            recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "테슬라", ticker: "TSLA" }, { name: "에코프로", ticker: "086520.KQ" }];
+        } else if (mfCount === 0) {
+            message = "중원을 책임질 미드필더가 없습니다! 팀의 중심을 잡아줄 빅테크나 지수 ETF 영입을 추천합니다.";
+            recs = [{ name: "애플", ticker: "AAPL" }, { name: "마이크로소프트", ticker: "MSFT" }, { name: "S&P 500", ticker: "SPY" }];
         } else if (dfCount === 0) {
-            message = "수비수(안정적 우량주)가 한 명도 없습니다! 하락장에 대비해 방어선을 구축하세요.";
-            recs = [{ name: "현대차", ticker: "005380.KS" }, { name: "존슨앤존슨", ticker: "JNJ" }];
-        } else if (fwCount === 0) {
-            message = "공격수(성장주)가 부족합니다. 시장 수익률을 상회하기 위해 공격적인 영입을 추천합니다.";
-            recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "테슬라", ticker: "TSLA" }];
-        } else if (yieldVal < 0.8) {
-            message = "배당 수익률(수비력)이 낮습니다. 안정적인 현금 흐름을 위해 고배당주 영입을 고려해 보세요.";
-            recs = [{ name: "KB금융", ticker: "105560.KS" }, { name: "리얼티인컴", ticker: "O" }];
+            message = "방어선이 구축되지 않았습니다! 하락장에 대비해 안정적인 수비수(우량주/배당주)를 배치하세요.";
+            recs = [{ name: "삼성전자", ticker: "005930.KS" }, { name: "현대차", ticker: "005380.KS" }, { name: "코카콜라", ticker: "KO" }];
         } else if (gkCount === 0) {
-            message = "골키퍼(최후의 방어자산)가 없습니다. 금이나 채권 ETF로 포트폴리오의 마지막 퍼즐을 맞추세요.";
-            recs = [{ name: "금(Gold)", ticker: "GLD" }, { name: "미국채", ticker: "TLT" }];
+            message = "골키퍼(안전자산)가 없습니다. 포트폴리오의 마지막 퍼즐인 금이나 채권을 영입하여 리스크를 관리하세요.";
+            recs = [{ name: "금(Gold)", ticker: "GLD" }, { name: "미국채 20년+", ticker: "TLT" }];
+        } 
+        // 2. Strategic Balance Analysis (Secondary Priority - only if all core roles exist)
+        else if (beta > 1.7) {
+            message = "현재 스쿼드는 매우 공격적입니다. 변동성이 크므로 현금 흐름이 좋은 고배당 수비수 보강을 추천합니다.";
+            recs = [{ name: "신한지주", ticker: "055550.KS" }, { name: "코카콜라", ticker: "KO" }];
+        } else if (beta < 0.6) {
+            message = "방어 중심의 매우 안정적인 구성입니다. 시장 상승 랠리에서 소외되지 않도록 공격수 영입을 고려해 보세요.";
+            recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "나스닥 100", ticker: "QQQ" }];
+        } else if (yieldVal < 0.8) {
+            message = "스쿼드의 수비력(배당 수익률)이 부족합니다. 배당 성향이 강한 우량주 영입으로 밸런스를 맞추세요.";
+            recs = [{ name: "리얼티인컴", ticker: "O" }, { name: "KB금융", ticker: "105560.KS" }];
         } else {
-            message = "매우 이상적인 스쿼드 밸런스입니다! 현재의 전략을 유지하며 시장 상황을 모니터링하세요.";
-            recs = [{ name: "S&P 500", ticker: "SPY" }, { name: "마이크로소프트", ticker: "MSFT" }];
+            message = "스쿼드 밸런스가 아주 좋습니다! 현재 포메이션에서 각 선수들의 컨디션을 모니터링하며 운영하세요.";
+            recs = [{ name: "퀄컴", ticker: "QCOM" }, { name: "두산", ticker: "000150.KS" }];
         }
         this.updateCoach(message, recs);
     }
