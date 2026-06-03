@@ -3,52 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>주식 스쿼드 메이커 | 나의 투자 포트폴리오 베스트 11</title>
-    <meta name="description" content="축구 스쿼드처럼 나의 주식 포트폴리오를 멋지게 구성해보세요. 나만의 주식 드림팀, 스쿼드 메이커.">
+    <title>STOCK SQUAD | 나만의 주식 드림팀</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
     <meta name="google-adsense-account" content="ca-pub-7722735349463695">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7722735349463695"
      crossorigin="anonymous"></script>
 </head>
-<body>
-    <div class="app-container">
-        <header class="header">
-            <h1 class="logo">📈 Stock Squad</h1>
-            <nav>
-                <a href="../index.html" class="nav-link">홈으로</a>
-            </nav>
+<body class="gaming-theme">
+    <div class="overlay"></div>
+    <div class="app-wrapper">
+        <header class="main-nav">
+            <div class="logo-area">
+                <span class="icon">📊</span>
+                <h1 class="glitch-text" data-text="STOCK SQUAD">STOCK SQUAD</h1>
+            </div>
+            <div class="top-controls">
+                <div class="formation-selector">
+                    <label>FORMATION</label>
+                    <select id="formation-select">
+                        <option value="4-4-2">4-4-2</option>
+                        <option value="4-3-3" selected>4-3-3</option>
+                        <option value="3-5-2">3-5-2</option>
+                        <option value="4-2-3-1">4-2-3-1</option>
+                    </select>
+                </div>
+                <a href="../index.html" class="exit-btn">EXIT</a>
+            </div>
         </header>
 
-        <main class="main-content">
-            <section class="squad-board-container">
-                <div class="field">
-                    <div id="squad-slots" class="squad-grid">
-                        <!-- Squad slots will be generated here -->
+        <main class="stadium-layout">
+            <div class="pitch-container">
+                <div class="pitch">
+                    <div class="pitch-lines"></div>
+                    <div id="squad-field" class="players-overlay">
+                        <!-- Player cards will be rendered here dynamically -->
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <aside class="sidebar">
-                <div class="search-box">
-                    <h3>주식 추가하기</h3>
-                    <input type="text" id="stock-search" placeholder="종목명 또는 코드 입력">
-                    <div id="search-results" class="results-list"></div>
+            <aside class="transfer-market">
+                <div class="market-header">
+                    <h2>TRANSFER MARKET</h2>
+                    <div class="search-input-wrapper">
+                        <input type="text" id="market-search" placeholder="종목명 또는 티커 검색...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                </div>
+                
+                <div id="market-list" class="stock-grid">
+                    <!-- Stock items will appear here -->
                 </div>
 
-                <div class="my-squad-info">
-                    <h3>스쿼드 요약</h3>
-                    <div id="squad-summary">
-                        <p>선수를 영입해주세요!</p>
+                <div class="squad-stats">
+                    <h3>SQUAD ANALYSIS</h3>
+                    <div class="stat-bars">
+                        <div class="stat-item">
+                            <label>공격력 (성장성)</label>
+                            <div class="bar-bg"><div id="stat-atk" class="bar-fill" style="width: 0%"></div></div>
+                        </div>
+                        <div class="stat-item">
+                            <label>조직력 (안정성)</label>
+                            <div class="bar-bg"><div id="stat-link" class="bar-fill" style="width: 0%"></div></div>
+                        </div>
+                        <div class="stat-item">
+                            <label>수비력 (방어력)</label>
+                            <div class="bar-bg"><div id="stat-def" class="bar-fill" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="total-value">
+                        <label>TOTAL SQUAD VALUE</label>
+                        <span id="total-price">0</span>
                     </div>
                 </div>
             </aside>
         </main>
-
-        <footer class="footer">
-            <p>&copy; 2024 Stock Squad Maker. <a href="../privacy.html">개인정보처리방침</a></p>
-        </footer>
     </div>
+
+    <!-- Player Selection Modal (Hidden by default) -->
+    <div id="selection-modal" class="modal">
+        <div class="modal-content">
+            <h3>포지션에 영입할 종목을 선택하세요</h3>
+            <div id="modal-market-list" class="stock-grid"></div>
+            <button class="close-modal">닫기</button>
+        </div>
+    </div>
+
     <script src="main.js"></script>
 </body>
 </html>
