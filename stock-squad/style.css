@@ -216,11 +216,34 @@ body.gaming-theme {
     align-items: center;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
 }
 
 .roster-item:hover {
     background: rgba(0, 212, 255, 0.15);
-    transform: scale(1.02);
+    transform: translateX(5px);
+}
+
+.release-btn {
+    background: rgba(255, 77, 77, 0.2);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: bold;
+    margin-left: 10px;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.release-btn:hover {
+    background: var(--accent-red);
+    color: white;
 }
 
 .roster-item.active-in-squad {

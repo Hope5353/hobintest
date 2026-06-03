@@ -209,6 +209,7 @@ class SquadManager {
 
         this.myRoster.push(stock);
         this.renderRoster();
+        // Just add to roster, do NOT call assignFromRoster here
     }
 
     renderRoster() {
@@ -226,12 +227,28 @@ class SquadManager {
                         <span class="m-name">${stock.country} ${stock.name}</span>
                         <span class="m-ticker">${stock.subPos} ${inSquad ? '(배치완료)' : ''}</span>
                     </div>
-                    <div class="item-stats">
+                    <div class="item-stats" style="display:flex; align-items:center;">
                         <span class="m-change ${stock.change >= 0 ? 'up' : 'down'}">${stock.change}%</span>
+                        <div class="release-btn" onclick="event.stopPropagation(); window.squadApp.releaseFromRoster('${stock.ticker}')">X</div>
                     </div>
                 </div>
             `;
         }).join('');
+    }
+
+    releaseFromRoster(ticker) {
+        // 1. Remove from squad if present
+        for (let key in this.squad) {
+            if (this.squad[key].ticker === ticker) {
+                delete this.squad[key];
+            }
+        }
+        // 2. Remove from roster pool
+        this.myRoster = this.myRoster.filter(s => s.ticker !== ticker);
+        
+        this.renderField();
+        this.renderRoster();
+        this.updateStats();
     }
 
     assignFromRoster(ticker) {
