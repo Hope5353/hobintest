@@ -280,16 +280,24 @@ class SquadManager {
         const condIcon = stock.change >= 1.0 ? '🔥' : (stock.change <= -1.0 ? '📉' : '➡️');
         const condClass = stock.change >= 1.0 ? 'up' : (stock.change <= -1.0 ? 'down' : '');
         const colorClass = `card-${stock.mainPos.toLowerCase()}`;
+        const countryName = stock.country === "🇰🇷" ? "KR" : (stock.country === "🇺🇸" ? "US" : "");
+        
         return `
             <div class="stock-card ${colorClass}">
-                <span class="flag">${stock.country}</span>
-                <span class="condition ${condClass}">${condIcon}</span>
-                <span class="role-badge">${stock.subPos}</span>
-                <span class="name">${stock.name}</span>
-                <span class="price" style="font-size:0.55rem; opacity:0.8; word-break:break-all;">${stock.ticker}</span>
-                <span class="change ${stock.change >= 0 ? 'up' : 'down'}">
-                    ${stock.change >= 0 ? '▲' : '▼'} ${Math.abs(stock.change)}%
-                </span>
+                <div class="card-header">
+                    <span class="pos-label">${stock.mainPos}</span>
+                    <span class="country-tag">${stock.country} ${countryName}</span>
+                </div>
+                <div class="card-body">
+                    <span class="name">${stock.name}</span>
+                    <span class="ticker-sub">${stock.ticker}</span>
+                </div>
+                <div class="card-footer">
+                    <span class="role-text">${stock.subPos}</span>
+                    <span class="change-val ${stock.change >= 0 ? 'up' : 'down'}">
+                        ${condIcon} ${Math.abs(stock.change)}%
+                    </span>
+                </div>
             </div>
         `;
     }

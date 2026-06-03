@@ -105,27 +105,88 @@ body.gaming-theme {
 .plus-icon { font-size: 1.5rem; color: rgba(255,255,255,0.2); }
 .pos-tag { font-size: 0.65rem; font-weight: 900; color: var(--text-muted); margin-top: 5px; }
 
+/* Modern Structured Stock Card */
 .stock-card {
-    width: 100%; height: 100%; background: #1a1f2c;
-    border: 2px solid var(--primary-neon); border-radius: 8px;
-    padding: 8px; display: flex; flex-direction: column; align-items: center;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 10px; padding: 0;
+    display: flex; flex-direction: column;
     position: relative; overflow: hidden;
     animation: cardIn 0.4s ease-out;
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Position Colors & Glows - CRITICAL FIX */
-.stock-card.card-fw { border: 2px solid #ff4d4d !important; box-shadow: 0 0 15px rgba(255, 77, 77, 0.6) !important; }
-.stock-card.card-fw .role-badge { background: #ff4d4d !important; color: white !important; }
+.card-header {
+    padding: 6px 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
 
-.stock-card.card-mf { border: 2px solid #00d4ff !important; box-shadow: 0 0 15px rgba(0, 212, 255, 0.6) !important; }
-.stock-card.card-mf .role-badge { background: #00d4ff !important; color: black !important; }
+.pos-label {
+    font-size: 0.75rem; font-weight: 900;
+    letter-spacing: 0.5px;
+}
 
-.stock-card.card-df { border: 2px solid #00ff88 !important; box-shadow: 0 0 15px rgba(0, 255, 136, 0.6) !important; }
-.stock-card.card-df .role-badge { background: #00ff88 !important; color: black !important; }
+.country-tag {
+    font-size: 0.6rem; font-weight: 700;
+    color: var(--text-muted);
+    display: flex; align-items: center; gap: 3px;
+}
 
-.stock-card.card-gk { border: 2px solid #bf5af2 !important; box-shadow: 0 0 15px rgba(191, 90, 242, 0.6) !important; }
-.stock-card.card-gk .role-badge { background: #bf5af2 !important; color: white !important; }
+.card-body {
+    flex: 1;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 10px 5px;
+    text-align: center;
+}
+
+.stock-card .name {
+    font-size: 0.85rem; font-weight: 800;
+    color: #fff; margin-bottom: 2px;
+    display: block; width: 100%;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.stock-card .ticker-sub {
+    font-size: 0.55rem; font-weight: 600;
+    color: var(--secondary-neon);
+    opacity: 0.7;
+}
+
+.card-footer {
+    padding: 5px 8px;
+    background: rgba(0,0,0,0.2);
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.role-text {
+    font-size: 0.55rem; font-weight: 800;
+    color: #fff; opacity: 0.9;
+}
+
+.stock-card .change-val {
+    font-size: 0.6rem; font-weight: 900;
+}
+
+/* Position-Specific Themes (Overriding) */
+.stock-card.card-fw { border: 2px solid #ff4d4d; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); }
+.stock-card.card-fw .pos-label { color: #ff4d4d; }
+.stock-card.card-fw .card-header { border-bottom: 1px solid rgba(255, 77, 77, 0.2); }
+
+.stock-card.card-mf { border: 2px solid #00d4ff; box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3); }
+.stock-card.card-mf .pos-label { color: #00d4ff; }
+.stock-card.card-mf .card-header { border-bottom: 1px solid rgba(0, 212, 255, 0.2); }
+
+.stock-card.card-df { border: 2px solid #00ff88; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3); }
+.stock-card.card-df .pos-label { color: #00ff88; }
+.stock-card.card-df .card-header { border-bottom: 1px solid rgba(0, 255, 136, 0.2); }
+
+.stock-card.card-gk { border: 2px solid #bf5af2; box-shadow: 0 4px 15px rgba(191, 90, 242, 0.3); }
+.stock-card.card-gk .pos-label { color: #bf5af2; }
+.stock-card.card-gk .card-header { border-bottom: 1px solid rgba(191, 90, 242, 0.2); }
 
 @keyframes cardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
