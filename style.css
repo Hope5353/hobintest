@@ -152,3 +152,62 @@ body {
     background-color: #636e72;
     margin-top: 20px;
 }
+
+/* Inquiry Styles */
+.inquiry-link {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #b2bec3;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.inquiry-link:hover {
+    color: var(--secondary-color);
+}
+
+.inquiry-form {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2d3436;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dfe6e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #636e72;
+    margin-top: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.95rem;
+}
+
+.back-btn:hover {
+    color: var(--text-color);
+}

@@ -125,3 +125,14 @@ function restartQuiz() {
     document.getElementById('results').style.display = 'none';
     document.getElementById('home').style.display = 'block';
 }
+
+function showInquiry() {
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('inquiry').style.display = 'block';
+}
+
+function goHome() {
+    document.getElementById('inquiry').style.display = 'none';
+    document.getElementById('home').style.display = 'block';
+}
