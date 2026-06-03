@@ -19,7 +19,8 @@ const LOCAL_TOP_STOCKS = [
 class SquadManager {
     constructor() {
         this.formation = "4-3-3";
-        this.squad = {}; 
+        this.squad = {}; // Active 11
+        this.myRoster = []; // User's pool
         this.searchTimeout = null;
         this.currentMarketData = [];
         this.init();
@@ -29,19 +30,22 @@ class SquadManager {
         this.renderField();
         this.setupEventListeners();
         this.renderMarketList(LOCAL_TOP_STOCKS);
+        this.renderRoster();
         this.updateStats();
     }
 
     setupEventListeners() {
         document.getElementById('formation-select').addEventListener('change', (e) => {
             this.formation = e.target.value;
+            this.squad = {};
             this.renderField();
+            this.renderRoster();
             this.updateStats();
         });
 
         document.getElementById('market-search').addEventListener('input', (e) => {
             const rawQuery = e.target.value;
-            const query = rawQuery.replace(/\s/g, '').toLowerCase(); // Normalization: remove spaces, lowercase
+            const query = rawQuery.replace(/\s/g, '').toLowerCase();
             clearTimeout(this.searchTimeout);
             
             if (query === "") {
@@ -49,16 +53,12 @@ class SquadManager {
                 return;
             }
 
-            // Enhanced local search (matches names without spaces)
             const localFiltered = LOCAL_TOP_STOCKS.filter(s => 
                 s.name.replace(/\s/g, '').toLowerCase().includes(query) || 
                 s.ticker.toLowerCase().includes(query)
             );
             
-            // Still show local results first
             this.renderMarketList(localFiltered);
-            
-            // Then fetch from global API for more
             this.searchTimeout = setTimeout(() => this.searchGlobal(rawQuery, localFiltered), 400);
         });
 
@@ -71,12 +71,11 @@ class SquadManager {
         const list = document.getElementById('market-list');
         const statusMsg = document.createElement('div');
         statusMsg.id = 'search-status';
-        statusMsg.style.cssText = 'padding:10px; font-size:0.75rem; color:var(--secondary-neon); text-align:center;';
-        statusMsg.innerText = '🛰️ 전 세계 거래소 검색 중...';
+        statusMsg.style.cssText = 'padding:10px; font-size:0.75rem; color:var(--primary-neon); text-align:center; display:flex; align-items:center; justify-content:center;';
+        statusMsg.innerHTML = '<div class="loading-spinner"></div> 🛰️ 실시간 주식 데이터 검색 중... 잠시만 기다려주세요.';
         if (!document.getElementById('search-status')) list.prepend(statusMsg);
 
         try {
-            // Added lang=ko-KR and region=KR to prioritize Korean results
             const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=20&enableFuzzyQuery=true&lang=ko-KR&region=KR`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             
@@ -89,7 +88,6 @@ class SquadManager {
                     .filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF" || q.quoteType === "INDEX")
                     .map(q => this.mapYahooQuote(q));
                 
-                // Combine and de-duplicate
                 const seen = new Set();
                 const combined = [...localResults];
                 combined.forEach(s => seen.add(s.ticker));
@@ -102,21 +100,16 @@ class SquadManager {
                 });
 
                 this.renderMarketList(combined);
-                if (document.getElementById('search-status')) document.getElementById('search-status').innerText = `✅ ${combined.length}개의 종목을 찾았습니다.`;
-            } else {
-                if (localResults.length > 0) {
-                    this.renderMarketList(localResults);
-                } else {
-                    list.innerHTML = `<p style="padding:20px; color:#999; font-size:0.8rem; text-align:center;">'${query}'에 대한 검색 결과가 없습니다.<br>티커(예: 005930 또는 AAPL)를 입력해 보세요.</p>`;
-                }
+                if (document.getElementById('search-status')) document.getElementById('search-status').innerText = `✅ 검색 완료 (${combined.length}개 발견)`;
             }
         } catch (e) {
             console.error("Global search failed", e);
+            if (document.getElementById('search-status')) document.getElementById('search-status').innerText = '❌ 검색 중 오류가 발생했습니다.';
         } finally {
             setTimeout(() => {
                 const l = document.getElementById('search-status');
                 if (l) { l.style.opacity = '0'; setTimeout(() => l?.remove(), 500); }
-            }, 2000);
+            }, 3000);
         }
     }
 
@@ -137,7 +130,6 @@ class SquadManager {
         let yieldVal = 1.2;
         let grow = 2.5;
 
-        // Position Logic
         if (type === "ETF" || type === "INDEX") {
             mainPos = "GK";
             subPos = "스위퍼 키퍼";
@@ -151,7 +143,6 @@ class SquadManager {
             name.toLowerCase().includes("energy solution")
         ) {
             mainPos = "FW";
-            // Detailed role assignment
             if (isKR && name.includes("에코프로")) { subPos = "왼쪽 윙어"; beta = 2.5; grow = 5.0; }
             else if (ticker === "NVDA" || ticker === "TSLA") { subPos = "타겟형 스트라이커"; beta = 2.2; grow = 5.0; }
             else { subPos = "쉐도우 스트라이커"; beta = 1.8; grow = 4.0; }
@@ -170,7 +161,6 @@ class SquadManager {
             else { subPos = "리베로"; beta = 0.7; yieldVal = 3.5; }
             grow = 1.2;
         } else {
-            // General MF
             if (name.includes("Apple") || name.includes("Microsoft")) { subPos = "공격형 미드필더"; beta = 1.2; grow = 3.5; }
             else { subPos = "중앙 미드필더"; beta = 1.1; yieldVal = 1.5; }
             grow = 2.5;
@@ -190,6 +180,88 @@ class SquadManager {
         };
     }
 
+    renderMarketList(data, containerId = 'market-list') {
+        const list = document.getElementById(containerId);
+        if (!data || data.length === 0) return;
+
+        list.innerHTML = data.map(stock => `
+            <div class="market-item" onclick="window.squadApp.addToRoster('${stock.ticker}')">
+                <div class="item-info">
+                    <span class="m-name">${stock.country} ${stock.name}</span>
+                    <span class="m-ticker">${stock.ticker} [${stock.subPos}]</span>
+                </div>
+                <div class="item-stats">
+                    <span class="m-price">+ 영입</span>
+                </div>
+            </div>
+        `).join('');
+        this.currentMarketData = data;
+    }
+
+    addToRoster(ticker) {
+        const stock = this.currentMarketData?.find(s => s.ticker === ticker) || LOCAL_TOP_STOCKS.find(s => s.ticker === ticker);
+        if (!stock) return;
+
+        if (this.myRoster.some(s => s.ticker === ticker)) {
+            alert("이미 영입된 종목입니다!");
+            return;
+        }
+
+        this.myRoster.push(stock);
+        this.renderRoster();
+    }
+
+    renderRoster() {
+        const list = document.getElementById('my-roster-list');
+        if (this.myRoster.length === 0) {
+            list.innerHTML = '<p style="padding:10px; color:#555; font-size:0.7rem;">영입된 종목이 없습니다.</p>';
+            return;
+        }
+
+        list.innerHTML = this.myRoster.map(stock => {
+            const inSquad = Object.values(this.squad).some(s => s.ticker === stock.ticker);
+            return `
+                <div class="roster-item ${inSquad ? 'active-in-squad' : ''}" onclick="window.squadApp.assignFromRoster('${stock.ticker}')">
+                    <div class="item-info">
+                        <span class="m-name">${stock.country} ${stock.name}</span>
+                        <span class="m-ticker">${stock.subPos} ${inSquad ? '(배치완료)' : ''}</span>
+                    </div>
+                    <div class="item-stats">
+                        <span class="m-change ${stock.change >= 0 ? 'up' : 'down'}">${stock.change}%</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    assignFromRoster(ticker) {
+        const stock = this.myRoster.find(s => s.ticker === ticker);
+        if (!stock) return;
+
+        const inSquad = Object.values(this.squad).some(s => s.ticker === stock.ticker);
+        if (inSquad) {
+            alert("이미 스쿼드에 배치된 선수입니다!");
+            return;
+        }
+
+        const role = stock.mainPos;
+        const rows = this.getFormationRows();
+        const roleIdx = ["FW", "MF", "DF", "GK"].indexOf(role);
+        const count = rows[roleIdx];
+        
+        for (let i = 0; i < count; i++) {
+            const posKey = `${role}-${i}`;
+            if (!this.squad[posKey]) {
+                this.squad[posKey] = stock;
+                this.renderField();
+                this.renderRoster();
+                this.updateStats();
+                return;
+            }
+        }
+        alert(`${role} 포지션에 빈 자리가 없습니다! 기존 선수를 클릭해 방출 후 다시 시도하세요.`);
+    }
+
     renderField() {
         const field = document.getElementById('squad-field');
         field.innerHTML = '';
@@ -207,7 +279,7 @@ class SquadManager {
                     slot.onclick = () => this.removeStock(posKey);
                 } else {
                     slot.innerHTML = `<div class="plus-icon">+</div><span class="pos-tag">${role}</span>`;
-                    slot.onclick = () => this.openMarketForPos(role, posKey);
+                    slot.onclick = () => alert(`${role} 포지션입니다. 하단 영입 목록에서 선택해 배치하세요!`);
                 }
                 rowDiv.appendChild(slot);
             }
@@ -242,73 +314,10 @@ class SquadManager {
         `;
     }
 
-    renderMarketList(data, containerId = 'market-list') {
-        const list = document.getElementById(containerId);
-        if (!data || data.length === 0) return;
-
-        list.innerHTML = data.map(stock => `
-            <div class="market-item" onclick="window.squadApp.autoAssign('${stock.ticker}')">
-                <div class="item-info">
-                    <span class="m-name">${stock.country} ${stock.name}</span>
-                    <span class="m-ticker">${stock.ticker} [${stock.subPos}]</span>
-                </div>
-                <div class="item-stats">
-                    <span class="m-change ${stock.change >= 0 ? 'up' : 'down'}">${stock.change}%</span>
-                </div>
-            </div>
-        `).join('');
-        this.currentMarketData = data;
-    }
-
-    openMarketForPos(role, posKey) {
-        this.targetPosKey = posKey;
-        const modal = document.getElementById('selection-modal');
-        const filtered = this.currentMarketData.filter(s => s.mainPos === role);
-        
-        if (filtered.length === 0) {
-            document.getElementById('modal-market-list').innerHTML = `<p style="padding:20px; color:#999; text-align:center;">${role} 포지션에 적합한 검색 결과가 없습니다.<br>마켓에서 종목을 먼저 검색해 보세요!</p>`;
-        } else {
-            this.renderMarketList(filtered, 'modal-market-list');
-            const items = document.querySelectorAll('#modal-market-list .market-item');
-            items.forEach((item, idx) => {
-                item.onclick = () => {
-                    this.squad[this.targetPosKey] = filtered[idx];
-                    this.finishAssign();
-                };
-            });
-        }
-        modal.style.display = 'flex';
-    }
-
-    autoAssign(ticker) {
-        let stock = this.currentMarketData?.find(s => s.ticker === ticker) || LOCAL_TOP_STOCKS.find(s => s.ticker === ticker);
-        if (!stock) return;
-
-        const role = stock.mainPos;
-        const rows = this.getFormationRows();
-        const roleIdx = ["FW", "MF", "DF", "GK"].indexOf(role);
-        const count = rows[roleIdx];
-        
-        for (let i = 0; i < count; i++) {
-            const posKey = `${role}-${i}`;
-            if (!this.squad[posKey]) {
-                this.squad[posKey] = stock;
-                this.finishAssign();
-                return;
-            }
-        }
-        alert(`${role} 포지션이 꽉 찼습니다! 기존 선수를 클릭해 방출 후 영입하세요.`);
-    }
-
-    finishAssign() {
-        document.getElementById('selection-modal').style.display = 'none';
-        this.renderField();
-        this.updateStats();
-    }
-
     removeStock(posKey) {
         delete this.squad[posKey];
         this.renderField();
+        this.renderRoster();
         this.updateStats();
     }
 

@@ -182,7 +182,67 @@ body.gaming-theme {
 .item-stats { text-align: right; }
 .item-stats .m-price { font-weight: bold; font-size: 0.85rem; display: block; }
 
-.squad-stats { margin-top: 20px; padding-top: 15px; border-top: 2px solid var(--border-glass); }
+/* My Roster Styling */
+.my-roster-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid var(--border-glass);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.roster-hint {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.roster-grid {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.roster-item {
+    background: rgba(0, 212, 255, 0.05);
+    border: 1px solid var(--secondary-neon);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.roster-item:hover {
+    background: rgba(0, 212, 255, 0.15);
+    transform: scale(1.02);
+}
+
+.roster-item.active-in-squad {
+    border-color: var(--primary-neon);
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-neon);
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.squad-stats {
+    margin-top: 15px;
 .stat-bars { margin-bottom: 15px; }
 .stat-item { margin-bottom: 8px; }
 .stat-item label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 3px; display: block; }
