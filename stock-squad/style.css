@@ -111,7 +111,21 @@ body.gaming-theme {
     padding: 8px; display: flex; flex-direction: column; align-items: center;
     position: relative; overflow: hidden;
     animation: cardIn 0.4s ease-out;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
 }
+
+/* Position Colors */
+.stock-card.card-fw { border-color: #ff4d4d; box-shadow: 0 0 15px rgba(255, 77, 77, 0.3); }
+.stock-card.card-fw .role-badge { background: #ff4d4d; color: white; }
+
+.stock-card.card-mf { border-color: #00d4ff; box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+.stock-card.card-mf .role-badge { background: #00d4ff; color: black; }
+
+.stock-card.card-df { border-color: #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
+.stock-card.card-df .role-badge { background: #00ff88; color: black; }
+
+.stock-card.card-gk { border-color: #bf5af2; box-shadow: 0 0 15px rgba(191, 90, 242, 0.3); }
+.stock-card.card-gk .role-badge { background: #bf5af2; color: white; }
 
 @keyframes cardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -270,7 +284,47 @@ body.gaming-theme {
 .stat-item { margin-bottom: 8px; }
 .stat-item label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 3px; display: block; }
 
-.squad-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Position Colors & Glows */
+.stock-card.card-fw { border: 2px solid #ff4d4d !important; box-shadow: 0 0 15px rgba(255, 77, 77, 0.4); }
+.stock-card.card-fw .role-badge { background: #ff4d4d !important; color: white !important; }
+
+.stock-card.card-mf { border: 2px solid #00d4ff !important; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
+.stock-card.card-mf .role-badge { background: #00d4ff !important; color: black !important; }
+
+.stock-card.card-df { border: 2px solid #00ff88 !important; box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+.stock-card.card-df .role-badge { background: #00ff88 !important; color: black !important; }
+
+.stock-card.card-gk { border: 2px solid #bf5af2 !important; box-shadow: 0 0 15px rgba(191, 90, 242, 0.4); }
+.stock-card.card-gk .role-badge { background: #bf5af2 !important; color: white !important; }
+
+/* Squad Overall Score */
+.total-score-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+    border: 1px solid var(--primary-neon);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-score-container label {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: var(--primary-neon);
+    letter-spacing: 1px;
+}
+
+.ovr-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 10px var(--primary-neon);
+}
+
+.squad-summary-grid {
+ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .summary-item { background: #000; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid var(--border-glass); }
 .summary-item label { font-size: 0.55rem; color: var(--secondary-neon); display: block; font-weight: 900; }
 .summary-item span { font-size: 1rem; font-weight: 800; color: #fff; }
