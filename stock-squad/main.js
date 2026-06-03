@@ -1,25 +1,20 @@
 // Popular stocks with 'Toss-style' friendly names including US stocks in Korean
 const LOCAL_TOP_STOCKS = [
-    { name: "삼성전자", ticker: "005930.KS", country: "🇰🇷", mainPos: "DF", subPos: "리베로", beta: 0.8, yield: 2.8, grow: 1.5, trait: "우량주" },
-    { name: "SK하이닉스", ticker: "000660.KS", country: "🇰🇷", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.4, yield: 1.2, grow: 3.5, trait: "반도체" },
-    { name: "현대차", ticker: "005380.KS", country: "🇰🇷", mainPos: "DF", subPos: "오른쪽 풀백", beta: 0.7, yield: 4.8, grow: 1.2, trait: "자동차" },
-    { name: "기아", ticker: "000270.KS", country: "🇰🇷", mainPos: "DF", subPos: "왼쪽 풀백", beta: 0.7, yield: 5.2, grow: 1.4, trait: "자동차" },
-    { name: "두산", ticker: "000150.KS", country: "🇰🇷", mainPos: "MF", subPos: "중앙 미드필더", beta: 1.2, yield: 2.0, grow: 2.5, trait: "지주사" },
-    { name: "두산로보틱스", ticker: "454910.KS", country: "🇰🇷", mainPos: "FW", subPos: "윙어", beta: 2.2, yield: 0.0, grow: 4.8, trait: "로봇" },
-    { name: "두산에너빌리티", ticker: "034020.KS", country: "🇰🇷", mainPos: "DF", subPos: "센터백", beta: 1.3, yield: 0.0, grow: 3.0, trait: "원자력" },
-    { name: "에코프로", ticker: "086520.KQ", country: "🇰🇷", mainPos: "FW", subPos: "왼쪽 윙어", beta: 2.5, yield: 0.1, grow: 5.0, trait: "2차전지" },
-    { name: "엔비디아", ticker: "NVDA", country: "🇺🇸", mainPos: "FW", subPos: "타겟형 스트라이커", beta: 2.1, yield: 0.0, grow: 5.0, trait: "AI 대장주" },
-    { name: "테슬라", ticker: "TSLA", country: "🇺🇸", mainPos: "FW", subPos: "쉐도우 스트라이커", beta: 2.4, yield: 0.0, grow: 4.8, trait: "전기차" },
-    { name: "애플", ticker: "AAPL", country: "🇺🇸", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.1, yield: 0.5, grow: 2.5, trait: "빅테크" },
-    { name: "마이크로소프트", ticker: "MSFT", country: "🇺🇸", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.0, yield: 0.8, grow: 3.0, trait: "빅테크" },
-    { name: "퀄컴", ticker: "QCOM", country: "🇺🇸", mainPos: "FW", subPos: "오른쪽 윙어", beta: 1.3, yield: 1.5, grow: 3.2, trait: "반도체" },
-    { name: "알파벳(구글)", ticker: "GOOGL", country: "🇺🇸", mainPos: "MF", subPos: "중앙 미드필더", beta: 1.1, yield: 0.0, grow: 3.5, trait: "빅테크" },
-    { name: "아마존", ticker: "AMZN", country: "🇺🇸", mainPos: "FW", subPos: "왼쪽 윙어", beta: 1.2, yield: 0.0, grow: 4.0, trait: "전자상거래" },
-    { name: "넷플릭스", ticker: "NFLX", country: "🇺🇸", mainPos: "FW", subPos: "쉐도우 스트라이커", beta: 1.5, yield: 0.0, grow: 4.2, trait: "엔터테인먼트" },
-    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", mainPos: "MF", subPos: "중앙 미드필더(지수)", beta: 1.0, yield: 1.5, grow: 1.5, trait: "지수 추종" },
-    { name: "골드(금) ETF", ticker: "GLD", country: "🇺🇸", mainPos: "GK", subPos: "스위퍼 키퍼(안전자산)", beta: 0.1, yield: 0.0, grow: 0.5, trait: "안전자산" },
-    { name: "실버(은) ETF", ticker: "SLV", country: "🇺🇸", mainPos: "GK", subPos: "스위퍼 키퍼(안전자산)", beta: 0.3, yield: 0.0, grow: 1.0, trait: "안전자산" },
-    { name: "미국채 20년+", ticker: "TLT", country: "🇺🇸", mainPos: "GK", subPos: "골키퍼(채권)", beta: -0.2, yield: 3.5, grow: 0.0, trait: "안전자산" }
+    { name: "삼성전자", ticker: "005930.KS", country: "🇰🇷", mainPos: "DF", subPos: "CB", beta: 0.8, yield: 2.8, grow: 1.5, trait: "우량주" },
+    { name: "SK하이닉스", ticker: "000660.KS", country: "🇰🇷", mainPos: "MF", subPos: "CAM", beta: 1.4, yield: 1.2, grow: 3.5, trait: "반도체" },
+    { name: "현대차", ticker: "005380.KS", country: "🇰🇷", mainPos: "DF", subPos: "RB", beta: 0.7, yield: 4.8, grow: 1.2, trait: "자동차" },
+    { name: "기아", ticker: "000270.KS", country: "🇰🇷", mainPos: "DF", subPos: "LB", beta: 0.7, yield: 5.2, grow: 1.4, trait: "자동차" },
+    { name: "두산", ticker: "000150.KS", country: "🇰🇷", mainPos: "MF", subPos: "CM", beta: 1.2, yield: 2.0, grow: 2.5, trait: "지주사" },
+    { name: "두산로보틱스", ticker: "454910.KS", country: "🇰🇷", mainPos: "FW", subPos: "RW", beta: 2.2, yield: 0.0, grow: 4.8, trait: "로봇" },
+    { name: "에코프로", ticker: "086520.KQ", country: "🇰🇷", mainPos: "FW", subPos: "LW", beta: 2.5, yield: 0.1, grow: 5.0, trait: "2차전지" },
+    { name: "엔비디아", ticker: "NVDA", country: "🇺🇸", mainPos: "FW", subPos: "ST", beta: 2.1, yield: 0.0, grow: 5.0, trait: "AI 대장주" },
+    { name: "테슬라", ticker: "TSLA", country: "🇺🇸", mainPos: "FW", subPos: "CF", beta: 2.4, yield: 0.0, grow: 4.8, trait: "전기차" },
+    { name: "애플", ticker: "AAPL", country: "🇺🇸", mainPos: "MF", subPos: "CAM", beta: 1.1, yield: 0.5, grow: 2.5, trait: "빅테크" },
+    { name: "마이크로소프트", ticker: "MSFT", country: "🇺🇸", mainPos: "MF", subPos: "CAM", beta: 1.0, yield: 0.8, grow: 3.0, trait: "빅테크" },
+    { name: "퀄컴", ticker: "QCOM", country: "🇺🇸", mainPos: "FW", subPos: "RW", beta: 1.3, yield: 1.5, grow: 3.2, trait: "반도체" },
+    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", mainPos: "MF", subPos: "CM", beta: 1.0, yield: 1.5, grow: 1.5, trait: "지수 추종" },
+    { name: "골드(금) ETF", ticker: "GLD", country: "🇺🇸", mainPos: "GK", subPos: "GK", beta: 0.1, yield: 0.0, grow: 0.5, trait: "안전자산" },
+    { name: "미국채 20년+", ticker: "TLT", country: "🇺🇸", mainPos: "GK", subPos: "GK", beta: -0.2, yield: 3.5, grow: 0.0, trait: "안전자산" }
 ];
 
 class SquadManager {
@@ -125,29 +120,29 @@ class SquadManager {
         const sector = q.sector || "";
         const industry = q.industry || "";
 
-        let mainPos = "MF", subPos = "중앙 미드필더", beta = 1.1, yieldVal = 1.2, grow = 2.5;
+        let mainPos = "MF", subPos = "CM", beta = 1.1, yieldVal = 1.2, grow = 2.5;
 
         const isLeverage = name.includes("Leverage") || name.includes("2x") || name.includes("3x") || ticker === "TQQQ" || ticker === "SOXL";
         const isSafeHaven = name.includes("Gold") || name.includes("GLD") || name.includes("Silver") || name.includes("Copper") || ticker === "IAU" || ticker === "TLT" || name.includes("Treasury");
 
-        if (isSafeHaven) { mainPos = "GK"; subPos = "스위퍼 키퍼(안전자산)"; beta = 0.2; yieldVal = 3.5; grow = 0.5; }
-        else if (isLeverage) { mainPos = "FW"; subPos = "공격적 레버리지"; beta = 3.0; yieldVal = 0.0; grow = 6.0; }
-        else if (type === "ETF" || type === "INDEX") { mainPos = "MF"; subPos = "중앙 미드필더(지수)"; beta = 1.0; yieldVal = 1.5; grow = 1.5; }
+        if (isSafeHaven) { mainPos = "GK"; subPos = "GK"; beta = 0.2; yieldVal = 3.5; grow = 0.5; }
+        else if (isLeverage) { mainPos = "FW"; subPos = "ST"; beta = 3.0; yieldVal = 0.0; grow = 6.0; }
+        else if (type === "ETF" || type === "INDEX") { mainPos = "MF"; subPos = "CM"; beta = 1.0; yieldVal = 1.5; grow = 1.5; }
         else if (sector.includes("Technology") || sector.includes("Communication") || industry.toLowerCase().includes("semicon") || name.toLowerCase().includes("tech") || name.toLowerCase().includes("bio")) {
             mainPos = "FW";
-            if (isKR && name.includes("에코프로")) { subPos = "왼쪽 윙어"; beta = 2.5; grow = 5.0; }
-            else if (ticker === "NVDA" || ticker === "TSLA" || name.toLowerCase().includes("nvidia")) { subPos = "타겟형 스트라이커"; beta = 2.2; grow = 5.0; }
-            else { subPos = "쉐도우 스트라이커"; beta = 1.8; grow = 4.0; }
+            if (isKR && name.includes("에코프로")) { subPos = "LW"; beta = 2.5; grow = 5.0; }
+            else if (ticker === "NVDA" || ticker === "TSLA" || name.toLowerCase().includes("nvidia")) { subPos = "ST"; beta = 2.2; grow = 5.0; }
+            else { subPos = "RW"; beta = 1.8; grow = 4.0; }
             yieldVal = 0.1;
         } else if (sector.includes("Financial") || sector.includes("Utilities") || sector.includes("Energy") || industry.toLowerCase().includes("insurance") || industry.toLowerCase().includes("bank")) {
             mainPos = "DF";
-            if (industry.includes("Bank") || industry.includes("Insurance")) { subPos = "센터백"; beta = 0.5; yieldVal = 5.5; }
-            else if (name.includes("현대차") || name.includes("기아")) { subPos = (name.includes("현대차") ? "오른쪽 풀백" : "왼쪽 풀백"); beta = 0.8; yieldVal = 4.5; }
-            else { subPos = "리베로"; beta = 0.7; yieldVal = 3.5; }
+            if (industry.includes("Bank") || industry.includes("Insurance")) { subPos = "CB"; beta = 0.5; yieldVal = 5.5; }
+            else if (name.includes("현대차") || name.includes("기아")) { subPos = (name.includes("현대차") ? "RB" : "LB"); beta = 0.8; yieldVal = 4.5; }
+            else { subPos = "CB"; beta = 0.7; yieldVal = 3.5; }
             grow = 1.2;
         } else {
-            if (name.includes("Apple") || name.includes("Microsoft")) { subPos = "공격형 미드필더"; beta = 1.2; grow = 3.5; }
-            else { subPos = "중앙 미드필더"; beta = 1.1; yieldVal = 1.5; }
+            if (name.includes("Apple") || name.includes("Microsoft")) { subPos = "CAM"; beta = 1.2; grow = 3.5; }
+            else { subPos = "CM"; beta = 1.1; yieldVal = 1.5; }
             grow = 2.5;
         }
 
@@ -219,9 +214,9 @@ class SquadManager {
         const count = rows[roleIdx];
         
         let targetIndices = Array.from({ length: count }, (_, i) => i);
-        if (stock.subPos.includes("오른쪽") || stock.subPos.includes("Right")) targetIndices = targetIndices.reverse();
-        else if (stock.subPos.includes("왼쪽") || stock.subPos.includes("Left")) targetIndices = targetIndices;
-        else if (stock.subPos.includes("중앙") || stock.subPos.includes("센터")) {
+        if (stock.subPos.includes("R")) targetIndices = targetIndices.reverse();
+        else if (stock.subPos.includes("L")) targetIndices = targetIndices;
+        else {
             const mid = Math.floor(count / 2);
             targetIndices.sort((a, b) => Math.abs(a - mid) - Math.abs(b - mid));
         }
@@ -254,13 +249,32 @@ class SquadManager {
                     slot.innerHTML = this.createCardHTML(this.squad[posKey]);
                     slot.onclick = () => this.removeStock(posKey);
                 } else {
-                    slot.innerHTML = `<div class="plus-icon">+</div><span class="pos-tag">${role}</span>`;
+                    slot.innerHTML = `<div class="plus-icon">+</div><span class="pos-tag">${this.getDisplayPos(role, i, count)}</span>`;
                     slot.onclick = () => alert(`${role} 포지션입니다. 하단 영입 목록에서 선택해 배치하세요!`);
                 }
                 rowDiv.appendChild(slot);
             }
             field.appendChild(rowDiv);
         });
+    }
+
+    getDisplayPos(role, i, total) {
+        if (role === 'FW') {
+            if (total === 1) return 'ST';
+            if (total === 2) return i === 0 ? 'LS' : 'RS';
+            if (total === 3) return i === 0 ? 'LW' : (i === 1 ? 'ST' : 'RW');
+        }
+        if (role === 'MF') {
+            if (total === 3) return i === 0 ? 'LCM' : (i === 1 ? 'CAM' : 'RCM');
+            if (total === 4) return i === 0 ? 'LM' : (i === 1 ? 'LCM' : (i === 2 ? 'RCM' : 'RM'));
+            if (total === 5) return i === 0 ? 'LM' : (i === 1 ? 'LCM' : (i === 2 ? 'CDM' : (i === 3 ? 'RCM' : 'RM')));
+        }
+        if (role === 'DF') {
+            if (total === 3) return i === 0 ? 'LCB' : (i === 1 ? 'CB' : 'RCB');
+            if (total === 4) return i === 0 ? 'LB' : (i === 1 ? 'LCB' : (i === 2 ? 'RCB' : 'RB'));
+            if (total === 5) return i === 0 ? 'LWB' : (i === 1 ? 'LB' : (i === 2 ? 'CB' : (i === 3 ? 'RB' : 'RWB')));
+        }
+        return role;
     }
 
     getFormationRows() {
@@ -280,12 +294,11 @@ class SquadManager {
         const condIcon = stock.change >= 1.0 ? '🔥' : (stock.change <= -1.0 ? '📉' : '➡️');
         const condClass = stock.change >= 1.0 ? 'up' : (stock.change <= -1.0 ? 'down' : '');
         const colorClass = `card-${stock.mainPos.toLowerCase()}`;
-        const countryName = stock.country === "🇰🇷" ? "KR" : (stock.country === "🇺🇸" ? "US" : "");
-        
+        const countryName = stock.country === "🇰🇷" ? "KR" : (stock.country === "🇺🇸" ? "US" : "GL");
         return `
             <div class="stock-card ${colorClass}">
                 <div class="card-header">
-                    <span class="pos-label">${stock.mainPos}</span>
+                    <span class="pos-label">${stock.subPos}</span>
                     <span class="country-tag">${stock.country} ${countryName}</span>
                 </div>
                 <div class="card-body">
@@ -293,7 +306,6 @@ class SquadManager {
                     <span class="ticker-sub">${stock.ticker}</span>
                 </div>
                 <div class="card-footer">
-                    <span class="role-text">${stock.subPos}</span>
                     <span class="change-val ${stock.change >= 0 ? 'up' : 'down'}">
                         ${condIcon} ${Math.abs(stock.change)}%
                     </span>
@@ -330,25 +342,38 @@ class SquadManager {
         document.getElementById('avg-yield').innerText = yieldVal.toFixed(1) + '%';
         document.getElementById('squad-ovr').innerText = ovr;
         const badge = document.getElementById('current-strategy');
-        if (beta > 1.3) { badge.innerText = "공격형"; badge.style.background = "var(--accent-red)"; }
+        if (beta > 1.3) { badge.innerText = "공격형"; badge.style.background = "var(--accent-red)"; badge.style.color = "#fff"; }
         else if (beta < 0.7) { badge.innerText = "안정형"; badge.style.background = "var(--secondary-neon)"; badge.style.color = "#000"; }
         else { badge.innerText = "밸런스형"; badge.style.background = "var(--primary-neon)"; badge.style.color = "#000"; }
     }
 
     analyzeSquad(players, beta, yieldVal) {
         let message = "", recs = [];
-        if (beta > 1.5) {
-            message = "포트폴리오가 매우 공격적입니다! 하락장에서 큰 타격을 입을 수 있으니 수비 보강(고배당주/금)이 시급합니다.";
-            recs = [{ name: "신한지주", ticker: "055550.KS" }, { name: "코카콜라", ticker: "KO" }, { name: "금(Gold) ETF", ticker: "GLD" }];
-        } else if (beta < 0.6) {
-            message = "매우 안정적인 스쿼드입니다. 하지만 시장 상승기에는 소외될 수 있으니 공격수(엔비디아, 테슬라) 영입을 고려해 보세요.";
+        const fwCount = players.filter(p => p.mainPos === 'FW').length;
+        const dfCount = players.filter(p => p.mainPos === 'DF').length;
+        const gkCount = players.filter(p => p.mainPos === 'GK').length;
+
+        if (players.length < 5) {
+            message = "아직 스쿼드가 완성되지 않았습니다. 다양한 포지션의 선수를 영입해 보세요!";
+            recs = [{ name: "애플", ticker: "AAPL" }, { name: "삼성전자", ticker: "005930.KS" }];
+        } else if (beta > 1.7) {
+            message = "공격력이 매우 높지만 변동성이 큽니다! 수비진(고배당/안전자산) 보강이 절실합니다.";
+            recs = [{ name: "코카콜라", ticker: "KO" }, { name: "금(Gold) ETF", ticker: "GLD" }, { name: "신한지주", ticker: "055550.KS" }];
+        } else if (dfCount === 0) {
+            message = "수비수(안정적 우량주)가 한 명도 없습니다! 하락장에 대비해 방어선을 구축하세요.";
+            recs = [{ name: "현대차", ticker: "005380.KS" }, { name: "존슨앤존슨", ticker: "JNJ" }];
+        } else if (fwCount === 0) {
+            message = "공격수(성장주)가 부족합니다. 시장 수익률을 상회하기 위해 공격적인 영입을 추천합니다.";
             recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "테슬라", ticker: "TSLA" }];
-        } else if (yieldVal < 1.0) {
-            message = "배당 수익률이 낮습니다. 현금 흐름 창출을 위해 고배당 수비수(금융/가치주) 영입을 추천합니다.";
-            recs = [{ name: "JP모건", ticker: "JPM" }, { name: "현대차", ticker: "005380.KS" }, { name: "코카콜라", ticker: "KO" }];
+        } else if (yieldVal < 0.8) {
+            message = "배당 수익률(수비력)이 낮습니다. 안정적인 현금 흐름을 위해 고배당주 영입을 고려해 보세요.";
+            recs = [{ name: "KB금융", ticker: "105560.KS" }, { name: "리얼티인컴", ticker: "O" }];
+        } else if (gkCount === 0) {
+            message = "골키퍼(최후의 방어자산)가 없습니다. 금이나 채권 ETF로 포트폴리오의 마지막 퍼즐을 맞추세요.";
+            recs = [{ name: "금(Gold)", ticker: "GLD" }, { name: "미국채", ticker: "TLT" }];
         } else {
-            message = "훌륭한 밸런스입니다! 현재의 스쿼드 컨디션을 유지하며 시장 흐름에 대응하세요.";
-            recs = [{ name: "애플", ticker: "AAPL" }, { name: "S&P 500", ticker: "SPY" }];
+            message = "매우 이상적인 스쿼드 밸런스입니다! 현재의 전략을 유지하며 시장 상황을 모니터링하세요.";
+            recs = [{ name: "S&P 500", ticker: "SPY" }, { name: "마이크로소프트", ticker: "MSFT" }];
         }
         this.updateCoach(message, recs);
     }
