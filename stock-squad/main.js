@@ -1,13 +1,19 @@
-// Popular stocks as immediate fallback/suggestions
+// Popular stocks with 'Toss-style' friendly names
 const LOCAL_TOP_STOCKS = [
     { name: "삼성전자", ticker: "005930.KS", country: "🇰🇷", mainPos: "DF", subPos: "리베로", beta: 0.8, yield: 2.8, grow: 1.5, trait: "우량주" },
     { name: "SK하이닉스", ticker: "000660.KS", country: "🇰🇷", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.4, yield: 1.2, grow: 3.5, trait: "반도체" },
     { name: "현대차", ticker: "005380.KS", country: "🇰🇷", mainPos: "DF", subPos: "오른쪽 풀백", beta: 0.7, yield: 4.8, grow: 1.2, trait: "자동차" },
     { name: "두산", ticker: "000150.KS", country: "🇰🇷", mainPos: "MF", subPos: "중앙 미드필더", beta: 1.2, yield: 2.0, grow: 2.5, trait: "지주사" },
+    { name: "두산로보틱스", ticker: "454910.KS", country: "🇰🇷", mainPos: "FW", subPos: "윙어", beta: 2.2, yield: 0.0, grow: 4.8, trait: "로봇" },
+    { name: "두산에너빌리티", ticker: "034020.KS", country: "🇰🇷", mainPos: "DF", subPos: "센터백", beta: 1.3, yield: 0.0, grow: 3.0, trait: "원자력" },
+    { name: "에코프로", ticker: "086520.KQ", country: "🇰🇷", mainPos: "FW", subPos: "왼쪽 윙어", beta: 2.5, yield: 0.1, grow: 5.0, trait: "2차전지" },
+    { name: "에코프로비엠", ticker: "247540.KQ", country: "🇰🇷", mainPos: "FW", subPos: "오른쪽 윙어", beta: 2.3, yield: 0.2, grow: 5.0, trait: "2차전지" },
+    { name: "포스코홀딩스", ticker: "005490.KS", country: "🇰🇷", mainPos: "MF", subPos: "수비형 미드필더", beta: 1.2, yield: 2.5, grow: 2.8, trait: "철강/소재" },
+    { name: "HLB", ticker: "028300.KQ", country: "🇰🇷", mainPos: "FW", subPos: "쉐도우 스트라이커", beta: 1.8, yield: 0.0, grow: 4.5, trait: "바이오" },
     { name: "Nvidia", ticker: "NVDA", country: "🇺🇸", mainPos: "FW", subPos: "타겟형 스트라이커", beta: 2.1, yield: 0.0, grow: 5.0, trait: "AI 대장주" },
     { name: "Tesla", ticker: "TSLA", country: "🇺🇸", mainPos: "FW", subPos: "쉐도우 스트라이커", beta: 2.4, yield: 0.0, grow: 4.8, trait: "전기차" },
     { name: "Apple", ticker: "AAPL", country: "🇺🇸", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.1, yield: 0.5, grow: 2.5, trait: "빅테크" },
-    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", mainPos: "GK", subPos: "골키퍼", beta: 1.0, yield: 1.5, grow: 1.5, trait: "지수 추종" }
+    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", mainPos: "GK", subPos: "스위퍼 키퍼", beta: 1.0, yield: 1.5, grow: 1.5, trait: "지수 추종" }
 ];
 
 class SquadManager {
@@ -34,7 +40,8 @@ class SquadManager {
         });
 
         document.getElementById('market-search').addEventListener('input', (e) => {
-            const query = e.target.value.trim();
+            const rawQuery = e.target.value;
+            const query = rawQuery.replace(/\s/g, '').toLowerCase(); // Normalization: remove spaces, lowercase
             clearTimeout(this.searchTimeout);
             
             if (query === "") {
@@ -42,14 +49,17 @@ class SquadManager {
                 return;
             }
 
-            // Quick local filter
+            // Enhanced local search (matches names without spaces)
             const localFiltered = LOCAL_TOP_STOCKS.filter(s => 
-                s.name.toLowerCase().includes(query.toLowerCase()) || 
-                s.ticker.toLowerCase().includes(query.toLowerCase())
+                s.name.replace(/\s/g, '').toLowerCase().includes(query) || 
+                s.ticker.toLowerCase().includes(query)
             );
             
-            // Fetch from global API with a slight delay
-            this.searchTimeout = setTimeout(() => this.searchGlobal(query, localFiltered), 400);
+            // Still show local results first
+            this.renderMarketList(localFiltered);
+            
+            // Then fetch from global API for more
+            this.searchTimeout = setTimeout(() => this.searchGlobal(rawQuery, localFiltered), 400);
         });
 
         document.querySelector('.close-modal').addEventListener('click', () => {
