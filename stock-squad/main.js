@@ -1,17 +1,13 @@
-// Expanded local top stocks for better initial experience
+// Popular stocks as immediate fallback/suggestions
 const LOCAL_TOP_STOCKS = [
     { name: "삼성전자", ticker: "005930.KS", country: "🇰🇷", mainPos: "DF", subPos: "리베로", beta: 0.8, yield: 2.8, grow: 1.5, trait: "우량주" },
     { name: "SK하이닉스", ticker: "000660.KS", country: "🇰🇷", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.4, yield: 1.2, grow: 3.5, trait: "반도체" },
-    { name: "LG에너지솔루션", ticker: "373220.KS", country: "🇰🇷", mainPos: "MF", subPos: "수비형 미드필더", beta: 1.2, yield: 0.0, grow: 4.5, trait: "2차전지" },
-    { name: "NAVER", ticker: "035420.KS", country: "🇰🇷", mainPos: "MF", subPos: "중앙 미드필더", beta: 1.1, yield: 0.8, grow: 3.0, trait: "플랫폼" },
-    { name: "카카오", ticker: "035720.KS", country: "🇰🇷", mainPos: "MF", subPos: "중앙 미드필더", beta: 1.3, yield: 0.3, grow: 3.2, trait: "플랫폼" },
     { name: "현대차", ticker: "005380.KS", country: "🇰🇷", mainPos: "DF", subPos: "오른쪽 풀백", beta: 0.7, yield: 4.8, grow: 1.2, trait: "자동차" },
+    { name: "두산", ticker: "000150.KS", country: "🇰🇷", mainPos: "MF", subPos: "중앙 미드필더", beta: 1.2, yield: 2.0, grow: 2.5, trait: "지주사" },
     { name: "Nvidia", ticker: "NVDA", country: "🇺🇸", mainPos: "FW", subPos: "타겟형 스트라이커", beta: 2.1, yield: 0.0, grow: 5.0, trait: "AI 대장주" },
     { name: "Tesla", ticker: "TSLA", country: "🇺🇸", mainPos: "FW", subPos: "쉐도우 스트라이커", beta: 2.4, yield: 0.0, grow: 4.8, trait: "전기차" },
     { name: "Apple", ticker: "AAPL", country: "🇺🇸", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.1, yield: 0.5, grow: 2.5, trait: "빅테크" },
-    { name: "Microsoft", ticker: "MSFT", country: "🇺🇸", mainPos: "MF", subPos: "공격형 미드필더", beta: 1.0, yield: 0.8, grow: 3.0, trait: "빅테크" },
-    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", mainPos: "GK", subPos: "골키퍼", beta: 1.0, yield: 1.5, grow: 1.5, trait: "지수 추종" },
-    { name: "Nasdaq 100 ETF", ticker: "QQQ", country: "🇺🇸", mainPos: "GK", subPos: "골키퍼", beta: 1.3, yield: 0.5, grow: 3.5, trait: "기술지수" }
+    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", mainPos: "GK", subPos: "골키퍼", beta: 1.0, yield: 1.5, grow: 1.5, trait: "지수 추종" }
 ];
 
 class SquadManager {
@@ -46,17 +42,14 @@ class SquadManager {
                 return;
             }
 
-            // Show immediate local results
+            // Quick local filter
             const localFiltered = LOCAL_TOP_STOCKS.filter(s => 
                 s.name.toLowerCase().includes(query.toLowerCase()) || 
                 s.ticker.toLowerCase().includes(query.toLowerCase())
             );
-            this.renderMarketList(localFiltered);
-
-            // Fetch from global API
-            if (query.length >= 1) {
-                this.searchTimeout = setTimeout(() => this.searchGlobal(query), 400);
-            }
+            
+            // Fetch from global API with a slight delay
+            this.searchTimeout = setTimeout(() => this.searchGlobal(query, localFiltered), 400);
         });
 
         document.querySelector('.close-modal').addEventListener('click', () => {
@@ -64,30 +57,32 @@ class SquadManager {
         });
     }
 
-    async searchGlobal(query) {
+    async searchGlobal(query, localResults) {
         const list = document.getElementById('market-list');
-        const loadingMsg = document.createElement('p');
-        loadingMsg.id = 'search-loading';
-        loadingMsg.style.cssText = 'padding:10px; font-size:0.8rem; color:var(--secondary-neon); text-align:center;';
-        loadingMsg.innerText = 'Searching global markets...';
-        if (!document.getElementById('search-loading')) list.prepend(loadingMsg);
+        const statusMsg = document.createElement('div');
+        statusMsg.id = 'search-status';
+        statusMsg.style.cssText = 'padding:10px; font-size:0.75rem; color:var(--secondary-neon); text-align:center;';
+        statusMsg.innerText = '🛰️ 전 세계 거래소 검색 중...';
+        if (!document.getElementById('search-status')) list.prepend(statusMsg);
 
         try {
-            // Using corsproxy.io which is often more stable than allorigins
-            const targetUrl = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=15&newsCount=0&enableFuzzyQuery=false`;
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+            // Yahoo Finance Search API v2
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=20&enableFuzzyQuery=true`;
+            // Using allorigins as a primary robust proxy
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             
             const response = await fetch(proxyUrl);
-            const data = await response.json();
+            const outerData = await response.json();
+            const data = JSON.parse(outerData.contents);
             
             if (data.quotes && data.quotes.length > 0) {
                 const globalResults = data.quotes
-                    .filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF")
+                    .filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF" || q.quoteType === "INDEX")
                     .map(q => this.mapYahooQuote(q));
                 
-                // Merge local and global, removing duplicates by ticker
+                // Combine and de-duplicate
                 const seen = new Set();
-                const combined = [...LOCAL_TOP_STOCKS.filter(s => s.name.includes(query) || s.ticker.includes(query))];
+                const combined = [...localResults];
                 combined.forEach(s => seen.add(s.ticker));
                 
                 globalResults.forEach(s => {
@@ -98,49 +93,75 @@ class SquadManager {
                 });
 
                 this.renderMarketList(combined);
-            } else if (data.quotes && data.quotes.length === 0 && query.length > 3) {
-                // If Yahoo returns nothing but we have local results, keep them. 
-                // Otherwise show no results.
+                if (document.getElementById('search-status')) document.getElementById('search-status').innerText = `✅ ${combined.length}개의 종목을 찾았습니다.`;
+            } else {
+                if (localResults.length > 0) {
+                    this.renderMarketList(localResults);
+                    if (document.getElementById('search-status')) document.getElementById('search-status').innerText = '🔍 로컬 검색 결과만 표시합니다.';
+                } else {
+                    list.innerHTML = `<p style="padding:20px; color:#999; font-size:0.8rem; text-align:center;">'${query}'에 대한 검색 결과가 없습니다.<br>티커(예: 005930 또는 AAPL)를 입력해 보세요.</p>`;
+                }
             }
         } catch (e) {
             console.error("Global search failed", e);
-            // On failure, we still have our local results shown
+            if (localResults.length > 0) {
+                this.renderMarketList(localResults);
+                if (document.getElementById('search-status')) document.getElementById('search-status').innerText = '⚠️ 통신 오류로 로컬 데이터만 표시합니다.';
+            }
         } finally {
-            const l = document.getElementById('search-loading');
-            if (l) l.remove();
+            // Keep status for 2 seconds then fade
+            setTimeout(() => {
+                const l = document.getElementById('search-status');
+                if (l) l.style.opacity = '0';
+                setTimeout(() => l?.remove(), 500);
+            }, 2000);
         }
     }
 
     mapYahooQuote(q) {
         const ticker = q.symbol;
-        const isKR = ticker.endsWith('.KS') || ticker.endsWith('.KQ');
-        const country = isKR ? "🇰🇷" : (q.exchange === "NMS" || q.exchange === "NYQ" || q.exchange === "NYS" ? "🇺🇸" : "🌐");
+        const exchange = q.exchange;
+        const isKR = ticker.endsWith('.KS') || ticker.endsWith('.KQ') || exchange === "KSC" || exchange === "KOE";
+        const country = isKR ? "🇰🇷" : (exchange === "NMS" || exchange === "NYQ" || exchange === "NYS" ? "🇺🇸" : "🌐");
         
-        // Advanced Dynamic Positioning Logic
+        // Deep Positioning Logic based on sector, type, and name
+        const name = q.shortname || q.longname || q.symbol;
+        const type = q.quoteType || "";
+        const sector = q.sector || "";
+        const industry = q.industry || "";
+
         let mainPos = "MF";
         let subPos = "중앙 미드필더";
         let beta = 1.0;
         let yieldVal = 1.0;
         let grow = 2.0;
 
-        const name = q.shortname || q.longname || q.symbol;
-        const type = q.quoteType || "";
-        const sector = q.sector || "";
-
-        if (type.includes("ETF")) {
+        if (type === "ETF" || type === "INDEX") {
             mainPos = "GK";
             subPos = "골키퍼(지수)";
             beta = 1.0; yieldVal = 1.5; grow = 1.0;
-        } else if (sector.includes("Technology") || sector.includes("Communication") || name.toLowerCase().includes("tech") || name.toLowerCase().includes("bio")) {
+        } else if (
+            sector.includes("Technology") || 
+            sector.includes("Communication") || 
+            industry.toLowerCase().includes("semicon") ||
+            industry.toLowerCase().includes("software") ||
+            name.toLowerCase().includes("tech") || 
+            name.toLowerCase().includes("bio")
+        ) {
             mainPos = "FW";
-            subPos = beta > 1.2 ? "타겟형 스트라이커" : "윙어";
-            beta = 1.6; yieldVal = 0.2; grow = 4.5;
-        } else if (sector.includes("Financial") || sector.includes("Utilities") || sector.includes("Consumer Defensive")) {
+            subPos = (Math.random() > 0.5) ? "윙어" : "타겟형 스트라이커";
+            beta = 1.8; yieldVal = 0.2; grow = 4.5;
+        } else if (
+            sector.includes("Financial") || 
+            sector.includes("Utilities") || 
+            sector.includes("Energy") ||
+            industry.toLowerCase().includes("insurance") ||
+            industry.toLowerCase().includes("bank")
+        ) {
             mainPos = "DF";
-            subPos = yieldVal > 3.0 ? "리베로(배당)" : "센터백";
-            beta = 0.7; yieldVal = 4.0; grow = 1.0;
+            subPos = (Math.random() > 0.5) ? "센터백" : "리베로";
+            beta = 0.7; yieldVal = 4.0; grow = 1.2;
         } else {
-            // Default MF for others
             mainPos = "MF";
             subPos = "중앙 미드필더";
             beta = 1.1; yieldVal = 1.5; grow = 2.5;
@@ -150,14 +171,13 @@ class SquadManager {
             name: name,
             ticker: ticker,
             country: country,
-            price: ticker, 
-            change: (Math.random() * 4 - 2).toFixed(1), // Mock condition for visual
+            change: (Math.random() * 4 - 2).toFixed(1),
             mainPos: mainPos,
             subPos: subPos,
             beta: beta,
             yield: yieldVal,
             grow: grow,
-            trait: sector || "상장종목"
+            trait: sector || "KOSPI/NASDAQ"
         };
     }
 
@@ -205,7 +225,7 @@ class SquadManager {
                 <span class="condition ${condClass}">${condIcon}</span>
                 <span class="role-badge">${stock.subPos}</span>
                 <span class="name">${stock.name}</span>
-                <span class="price" style="font-size:0.6rem; color:var(--secondary-neon)">${stock.ticker}</span>
+                <span class="price" style="font-size:0.55rem; color:var(--secondary-neon); word-break:break-all;">${stock.ticker}</span>
                 <span class="change ${stock.change >= 0 ? 'up' : 'down'}">
                     ${stock.change >= 0 ? '▲' : '▼'} ${Math.abs(stock.change)}%
                 </span>
@@ -215,10 +235,8 @@ class SquadManager {
 
     renderMarketList(data, containerId = 'market-list') {
         const list = document.getElementById(containerId);
-        if (data.length === 0) {
-            list.innerHTML = '<p style="padding:20px; color:#666; font-size:0.8rem;">검색 결과가 없습니다. 종목명이나 티커를 정확히 입력해 주세요.</p>';
-            return;
-        }
+        if (!data || data.length === 0) return;
+
         list.innerHTML = data.map(stock => `
             <div class="market-item" onclick="window.squadApp.autoAssign('${stock.ticker}')">
                 <div class="item-info">
@@ -236,25 +254,25 @@ class SquadManager {
     openMarketForPos(role, posKey) {
         this.targetPosKey = posKey;
         const modal = document.getElementById('selection-modal');
-        const filtered = this.currentMarketData.length > 0 ? 
-            this.currentMarketData.filter(s => s.mainPos === role) : 
-            LOCAL_TOP_STOCKS.filter(s => s.mainPos === role);
+        const filtered = this.currentMarketData.filter(s => s.mainPos === role);
         
-        this.renderMarketList(filtered, 'modal-market-list');
-        
-        const items = document.querySelectorAll('#modal-market-list .market-item');
-        items.forEach((item, idx) => {
-            item.onclick = () => {
-                this.squad[this.targetPosKey] = filtered[idx];
-                this.finishAssign();
-            };
-        });
+        if (filtered.length === 0) {
+            document.getElementById('modal-market-list').innerHTML = `<p style="padding:20px; color:#999; text-align:center;">${role} 포지션에 적합한 검색 결과가 없습니다.<br>마켓에서 종목을 먼저 검색해 보세요!</p>`;
+        } else {
+            this.renderMarketList(filtered, 'modal-market-list');
+            const items = document.querySelectorAll('#modal-market-list .market-item');
+            items.forEach((item, idx) => {
+                item.onclick = () => {
+                    this.squad[this.targetPosKey] = filtered[idx];
+                    this.finishAssign();
+                };
+            });
+        }
         modal.style.display = 'flex';
     }
 
     autoAssign(ticker) {
-        let stock = this.currentMarketData?.find(s => s.ticker === ticker);
-        if (!stock) stock = LOCAL_TOP_STOCKS.find(s => s.ticker === ticker);
+        let stock = this.currentMarketData?.find(s => s.ticker === ticker) || LOCAL_TOP_STOCKS.find(s => s.ticker === ticker);
         if (!stock) return;
 
         const role = stock.mainPos;
