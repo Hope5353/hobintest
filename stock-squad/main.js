@@ -30,7 +30,8 @@ class SquadManager {
     init() {
         this.renderField();
         this.setupEventListeners();
-        this.renderMarketList(LOCAL_TOP_STOCKS);
+        // Remove initial market rendering as requested
+        this.renderMarketList([]); 
         this.renderRoster();
         this.updateStats();
         this.checkSharedSquad();
@@ -56,7 +57,7 @@ class SquadManager {
             const query = rawQuery.replace(/\s/g, '').toLowerCase();
             clearTimeout(this.searchTimeout);
             if (query === "") {
-                this.renderMarketList(LOCAL_TOP_STOCKS);
+                this.renderMarketList([]); // Clear when query is empty
                 return;
             }
             const localFiltered = LOCAL_TOP_STOCKS.filter(s => 
@@ -74,7 +75,11 @@ class SquadManager {
         document.getElementById('recommendation-area').addEventListener('click', (e) => {
             if (e.target.classList.contains('rec-tag')) {
                 const ticker = e.target.dataset.ticker;
-                if (ticker) this.addToRoster(ticker);
+                if (ticker) {
+                    this.addToRoster(ticker);
+                    // Refresh coach advice immediately after adding to roster
+                    this.updateStats(); 
+                }
             }
         });
     }
@@ -229,32 +234,64 @@ class SquadManager {
         const players = Object.entries(this.squad).map(([pos, stock]) => `${pos}:${stock.ticker}`).join(',');
         if (!players) { alert("저장할 스쿼드가 없습니다! 선수를 배치해 주세요."); return; }
         
+        const squadName = prompt("스쿼드 이름을 입력하세요 (예: 나의 공격팀, 2026 베스트 등)", `스쿼드 ${new Date().toLocaleDateString()}`);
+        if (!squadName) return;
+
         const saveData = {
+            id: Date.now(),
+            name: squadName,
             formation: this.formation,
             squadStr: players,
             date: new Date().toLocaleString()
         };
         
-        localStorage.setItem('myBestSquad', JSON.stringify(saveData));
-        alert("스쿼드가 브라우저에 저장되었습니다! (나의 베스트 11)");
+        const savedList = JSON.parse(localStorage.getItem('savedStockSquads') || '[]');
+        savedList.push(saveData);
+        localStorage.setItem('savedStockSquads', JSON.stringify(savedList));
+        
+        alert(`"${squadName}" 스쿼드가 저장되었습니다!`);
     }
 
     async loadSquadLocal() {
-        const saved = localStorage.getItem('myBestSquad');
-        if (!saved) { alert("저장된 스쿼드가 없습니다. 먼저 스쿼드를 구성하고 SAVE 해주세요!"); return; }
+        const savedList = JSON.parse(localStorage.getItem('savedStockSquads') || '[]');
+        if (savedList.length === 0) { alert("저장된 스쿼드가 없습니다. 먼저 스쿼드를 구성하고 SAVE 해주세요!"); return; }
         
-        const data = JSON.parse(saved);
-        if (confirm(`저장된 스쿼드(${data.date})를 불러오시겠습니까? 현재 스쿼드는 사라집니다.`)) {
+        const modal = document.getElementById('selection-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalList = document.getElementById('modal-market-list');
+        
+        modalTitle.innerText = "저장된 스쿼드 불러오기";
+        modalList.innerHTML = savedList.map(s => `
+            <div class="market-item" onclick="window.squadApp.applySavedSquad(${s.id})">
+                <div class="item-info">
+                    <span class="m-name">📁 ${s.name}</span>
+                    <span class="m-ticker">${s.formation} | ${s.date}</span>
+                </div>
+                <div class="item-stats">
+                    <span class="m-price" style="color:var(--accent-red)" onclick="event.stopPropagation(); window.squadApp.deleteSavedSquad(${s.id})">삭제</span>
+                </div>
+            </div>
+        `).join('');
+        
+        modal.style.display = 'flex';
+    }
+
+    async applySavedSquad(squadId) {
+        const savedList = JSON.parse(localStorage.getItem('savedStockSquads') || '[]');
+        const data = savedList.find(s => s.id === squadId);
+        if (!data) return;
+
+        if (confirm(`"${data.name}" 스쿼드를 불러오시겠습니까? 현재 스쿼드는 사라집니다.`)) {
+            document.getElementById('selection-modal').style.display = 'none';
             this.formation = data.formation;
             document.getElementById('formation-select').value = data.formation;
             
-            // Re-use logic from checkSharedSquad for parsing and loading
             const statusMsg = document.createElement('div');
             statusMsg.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.8); padding:20px; border-radius:10px; z-index:1000; color:var(--secondary-neon); border:1px solid var(--secondary-neon);';
-            statusMsg.innerHTML = '📂 저장된 스쿼드를 불러오는 중...';
+            statusMsg.innerHTML = `📂 "${data.name}" 스쿼드를 불러오는 중...`;
             document.body.appendChild(statusMsg);
 
-            this.squad = {}; // Clear current squad
+            this.squad = {}; 
             const playerPairs = data.squadStr.split(',');
             for (const pair of playerPairs) {
                 const [pos, ticker] = pair.split(':');
@@ -271,6 +308,14 @@ class SquadManager {
             this.updateStats();
             statusMsg.remove();
         }
+    }
+
+    deleteSavedSquad(squadId) {
+        if (!confirm("정말 이 스쿼드를 삭제하시겠습니까?")) return;
+        let savedList = JSON.parse(localStorage.getItem('savedStockSquads') || '[]');
+        savedList = savedList.filter(s => s.id !== squadId);
+        localStorage.setItem('savedStockSquads', JSON.stringify(savedList));
+        this.loadSquadLocal(); // Refresh list
     }
 
     async checkSharedSquad() {
