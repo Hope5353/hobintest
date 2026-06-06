@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>STOCK SQUAD | 전략적 주식 드림팀</title>
-    <!-- Cache busting with major version 2.1 -->
-    <link rel="stylesheet" href="style.css?v=2.1">
+    <!-- Cache busting with major version 2.3 -->
+    <link rel="stylesheet" href="style.css?v=2.3">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
     
     <!-- Google AdSense -->
@@ -125,11 +125,11 @@
                     </div>
                     <div class="squad-summary-grid">
                         <div class="summary-item">
-                            <label>AVG BETA</label>
+                            <label>시장 민감도 (Beta)</label>
                             <span id="avg-beta">0.00</span>
                         </div>
                         <div class="summary-item">
-                            <label>AVG YIELD</label>
+                            <label>평균 배당률 (Yield)</label>
                             <span id="avg-yield">0.0%</span>
                         </div>
                     </div>
@@ -196,11 +196,20 @@
                 </div>
             </div>
 
+            <div class="guide-section">
+                <h3>📊 스탯 읽는 법</h3>
+                <ul style="color:#f8fafc; font-size:0.85rem; line-height:1.8; padding-left:20px;">
+                    <li><strong>시장 민감도 (Beta)</strong>: 1.0보다 높으면 시장보다 화끈하게 움직이는 <strong>공격형</strong>, 낮으면 시장 흔들림에 강한 <strong>안정형</strong> 팀입니다.</li>
+                    <li><strong>평균 배당률 (Yield)</strong>: 팀의 기초 체력입니다. 높을수록 주가 하락 시에도 꼬박꼬박 수익을 챙기는 <strong>탄탄한 수비력</strong>을 의미합니다.</li>
+                    <li><strong>SQUAD OVERALL (OVR)</strong>: 팀의 밸런스, 현재 수익 상태, 선수 층의 두께를 종합한 <strong>스쿼드 완성도</strong>입니다.</li>
+                </ul>
+            </div>
+
             <button class="close-guide">이해했습니다!</button>
         </div>
     </div>
 
-    <script src="main.js?v=2.2"></script>
+    <script src="main.js?v=2.3"></script>
     </body>
     </html>
 
