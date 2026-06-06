@@ -530,33 +530,45 @@ class SquadManager {
         const dfCount = players.filter(p => p.mainPos === 'DF').length;
         const gkCount = players.filter(p => p.mainPos === 'GK').length;
 
+        // helper to get top stocks by position that are not in squad/roster
+        const getTopRecs = (pos, count = 3) => {
+            return LOCAL_TOP_STOCKS
+                .filter(s => s.mainPos === pos && !this.myRoster.some(r => r.ticker === s.ticker))
+                .slice(0, count)
+                .map(s => ({ name: s.name, ticker: s.ticker }));
+        };
+
         // 1. Critical Gap Analysis (Primary Priority)
         if (fwCount === 0) {
-            message = "전방 공격진이 비어 있습니다! 수익률 극대화를 위해 화끈한 공격수(엔비디아, 테슬라 등)를 영입해 보세요.";
-            recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "테슬라", ticker: "TSLA" }, { name: "에코프로", ticker: "086520.KQ" }];
+            message = "전방 공격진이 비어 있습니다! 수익률 극대화를 위해 화끈한 공격수 영입을 추천합니다.";
+            recs = getTopRecs("FW");
+            if (recs.length === 0) recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "테슬라", ticker: "TSLA" }];
         } else if (mfCount === 0) {
-            message = "중원을 책임질 미드필더가 없습니다! 팀의 중심을 잡아줄 빅테크나 지수 ETF 영입을 추천합니다.";
-            recs = [{ name: "애플", ticker: "AAPL" }, { name: "마이크로소프트", ticker: "MSFT" }, { name: "S&P 500", ticker: "SPY" }];
+            message = "중원을 책임질 미드필더가 없습니다! 팀의 중심을 잡아줄 핵심 종목 영입을 추천합니다.";
+            recs = getTopRecs("MF");
+            if (recs.length === 0) recs = [{ name: "애플", ticker: "AAPL" }, { name: "마이크로소프트", ticker: "MSFT" }];
         } else if (dfCount === 0) {
-            message = "방어선이 구축되지 않았습니다! 하락장에 대비해 안정적인 수비수(우량주/배당주)를 배치하세요.";
-            recs = [{ name: "삼성전자", ticker: "005930.KS" }, { name: "현대차", ticker: "005380.KS" }, { name: "코카콜라", ticker: "KO" }];
+            message = "방어선이 구축되지 않았습니다! 하락장에 대비해 안정적인 수비수를 배치하세요.";
+            recs = getTopRecs("DF");
+            if (recs.length === 0) recs = [{ name: "삼성전자", ticker: "005930.KS" }, { name: "현대차", ticker: "005380.KS" }];
         } else if (gkCount === 0) {
-            message = "골키퍼(안전자산)가 없습니다. 포트폴리오의 마지막 퍼즐인 금이나 채권을 영입하여 리스크를 관리하세요.";
-            recs = [{ name: "금(Gold)", ticker: "GLD" }, { name: "미국채 20년+", ticker: "TLT" }];
+            message = "골키퍼(안전자산)가 없습니다. 리스크 관리를 위해 안전자산 영입을 추천합니다.";
+            recs = getTopRecs("GK");
+            if (recs.length === 0) recs = [{ name: "금(Gold)", ticker: "GLD" }, { name: "미국채 20년+", ticker: "TLT" }];
         } 
-        // 2. Strategic Balance Analysis (Secondary Priority - only if all core roles exist)
+        // 2. Strategic Balance Analysis
         else if (beta > 1.7) {
-            message = "현재 스쿼드는 매우 공격적입니다. 변동성이 크므로 현금 흐름이 좋은 고배당 수비수 보강을 추천합니다.";
-            recs = [{ name: "신한지주", ticker: "055550.KS" }, { name: "코카콜라", ticker: "KO" }];
+            message = "현재 스쿼드는 매우 공격적입니다. 변동성 조절을 위해 안정적인 수비수 보강을 추천합니다.";
+            recs = getTopRecs("DF", 2);
         } else if (beta < 0.6) {
-            message = "방어 중심의 매우 안정적인 구성입니다. 시장 상승 랠리에서 소외되지 않도록 공격수 영입을 고려해 보세요.";
-            recs = [{ name: "엔비디아", ticker: "NVDA" }, { name: "나스닥 100", ticker: "QQQ" }];
+            message = "방어 중심의 구성입니다. 시장 상승에 대비해 공격수 영입을 고려해 보세요.";
+            recs = getTopRecs("FW", 2);
         } else if (yieldVal < 0.8) {
-            message = "스쿼드의 수비력(배당 수익률)이 부족합니다. 배당 성향이 강한 우량주 영입으로 밸런스를 맞추세요.";
-            recs = [{ name: "리얼티인컴", ticker: "O" }, { name: "KB금융", ticker: "105560.KS" }];
+            message = "수비력(배당 수익률)이 부족합니다. 배당 성향이 강한 종목으로 밸런스를 맞추세요.";
+            recs = LOCAL_TOP_STOCKS.filter(s => s.yield > 3.0 && !this.myRoster.some(r => r.ticker === s.ticker)).slice(0, 2).map(s => ({name: s.name, ticker: s.ticker}));
         } else {
-            message = "스쿼드 밸런스가 아주 좋습니다! 현재 포메이션에서 각 선수들의 컨디션을 모니터링하며 운영하세요.";
-            recs = [{ name: "퀄컴", ticker: "QCOM" }, { name: "두산", ticker: "000150.KS" }];
+            message = "스쿼드 밸런스가 아주 좋습니다! 추가로 영입할 만한 주요 종목들을 확인해 보세요.";
+            recs = LOCAL_TOP_STOCKS.filter(s => !this.myRoster.some(r => r.ticker === s.ticker)).slice(0, 3).map(s => ({name: s.name, ticker: s.ticker}));
         }
         this.updateCoach(message, recs);
     }
