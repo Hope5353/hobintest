@@ -12,11 +12,13 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
 
+html { margin-top: 0 !important; padding-top: 0 !important; } /* Force AdSense margins to zero */
+
 body.gaming-theme {
     background-color: var(--bg-deep);
     color: white;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
     background: radial-gradient(circle at top, #0a1931 0%, #050a14 100%);
 }
 
@@ -26,12 +28,12 @@ body.gaming-theme {
     opacity: 0.1; pointer-events: none;
 }
 
-.app-wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100vh; }
+.app-wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
 
 /* Header & Nav */
 .main-nav {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 40px; background: rgba(0, 0, 0, 0.8);
+    padding: 10px 40px; background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-glass);
     z-index: 10;
 }
@@ -77,7 +79,7 @@ body.gaming-theme {
 .exit-btn:hover { background: #fff; color: #000; }
 
 /* Stadium Layout */
-.stadium-layout { display: flex; flex: 1; overflow: hidden; }
+.stadium-layout { display: flex; flex: 1; }
 
 .pitch-container {
     flex: 2.5; padding: 20px; display: flex; flex-direction: column;
@@ -250,31 +252,31 @@ body.gaming-theme {
 
 /* --- Mobile Optimization --- */
 @media (max-width: 1024px) {
-    .stadium-layout { flex-direction: column; overflow-y: auto; }
-    .pitch-container { flex: none; width: 100%; padding: 10px; min-height: 600px; }
+    .stadium-layout { flex-direction: column; }
+    .pitch-container { flex: none; width: 100%; padding: 5px 10px; justify-content: flex-start; }
     .transfer-market { flex: none; width: 100%; border-left: none; border-top: 2px solid var(--border-glass); padding: 20px; }
     body.gaming-theme { height: auto; overflow-y: auto; }
-    .app-wrapper { height: auto; }
+    .app-wrapper { height: auto; min-height: 100vh; }
 }
 
 @media (max-width: 768px) {
-    .main-nav { padding: 10px; flex-direction: column; gap: 8px; }
-    .logo-area { gap: 10px; }
+    .main-nav { padding: 8px 12px; flex-direction: column; gap: 8px; border-bottom: none; }
+    .logo-area { gap: 10px; width: 100%; justify-content: center; }
     .glitch-text { font-size: 1.3rem; }
     .logo-area .icon { font-size: 1.5rem; }
     .tagline { font-size: 0.55rem; }
 
-    .top-controls { width: 100%; flex-direction: column; gap: 8px; }
+    .top-controls { width: 100%; flex-direction: column; gap: 6px; align-items: center; }
     .formation-selector { align-items: center; width: 100%; }
-    .action-btns { width: 100%; justify-content: center; gap: 5px; }
-    .action-btns button, .action-btns a { flex: 1; min-width: 0; padding: 8px 2px; font-size: 0.65rem; }
+    .action-btns { width: 100%; justify-content: center; gap: 5px; margin-top: 2px; }
+    .action-btns button, .action-btns a { flex: 1; min-width: 0; padding: 8px 2px; font-size: 0.65rem; height: 36px; }
     
-    .ad-container { margin: 5px auto; min-height: 0; }
-    .pitch-container { padding-top: 5px; }
+    .ad-container { margin: 2px auto; min-height: 0; }
+    .pitch-container { padding-top: 0; }
 
-    .pitch { height: 480px; border-radius: 12px; }
+    .pitch { height: 480px; border-radius: 12px; margin-top: 0; }
     .player-slot { width: 65px; height: 95px; }
-    .formation-row { gap: 5px; }
+    .formation-row { gap: 6px; }
     
     .coach-advice-panel { margin-top: 10px; padding: 10px; gap: 10px; }
     .coach-header { border-right: none; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; min-width: 100%; }
@@ -283,6 +285,11 @@ body.gaming-theme {
 @media (max-width: 480px) {
     .pitch { height: 420px; }
     .player-slot { width: 55px; height: 80px; }
+    .formation-row { gap: 4px; }
     .stock-card .name { font-size: 0.6rem; }
     .card-header, .card-footer { padding: 3px 5px; }
+    .pos-label { font-size: 0.65rem; }
 }
+
+/* Fix for potential AdSense auto-spacing */
+iframe[name^="google_ads_iframe"] { margin-top: 0 !important; margin-bottom: 0 !important; }
