@@ -2,112 +2,161 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나만의 반려동물 찾기 | 나에게 어울리는 강아지 고양이 추천 테스트</title>
-    <meta name="description" content="라이프스타일과 성향 질문을 통해 당신에게 가장 잘 어울리는 반려동물 품종을 추천해 드립니다. 나만의 완벽한 파트너를 찾아보세요.">
-    <meta property="og:title" content="나만의 반려동물 찾기">
-    <meta property="og:description" content="당신의 성향에 딱 맞는 반려동물은? 지금 바로 테스트해보세요!">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STOCK SQUAD | 전략적 주식 드림팀</title>
+    <!-- Cache busting with version query -->
+    <link rel="stylesheet" href="style.css?v=1.4">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Google AdSense -->
     <meta name="google-adsense-account" content="ca-pub-7722735349463695">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7722735349463695"
      crossorigin="anonymous"></script>
 </head>
-<body>
-    <div class="container">
-        <header class="main-header">
-            <h1 onclick="location.reload()" style="cursor:pointer">🐾 Pet Match</h1>
+<body class="gaming-theme">
+    <div class="overlay"></div>
+    <div class="app-wrapper">
+        <header class="main-nav">
+            <div class="logo-area">
+                <span class="icon">🏆</span>
+                <div class="logo-text">
+                    <h1 class="glitch-text" data-text="STOCK SQUAD">STOCK SQUAD</h1>
+                    <span class="tagline">MANAGEMENT & ANALYSIS</span>
+                </div>
+            </div>
+            <div class="top-controls">
+                <div class="strategy-badge" id="current-strategy">분석 중</div>
+                <div class="formation-selector">
+                    <label>FORMATION</label>
+                    <select id="formation-select">
+                        <option value="4-4-2">4-4-2</option>
+                        <option value="4-3-3" selected>4-3-3</option>
+                        <option value="3-5-2">3-5-2</option>
+                        <option value="4-2-3-1">4-2-3-1</option>
+                        <option value="3-4-3">3-4-3</option>
+                        <option value="5-3-2">5-3-2</option>
+                        <option value="5-4-1">5-4-1</option>
+                    </select>
+                </div>
+                <div class="action-btns">
+                    <button id="save-btn" class="save-btn" title="스쿼드 저장">SAVE</button>
+                    <button id="load-btn" class="load-btn" title="스쿼드 불러오기">LOAD</button>
+                    <button id="share-btn" class="share-btn" title="친구에게 공유">SHARE</button>
+                    <a href="index.html" class="exit-btn">RESET</a>
+                </div>
+            </div>
         </header>
 
-        <!-- Home Screen -->
-        <section id="home" class="card">
-            <h2 class="title">🐶 나에게 딱 맞는 <br>반려동물은 누구일까요? 🐱</h2>
-            <p class="subtitle">몇 가지 질문을 통해 당신의 성향과 라이프스타일에 <br>가장 잘 어울리는 강아지와 고양이를 추천해 드립니다.</p>
-            <button class="main-btn" onclick="startQuiz()">테스트 시작하기</button>
-        </section>
-
-        <!-- About Section (Content Enhancement) -->
-        <section id="about" class="card">
-            <h3 class="section-title">서비스 소개</h3>
-            <p class="desc-text">
-                반려동물을 가족으로 맞이하는 것은 매우 중요한 결정입니다. 'Pet Match'는 활동량, 주거 환경, 독립성 선호도 등 사용자의 라이프스타일을 분석하여 가장 조화로운 생활을 할 수 있는 품종을 제안합니다. <br><br>
-                단순한 흥미 위주의 테스트를 넘어, 반려동물과 반려인 모두가 행복할 수 있는 최적의 매칭을 돕는 것이 우리의 목표입니다.
-            </p>
-        </section>
-
-        <!-- Quiz Screen -->
-        <section id="quiz" class="card" style="display: none;">
-            <div class="progress-container">
-                <div id="progress" class="progress-bar"></div>
-            </div>
-            <div id="quiz-container">
-                <!-- Questions will be injected here -->
-            </div>
-        </section>
-
-        <!-- Results Screen -->
-        <section id="results" class="card" style="display: none;">
-            <h2 class="result-title">✨ 당신을 위한 최고의 파트너 ✨</h2>
-            <div class="result-grid">
-                <div id="dog-result" class="result-item"></div>
-                <div id="cat-result" class="result-item"></div>
-            </div>
-            <button class="retry-btn" onclick="restartQuiz()">다시 테스트하기</button>
-        </section>
-
-        <!-- Inquiry Screen -->
-        <section id="inquiry" class="card" style="display: none;">
-            <h2 class="title">🤝 제휴 및 협업 문의</h2>
-            <p class="subtitle">함께 성장할 파트너를 기다립니다. <br>내용을 남겨주시면 담당자가 연락드리겠습니다.</p>
-            
-            <form action="https://formspree.io/f/xvznpbvk" method="POST" class="inquiry-form">
-                <div class="form-group">
-                    <label for="name">성함/담당자명</label>
-                    <input type="text" id="name" name="name" required placeholder="홍길동">
+        <main class="stadium-layout">
+            <div class="pitch-container">
+                <!-- Top Ad Slot -->
+                <div class="ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-7722735349463695"
+                         data-ad-slot="auto"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
                 </div>
-                <div class="form-group">
-                    <label for="email">이메일 주소</label>
-                    <input type="email" id="email" name="_replyto" required placeholder="example@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="company">회사명/단체명</label>
-                    <input type="text" id="company" name="company" placeholder="회사명 (선택)">
-                </div>
-                <div class="form-group">
-                    <label for="message">문의 내용</label>
-                    <textarea id="message" name="message" required placeholder="문의하실 내용을 입력해주세요." rows="5"></textarea>
-                </div>
-                <button type="submit" class="main-btn">문의 보내기</button>
-            </form>
-            <button class="back-btn" onclick="goHome()">뒤로 가기</button>
-        </section>
 
-        <!-- Comments Section -->
-        <section class="card comment-section">
-            <h3 class="section-title">댓글 및 의견</h3>
-            <div id="disqus_thread"></div>
-            <script>
-                (function() { // DON'T EDIT BELOW THIS LINE
-                var d = document, s = d.createElement('script');
-                s.src = 'https://hobintestproduct.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-                })();
-            </script>
-            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        </section>
-
-        <footer class="main-footer">
-            <p>&copy; 2024 Pet Match. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="privacy.html">개인정보처리방침</a> | 
-                <a href="terms.html">이용약관</a> | 
-                <a href="#" onclick="showInquiry(); return false;">제휴 문의</a> |
-                <a href="stock-squad/index.html" style="color:var(--primary-color); font-weight:bold;">📈 주식 스쿼드 메이커</a>
+                <div class="pitch">
+                    <div id="squad-field" class="players-overlay">
+                        <!-- Player cards will be rendered here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="coach-advice-panel">
+                    <div class="coach-header">
+                        <span class="coach-icon">👨‍🏫</span>
+                        <h3>COACH ADVICE</h3>
+                    </div>
+                    <div id="coach-message" class="coach-content">
+                        포트폴리오를 분석 중입니다. 선수를 영입해 주세요!
+                    </div>
+                    <div id="recommendation-area" class="rec-list">
+                        <!-- Recommendations will appear here -->
+                    </div>
+                </div>
             </div>
-        </footer>
+
+            <aside class="transfer-market">
+                <div class="market-header">
+                    <h2>TRANSFER MARKET</h2>
+                    <div class="search-input-wrapper">
+                        <input type="text" id="market-search" placeholder="종목명 또는 티커 검색...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                </div>
+                
+                <div id="market-list" class="stock-grid">
+                    <!-- Stock items will appear here -->
+                </div>
+
+                <div class="my-roster-section">
+                    <h3>MY ROSTER (영입 목록)</h3>
+                    <div id="my-roster-list" class="roster-grid">
+                        <!-- My picked stocks will appear here -->
+                    </div>
+                </div>
+
+                <div class="squad-stats">
+                    <h3>SQUAD PERFORMANCE</h3>
+                    
+                    <div class="total-score-container">
+                        <label>SQUAD OVERALL (OVR)</label>
+                        <span id="squad-ovr" class="ovr-value">0</span>
+                    </div>
+
+                    <div class="stat-bars">
+                        <div class="stat-item">
+                            <label>공격력 (레버리지/성장성)</label>
+                            <div class="bar-bg"><div id="stat-atk" class="bar-fill" style="width: 0%"></div></div>
+                        </div>
+                        <div class="stat-item">
+                            <label>조직력 (안정성)</label>
+                            <div class="bar-bg"><div id="stat-link" class="bar-fill" style="width: 0%"></div></div>
+                        </div>
+                        <div class="stat-item">
+                            <label>수비력 (배당/현금흐름)</label>
+                            <div class="bar-bg"><div id="stat-def" class="bar-fill" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="squad-summary-grid">
+                        <div class="summary-item">
+                            <label>AVG BETA</label>
+                            <span id="avg-beta">0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <label>AVG YIELD</label>
+                            <span id="avg-yield">0.0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Ad Slot in Sidebar -->
+                <div class="ad-container" style="margin-top:20px;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-7722735349463695"
+                         data-ad-slot="auto"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
+                </div>
+            </aside>
+        </main>
     </div>
 
-    <script src="main.js"></script>
+    <!-- Player Selection Modal -->
+    <div id="selection-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">영입 가능한 선수 목록</h3>
+            <div id="modal-market-list" class="stock-grid" style="max-height: 60vh; overflow-y: auto; margin-top: 15px;"></div>
+            <button class="close-modal">닫기</button>
+        </div>
+    </div>
+
+    <script src="main.js?v=1.4"></script>
 </body>
 </html>
