@@ -186,7 +186,8 @@ body.gaming-theme {
 }
 .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
 
-.stock-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.stock-grid { display: flex; flex-direction: column; gap: 8px; }
+.stock-grid:empty { display: none; }
 
 .market-item {
     background: var(--card-glass); padding: 12px 15px; border-radius: 8px;
@@ -196,7 +197,7 @@ body.gaming-theme {
 .market-item:hover { background: rgba(255,255,255,0.08); border-left-color: var(--primary-neon); }
 
 /* My Roster */
-.my-roster-section { margin-top: 10px; padding-top: 20px; border-top: 1px solid var(--border-glass); }
+.my-roster-section { margin-top: 0; padding-top: 10px; border-top: 1px solid var(--border-glass); }
 .roster-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 
 .roster-item {
