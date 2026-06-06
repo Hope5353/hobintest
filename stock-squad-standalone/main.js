@@ -161,7 +161,11 @@ class SquadManager {
 
     renderMarketList(data, containerId = 'market-list') {
         const list = document.getElementById(containerId);
-        if (!data || data.length === 0) return;
+        if (!data) return;
+        if (data.length === 0) {
+            list.innerHTML = "";
+            return;
+        }
         list.innerHTML = data.map(stock => `
             <div class="market-item" onclick="window.squadApp.addToRoster('${stock.ticker}')">
                 <div class="item-info">
