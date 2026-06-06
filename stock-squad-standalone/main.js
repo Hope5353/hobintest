@@ -48,6 +48,8 @@ class SquadManager {
         });
 
         document.getElementById('share-btn').addEventListener('click', () => this.shareSquad());
+        document.getElementById('save-btn').addEventListener('click', () => this.saveSquadLocal());
+        document.getElementById('load-btn').addEventListener('click', () => this.loadSquadLocal());
 
         document.getElementById('market-search').addEventListener('input', (e) => {
             const rawQuery = e.target.value;
@@ -220,6 +222,54 @@ class SquadManager {
             }
         } catch (err) {
             console.error('Share failed:', err);
+        }
+    }
+
+    saveSquadLocal() {
+        const players = Object.entries(this.squad).map(([pos, stock]) => `${pos}:${stock.ticker}`).join(',');
+        if (!players) { alert("저장할 스쿼드가 없습니다! 선수를 배치해 주세요."); return; }
+        
+        const saveData = {
+            formation: this.formation,
+            squadStr: players,
+            date: new Date().toLocaleString()
+        };
+        
+        localStorage.setItem('myBestSquad', JSON.stringify(saveData));
+        alert("스쿼드가 브라우저에 저장되었습니다! (나의 베스트 11)");
+    }
+
+    async loadSquadLocal() {
+        const saved = localStorage.getItem('myBestSquad');
+        if (!saved) { alert("저장된 스쿼드가 없습니다. 먼저 스쿼드를 구성하고 SAVE 해주세요!"); return; }
+        
+        const data = JSON.parse(saved);
+        if (confirm(`저장된 스쿼드(${data.date})를 불러오시겠습니까? 현재 스쿼드는 사라집니다.`)) {
+            this.formation = data.formation;
+            document.getElementById('formation-select').value = data.formation;
+            
+            // Re-use logic from checkSharedSquad for parsing and loading
+            const statusMsg = document.createElement('div');
+            statusMsg.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.8); padding:20px; border-radius:10px; z-index:1000; color:var(--secondary-neon); border:1px solid var(--secondary-neon);';
+            statusMsg.innerHTML = '📂 저장된 스쿼드를 불러오는 중...';
+            document.body.appendChild(statusMsg);
+
+            this.squad = {}; // Clear current squad
+            const playerPairs = data.squadStr.split(',');
+            for (const pair of playerPairs) {
+                const [pos, ticker] = pair.split(':');
+                if (pos && ticker) {
+                    const stock = await this.loadStockByTicker(ticker);
+                    if (stock) {
+                        if (!this.myRoster.some(s => s.ticker === ticker)) this.myRoster.push(stock);
+                        this.squad[pos] = stock;
+                    }
+                }
+            }
+            this.renderField();
+            this.renderRoster();
+            this.updateStats();
+            statusMsg.remove();
         }
     }
 

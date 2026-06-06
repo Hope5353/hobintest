@@ -63,15 +63,28 @@ body.gaming-theme {
     text-decoration: none; font-weight: bold; font-size: 0.75rem; border-radius: 4px;
 }
 
+.save-btn {
+    padding: 6px 15px; background: var(--secondary-neon); color: #000;
+    border: none; font-weight: 800; font-size: 0.75rem; border-radius: 4px;
+    cursor: pointer; margin-right: -10px;
+}
+
+.load-btn {
+    padding: 6px 15px; background: #bf5af2; color: #fff;
+    border: none; font-weight: 800; font-size: 0.75rem; border-radius: 4px;
+    cursor: pointer; margin-right: -10px;
+}
+
 .share-btn {
     padding: 6px 15px; background: var(--primary-neon); color: #000;
     border: none; font-weight: 800; font-size: 0.75rem; border-radius: 4px;
-    cursor: pointer; margin-right: -10px; /* Adjusting gap with EXIT */
+    cursor: pointer; margin-right: -10px;
 }
 
-.share-btn:hover {
+.share-btn:hover, .save-btn:hover, .load-btn:hover {
     background: #fff;
-    box-shadow: 0 0 15px var(--primary-neon);
+    color: #000;
+    box-shadow: 0 0 15px currentColor;
 }
 
 /* Stadium Layout */
