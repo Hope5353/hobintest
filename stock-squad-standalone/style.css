@@ -284,6 +284,21 @@ body.gaming-theme {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 10px; }
 
+/* Footer */
+.app-footer {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px 40px;
+    border-top: 1px solid var(--border-glass);
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.footer-links { margin-bottom: 10px; display: flex; justify-content: center; gap: 20px; }
+.footer-links a { color: #fff; text-decoration: none; font-weight: bold; }
+.footer-links a:hover { color: var(--primary-neon); }
+.copyright { opacity: 0.8; line-height: 1.5; }
+
 /* --- Mobile Optimization --- */
 @media (max-width: 1024px) {
     .stadium-layout { flex-direction: column; overflow-y: auto; }
