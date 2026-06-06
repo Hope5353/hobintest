@@ -307,3 +307,38 @@ body.gaming-theme {
 .down { color: var(--secondary-neon); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 10px; }
+
+/* Responsive Mobile Optimization */
+@media (max-width: 768px) {
+    body.gaming-theme { overflow-y: auto; height: auto; }
+    .app-wrapper { height: auto; }
+    
+    .main-nav { padding: 10px 15px; flex-direction: column; gap: 10px; }
+    .logo-area .icon { font-size: 1.5rem; }
+    .glitch-text { font-size: 1.4rem; }
+    .top-controls { width: 100%; justify-content: space-between; }
+
+    .stadium-layout { flex-direction: column; overflow: visible; }
+    
+    .pitch-container { padding: 10px; min-height: 500px; }
+    .pitch { height: 450px; }
+    
+    .player-slot { width: 65px; height: 90px; }
+    .stock-card .name { font-size: 0.65rem; }
+    .stock-card .ticker-sub { font-size: 0.45rem; }
+    .pos-label { font-size: 0.6rem; }
+    .card-header, .card-footer { padding: 3px 5px; }
+
+    .coach-advice-panel { flex-direction: column; text-align: center; gap: 10px; margin-top: 10px; }
+    .coach-header { border-right: none; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; min-width: 100%; }
+
+    .transfer-market { border-left: none; border-top: 2px solid var(--border-glass); padding: 15px; }
+    .market-grid { max-height: 400px; }
+}
+
+@media (max-width: 480px) {
+    .pitch { height: 400px; }
+    .player-slot { width: 55px; height: 80px; }
+    .stock-card .name { font-size: 0.55rem; }
+    .formation-row { gap: 5px; }
+}
