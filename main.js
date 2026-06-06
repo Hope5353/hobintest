@@ -51,6 +51,13 @@ class SquadManager {
         document.getElementById('share-btn').addEventListener('click', () => this.shareSquad());
         document.getElementById('save-btn').addEventListener('click', () => this.saveSquadLocal());
         document.getElementById('load-btn').addEventListener('click', () => this.loadSquadLocal());
+        document.getElementById('guide-btn').addEventListener('click', () => {
+            document.getElementById('guide-modal').style.display = 'flex';
+        });
+
+        document.querySelector('.close-guide').addEventListener('click', () => {
+            document.getElementById('guide-modal').style.display = 'none';
+        });
 
         document.getElementById('market-search').addEventListener('input', (e) => {
             const rawQuery = e.target.value;
@@ -434,13 +441,57 @@ class SquadManager {
                     slot.innerHTML = this.createCardHTML(this.squad[posKey]);
                     slot.onclick = () => this.removeStock(posKey);
                 } else {
-                    slot.innerHTML = `<div class="plus-icon">+</div><span class="pos-tag">${this.getDisplayPos(role, i, count)}</span>`;
-                    slot.onclick = () => alert(`${role} 포지션입니다. 하단 영입 목록에서 선택해 배치하세요!`);
+                    const displayPos = this.getDisplayPos(role, i, count);
+                    slot.innerHTML = `<div class="plus-icon">+</div><span class="pos-tag">${displayPos}</span>`;
+                    slot.onclick = () => this.openSelectionModal(role, posKey);
                 }
                 rowDiv.appendChild(slot);
             }
             field.appendChild(rowDiv);
         });
+    }
+
+    openSelectionModal(role, posKey) {
+        const modal = document.getElementById('selection-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalList = document.getElementById('modal-market-list');
+        
+        modalTitle.innerText = `${role} 포지션 추천 종목`;
+        
+        const recs = LOCAL_TOP_STOCKS.filter(s => s.mainPos === role);
+        
+        modalList.innerHTML = recs.map(stock => `
+            <div class="market-item" onclick="window.squadApp.directAssign('${stock.ticker}', '${posKey}')">
+                <div class="item-info">
+                    <span class="m-name">${stock.country} ${stock.name}</span>
+                    <span class="m-ticker">${stock.ticker} [${stock.subPos}]</span>
+                </div>
+                <div class="item-stats"><span class="m-price">+ 바로배치</span></div>
+            </div>
+        `).join('');
+        
+        modal.style.display = 'flex';
+    }
+
+    directAssign(ticker, posKey) {
+        let stock = LOCAL_TOP_STOCKS.find(s => s.ticker === ticker);
+        if (!stock) return;
+        
+        // Add to roster if not already there
+        if (!this.myRoster.some(s => s.ticker === ticker)) {
+            this.myRoster.push(stock);
+        }
+        
+        // Remove ticker from any other position first to prevent duplicates in squad
+        for (let key in this.squad) {
+            if (this.squad[key].ticker === ticker) delete this.squad[key];
+        }
+
+        this.squad[posKey] = stock;
+        document.getElementById('selection-modal').style.display = 'none';
+        this.renderField();
+        this.renderRoster();
+        this.updateStats();
     }
 
     getDisplayPos(role, i, total) {

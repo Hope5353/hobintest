@@ -75,8 +75,35 @@ body.gaming-theme {
 .load-btn { background: #bf5af2; color: #fff; }
 .exit-btn { background: #333; color: #fff; border: 1px solid #444; }
 
-.share-btn:hover, .save-btn:hover, .load-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px currentColor; }
+.guide-btn {
+    padding: 8px 15px; background: #fff; color: #000;
+    border: none; font-weight: 800; font-size: 0.75rem; border-radius: 4px;
+    cursor: pointer; margin-right: -10px;
+}
+
+.share-btn:hover, .save-btn:hover, .load-btn:hover, .guide-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px currentColor; }
 .exit-btn:hover { background: #fff; color: #000; }
+
+/* Guide Modal Specifics */
+.guide-content-wrapper { max-width: 600px !important; overflow-y: auto; max-height: 85vh; }
+.guide-content-wrapper h2 { color: var(--primary-neon); margin-bottom: 20px; text-align: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; }
+.guide-section { margin-bottom: 25px; }
+.guide-section h3 { color: var(--secondary-neon); font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.guide-section ol { padding-left: 20px; color: #f8fafc; font-size: 0.85rem; line-height: 1.8; }
+.guide-section strong { color: var(--primary-neon); }
+
+.guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.guide-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border-left: 4px solid #555; }
+.guide-item .label { display: block; font-weight: 900; font-size: 0.75rem; margin-bottom: 5px; }
+.guide-item p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+
+.guide-item.fw { border-left-color: #ff4d4d; }
+.guide-item.mf { border-left-color: #00d4ff; }
+.guide-item.df { border-left-color: #00ff88; }
+.guide-item.gk { border-left-color: #bf5af2; }
+
+.close-guide { margin-top: 10px; width: 100%; padding: 12px; background: var(--primary-neon); color: black; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; transition: 0.2s; }
+.close-guide:hover { background: #fff; transform: scale(1.02); }
 
 /* Stadium Layout */
 .stadium-layout { display: flex; flex: 1; min-height: 0; }
