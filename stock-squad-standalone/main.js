@@ -179,6 +179,11 @@ class SquadManager {
         if (!stock) stock = this.mapYahooQuote({ symbol: ticker, shortname: ticker });
         if (this.myRoster.some(s => s.ticker === ticker)) { alert("이미 영입된 종목입니다!"); return; }
         this.myRoster.push(stock);
+        
+        // Clear search input and results after adding to roster
+        document.getElementById('market-search').value = "";
+        this.renderMarketList([]); 
+
         this.renderRoster();
     }
 
