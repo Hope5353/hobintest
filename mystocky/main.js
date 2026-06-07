@@ -46,9 +46,12 @@ class Stocky {
         wrapper.innerHTML = `
             <div class="stocky-bubble">뉴스 소식을 기다리는 중...</div>
             <div class="stocky-character-container">
-                <div class="stock-badge">${this.icon}</div>
                 <div class="stocky-body species-${this.species} ${moodClass}" style="background-color: ${this.color}">
-                    <div class="stocky-eyes">
+                    <div class="stocky-ears">
+                        <div class="ear"></div>
+                        <div class="ear"></div>
+                    </div>
+                    <div class="stocky-eyes-container">
                         <div class="stocky-eye"></div>
                         <div class="stocky-eye"></div>
                     </div>
@@ -227,7 +230,11 @@ class MyStockyVillage {
         container.innerHTML = this.candidates.map((c, idx) => `
             <div class="candidate-item ${idx === 0 ? 'selected' : ''}" onclick="window.game.selectCandidate(${idx}, this)">
                 <div class="stocky-body species-${c.species}" style="background-color: ${c.color}; width: 50px; height: 55px; border-width: 3px;">
-                    <div class="stocky-eyes" style="top: 15px; padding: 0 10px;">
+                    <div class="stocky-ears">
+                        <div class="ear" style="border-width: 3px;"></div>
+                        <div class="ear" style="border-width: 3px;"></div>
+                    </div>
+                    <div class="stocky-eyes-container" style="top: 15px; padding: 0 10px;">
                         <div class="stocky-eye" style="width: 5px; height: 5px;"></div>
                         <div class="stocky-eye" style="width: 5px; height: 5px;"></div>
                     </div>
