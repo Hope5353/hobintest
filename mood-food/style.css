@@ -1,12 +1,12 @@
 :root {
-    --bg-main: #fff5f5;
-    --primary: #ff6b6b;
-    --secondary: #ffa8a8;
-    --text: #2d3436;
+    --bg-main: #fff0f3;
+    --primary: #ff4d6d;
+    --secondary: #ff85a1;
+    --text: #3d348b;
     --white: #ffffff;
     --baemin: #2ac1bc;
     --coupang: #00aaff;
-    --shadow: 0 10px 30px rgba(255, 107, 107, 0.1);
+    --shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
 }
 
 * {
@@ -16,8 +16,12 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+h1, .step-title, .food-name, .label {
+    font-family: 'Jua', sans-serif;
+}
+
 body {
-    background-color: #f8f9fa;
+    background-color: #fceef5;
     color: var(--text);
     overflow-x: hidden;
 }
