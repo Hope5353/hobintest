@@ -139,10 +139,24 @@ class Stocky {
     }
 }
 
+const LOCAL_TOP_STOCKS = [
+    { name: "삼성전자", ticker: "005930.KS", country: "🇰🇷", type: "주식" },
+    { name: "SK하이닉스", ticker: "000660.KS", country: "🇰🇷", type: "주식" },
+    { name: "현대차", ticker: "005380.KS", country: "🇰🇷", type: "주식" },
+    { name: "기아", ticker: "000270.KS", country: "🇰🇷", type: "주식" },
+    { name: "엔비디아", ticker: "NVDA", country: "🇺🇸", type: "주식" },
+    { name: "테슬라", ticker: "TSLA", country: "🇺🇸", type: "주식" },
+    { name: "애플", ticker: "AAPL", country: "🇺🇸", type: "주식" },
+    { name: "마이크로소프트", ticker: "MSFT", country: "🇺🇸", type: "주식" },
+    { name: "비트코인 ETF", ticker: "IBIT", country: "🇺🇸", type: "ETF" },
+    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", type: "ETF" }
+];
+
 class MyStockyVillage {
     constructor() {
         this.stockies = [];
         this.clovers = [];
+        this.searchTimeout = null;
         this.villageEl = document.getElementById('village');
         this.init();
     }
@@ -160,38 +174,79 @@ class MyStockyVillage {
         document.querySelectorAll('.close-modal').forEach(btn => {
             btn.onclick = () => { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); };
         });
+        
         const searchInput = document.getElementById('market-search');
         searchInput.oninput = (e) => {
-            const query = e.target.value.trim();
-            if (query.length < 2) return;
-            this.searchGlobal(query);
+            const rawQuery = e.target.value.trim();
+            clearTimeout(this.searchTimeout);
+            
+            if (rawQuery === "") {
+                this.renderSearchResults([]);
+                return;
+            }
+
+            // 1. Instant Local Filter
+            const query = rawQuery.toLowerCase();
+            const localResults = LOCAL_TOP_STOCKS.filter(s => 
+                s.name.toLowerCase().includes(query) || s.ticker.toLowerCase().includes(query)
+            );
+            this.renderSearchResults(localResults);
+
+            // 2. Debounced Global Search
+            this.searchTimeout = setTimeout(() => this.searchGlobal(rawQuery, localResults), 400);
         };
+        
         document.getElementById('btn-adopt-confirm').onclick = () => this.confirmAdoption();
     }
 
     toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
 
-    async searchGlobal(query) {
+    async searchGlobal(query, localResults) {
         try {
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=10`;
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=15&enableFuzzyQuery=true`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
+            
             if (data.quotes) {
-                const results = data.quotes.filter(q => q.quoteType === "EQUITY")
-                    .map(q => ({ name: q.shortname || q.longname || q.symbol, ticker: q.symbol, country: q.exchange && q.exchange.includes("KS") ? "🇰🇷" : "🇺🇸" }));
-                this.renderSearchResults(results);
+                const globalResults = data.quotes
+                    .filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF")
+                    .map(q => ({
+                        name: q.shortname || q.longname || q.symbol,
+                        ticker: q.symbol,
+                        country: q.exchange && (q.exchange.includes("KS") || q.exchange.includes("KOE")) ? "🇰🇷" : "🇺🇸",
+                        type: q.quoteType === "EQUITY" ? "주식" : "ETF"
+                    }));
+                
+                const seen = new Set(localResults.map(s => s.ticker));
+                const combined = [...localResults];
+                globalResults.forEach(s => {
+                    if (!seen.has(s.ticker)) {
+                        combined.push(s);
+                        seen.add(s.ticker);
+                    }
+                });
+                this.renderSearchResults(combined);
             }
-        } catch (e) { console.error("Search failed"); }
+        } catch (e) {
+            console.error("Search failed", e);
+        }
     }
 
     renderSearchResults(results) {
         const list = document.getElementById('market-list');
+        if (results.length === 0) {
+            list.innerHTML = '<p style="padding:20px; text-align:center; color:#888;">검색 결과가 없어요 😢</p>';
+            return;
+        }
         list.innerHTML = results.map(q => `
             <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
-                <div style="text-align: left;"><strong>${q.country} ${q.name}</strong><div>${q.ticker}</div></div>
-                <span class="adopt-badge">영입</span>
+                <div style="text-align: left;">
+                    <strong style="display:block; font-size:1rem;">${q.country || ""} ${q.name}</strong>
+                    <div style="font-size:0.8rem; color:#666;">${q.ticker} | ${q.type}</div>
+                </div>
+                <span class="adopt-badge">입양</span>
             </div>
         `).join('');
     }
