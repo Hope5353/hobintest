@@ -178,40 +178,79 @@ class MyStockyVillage {
         document.querySelectorAll('.close-modal').forEach(btn => {
             btn.onclick = () => { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); };
         });
+
         const searchInput = document.getElementById('market-search');
         searchInput.oninput = (e) => {
             const query = e.target.value.trim();
-            if (query.length < 2) return;
-            this.searchGlobal(query);
+            clearTimeout(this.searchTimeout);
+            if (query.length === 0) {
+                document.getElementById('market-list').innerHTML = '';
+                return;
+            }
+            this.searchTimeout = setTimeout(() => this.searchGlobal(query), 400);
         };
+        
+        const searchTrigger = document.getElementById('btn-search-trigger');
+        if (searchTrigger) {
+            searchTrigger.onclick = () => {
+                const query = searchInput.value.trim();
+                if (query) this.searchGlobal(query);
+            };
+        }
+
         document.getElementById('btn-adopt-confirm').onclick = () => this.confirmAdoption();
     }
 
     toggleModal(id, show) {
         const m = document.getElementById(id);
         if (m) m.style.display = show ? 'flex' : 'none';
+        if (show && id === 'market-modal') {
+            const input = document.getElementById('market-search');
+            if (input) input.focus();
+        }
     }
 
     async searchGlobal(query) {
+        const list = document.getElementById('market-list');
+        list.innerHTML = '<p style="padding:20px; text-align:center; color: #ff7675;">🔍 주식 정보를 물어오는 중...</p>';
+        
         try {
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=10`;
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=15&enableFuzzyQuery=true`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
-            if (data.quotes) {
-                const results = data.quotes.filter(q => q.quoteType === "EQUITY")
-                    .map(q => ({ name: q.shortname || q.longname || q.symbol, ticker: q.symbol, country: q.exchange && q.exchange.includes("KS") ? "🇰🇷" : "🇺🇸" }));
+            
+            if (data.quotes && data.quotes.length > 0) {
+                const results = data.quotes.filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF")
+                    .map(q => ({
+                        name: q.shortname || q.longname || q.symbol,
+                        ticker: q.symbol,
+                        country: q.exchange && (q.exchange.includes("KS") || q.exchange.includes("KOE")) ? "🇰🇷" : "🇺🇸",
+                        type: q.quoteType === "EQUITY" ? "주식" : "ETF"
+                    }));
                 this.renderSearchResults(results);
+            } else {
+                list.innerHTML = '<p style="padding:20px; text-align:center;">결과가 없어요 😢 다른 이름으로 검색해 보세요!</p>';
             }
-        } catch (e) { console.error("Search failed"); }
+        } catch (e) {
+            console.error("Search failed", e);
+            list.innerHTML = '<p style="padding:20px; text-align:center; color: #ff7675;">앗! 정보를 가져오지 못했어요. 잠시 후 다시 시도해 주세요.</p>';
+        }
     }
 
     renderSearchResults(results) {
         const list = document.getElementById('market-list');
+        if (results.length === 0) {
+            list.innerHTML = '<p style="padding:20px; text-align:center;">주식을 찾지 못했어요 😢</p>';
+            return;
+        }
         list.innerHTML = results.map(q => `
             <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
-                <div style="text-align: left;"><strong>${q.country} ${q.name}</strong><div style="font-size:0.75rem; color:#888;">${q.ticker}</div></div>
+                <div style="text-align: left;">
+                    <strong style="font-size:1rem; display:block;">${q.country} ${q.name}</strong>
+                    <div style="font-size:0.75rem; color:#666;">${q.ticker} | ${q.type}</div>
+                </div>
                 <span class="adopt-badge">입양</span>
             </div>
         `).join('');
