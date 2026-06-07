@@ -161,29 +161,51 @@ class MyStockyVillage {
         if (!query) return;
 
         const list = document.getElementById('market-list');
-        list.innerHTML = '<p style="padding:20px; color: #888;">주식 찾는 중...</p>';
+        list.innerHTML = '<div class="loading-spinner-container"><p style="padding:20px; color: var(--primary-color);">🔍 스토키 찾는 중...</p></div>';
 
         try {
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}`;
+            // Updated URL to include more quotes and fuzzy query
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=20&enableFuzzyQuery=true`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
             
-            if (data.quotes) {
-                const equities = data.quotes.filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF");
-                list.innerHTML = equities.map(q => `
-                    <div class="search-item" onclick="window.game.prepareAdoption('${q.symbol}', '${q.shortname || q.longname}')">
-                        <div>
-                            <strong>${q.shortname || q.longname}</strong>
-                            <div class="ticker">${q.symbol} (${q.exchange})</div>
+            if (data.quotes && data.quotes.length > 0) {
+                // More inclusive filtering (EQUITY, ETF, INDEX, etc.)
+                const results = data.quotes.filter(q => 
+                    q.quoteType === "EQUITY" || 
+                    q.quoteType === "ETF" || 
+                    q.quoteType === "INDEX" || 
+                    q.quoteType === "CURRENCY"
+                );
+
+                if (results.length === 0) {
+                    list.innerHTML = '<p style="padding:20px; color:#888;">일치하는 종목을 찾지 못했어요 😢</p>';
+                    return;
+                }
+
+                list.innerHTML = results.map(q => {
+                    const name = q.shortname || q.longname || q.symbol;
+                    const exchange = q.exchDisp || q.exchange || "Market";
+                    const type = q.quoteType === "EQUITY" ? "주식" : (q.quoteType === "ETF" ? "ETF" : "지수");
+                    
+                    return `
+                        <div class="search-item" onclick="window.game.prepareAdoption('${q.symbol}', '${name.replace(/'/g, "\\'")}')">
+                            <div style="flex: 1;">
+                                <strong style="display:block; margin-bottom: 2px;">${name}</strong>
+                                <div class="ticker">${q.symbol} | ${exchange} | ${type}</div>
+                            </div>
+                            <span class="adopt-badge">➕ 영입</span>
                         </div>
-                        <span>➕ 영입</span>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
+            } else {
+                list.innerHTML = '<p style="padding:20px; color:#888;">일치하는 종목을 찾지 못했어요 😢</p>';
             }
         } catch (e) {
-            list.innerHTML = '<p style="color:red;">검색에 실패했습니다.</p>';
+            console.error("Search failed", e);
+            list.innerHTML = '<p style="color:var(--accent-red); padding:20px;">검색 중 오류가 발생했습니다. 다시 시도해 주세요.</p>';
         }
     }
 
