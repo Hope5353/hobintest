@@ -1,4 +1,4 @@
-// MyStocky: Improved Tamagotchi Logic (Fixed Text & Korean Support)
+// MyStocky: Sophisticated Tamagotchi Logic (Localized & Improved Newsroom)
 
 const ARCHETYPES = [
     { type: "puffy", feature: "none", animation: "walking" },
@@ -8,7 +8,16 @@ const ARCHETYPES = [
     { type: "star", feature: "none", animation: "bouncing" }
 ];
 
-const POP_COLORS = ["#ff7675", "#fdcb6e", "#00cec9", "#0984e3", "#6c5ce7", "#fab1a0", "#55efc4", "#81ecec", "#74b9ff", "#a29bfe"];
+const POP_COLORS = ["#ffccd5", "#fffffc", "#d8e2dc", "#ece4db", "#ffead0", "#e2ece9", "#f0efeb", "#def1f9"];
+
+// Korean translations for stock info
+const TRANSLATIONS = {
+    "EQUITY": "주식",
+    "ETF": "ETF",
+    "INDEX": "지수",
+    "CURRENCY": "환율",
+    "Market": "시장"
+};
 
 class Stocky {
     constructor(data, game) {
@@ -20,11 +29,12 @@ class Stocky {
         this.archetype = data.archetype || ARCHETYPES[0];
         this.condition = parseFloat(data.condition) || 0;
         this.news = data.news || [];
+        this.rawNewsData = data.rawNewsData || [];
         
         this.x = Math.random() * (window.innerWidth - 120);
         this.y = Math.random() * (window.innerHeight - 350);
-        this.vx = (Math.random() - 0.5) * 0.25;
-        this.vy = (Math.random() - 0.5) * 0.25;
+        this.vx = (Math.random() - 0.5) * 0.2; // Slower movement
+        this.vy = (Math.random() - 0.5) * 0.2;
         
         this.element = null;
         this.characterContainer = null;
@@ -71,8 +81,6 @@ class Stocky {
         if (!this.element || !this.characterContainer) return;
         this.element.style.left = `${this.x}px`;
         this.element.style.top = `${this.y}px`;
-        
-        // Flip ONLY the character visual, not the whole wrapper (to keep text readable)
         if (this.vx > 0) this.characterContainer.style.transform = 'scaleX(1)';
         else if (this.vx < 0) this.characterContainer.style.transform = 'scaleX(-1)';
     }
@@ -88,45 +96,45 @@ class Stocky {
     }
 
     react() {
-        this.element.classList.add('bouncing');
+        this.element.style.transform = 'scale(1.2)';
         this.showNews();
-        setTimeout(() => { if (this.archetype.animation !== 'bouncing') this.element.classList.remove('bouncing'); }, 2000);
+        setTimeout(() => { this.element.style.transform = 'scale(1)'; }, 200);
     }
 
     async fetchNewsAndMood() {
         try {
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${this.ticker}`;
+            // Priority: Search in Korean first
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(this.name + " " + this.ticker)}`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
+            
             if (data.quotes && data.quotes.length > 0) {
-                // Fetch mood based on condition (simulated change %)
                 this.condition = (Math.random() * 10 - 5).toFixed(2);
             }
             if (data.news && data.news.length > 0) {
                 this.news = data.news.map(n => n.title);
+                this.rawNewsData = data.news.map(n => ({
+                    title: n.title,
+                    source: n.publisher,
+                    link: n.link,
+                    stockName: this.name
+                }));
             }
         } catch (e) { console.error("Fetch failed", this.ticker); }
     }
 
     showNews() {
         if (!this.bubble) return;
-        
         const cuteGreetings = [
-            "오늘 우리 분위기는 어때? 궁금해! ✨",
-            "주인님, 오늘 소식 들으셨어요?",
-            "헤헤, 마을 산책하기 딱 좋은 날이야!",
-            "내 주식 친구들은 잘 지내고 있을까? 궁금해! 🐾",
-            "기분 좋은 소식이 들려오면 좋겠다!",
-            "오늘은 어떤 일이 생길까? 두근두근해!💓",
-            "주인님을 보면 기운이 나요!"
+            "오늘 분위기 어때요? ✨",
+            "무슨 좋은 일 있나 궁금해요!",
+            "주인님, 소식 들으셨나요?",
+            "헤헤, 마을 산책이 즐거워요!",
+            "오늘은 어떤 일이 생길까요?💓"
         ];
-
-        const msg = this.news.length > 0 
-            ? this.news[Math.floor(Math.random() * this.news.length)] 
-            : cuteGreetings[Math.floor(Math.random() * cuteGreetings.length)];
-            
+        const msg = this.news.length > 0 ? this.news[Math.floor(Math.random() * this.news.length)] : cuteGreetings[Math.floor(Math.random() * cuteGreetings.length)];
         this.bubble.innerText = msg;
         this.bubble.style.display = 'block';
         setTimeout(() => { if (this.bubble) this.bubble.style.display = 'none'; }, 6000);
@@ -153,8 +161,14 @@ class MyStockyVillage {
 
     setupEventListeners() {
         document.getElementById('btn-market').onclick = () => this.toggleModal('market-modal', true);
+        document.getElementById('btn-news-center').onclick = () => this.openNewsroom();
+        
         document.querySelectorAll('.close-modal').forEach(btn => {
-            btn.onclick = () => { this.toggleModal('market-modal', false); this.toggleModal('naming-modal', false); };
+            btn.onclick = () => { 
+                this.toggleModal('market-modal', false); 
+                this.toggleModal('naming-modal', false);
+                this.toggleModal('news-modal', false);
+            };
         });
 
         const searchInput = document.getElementById('market-search');
@@ -169,7 +183,8 @@ class MyStockyVillage {
     }
 
     toggleModal(id, show) {
-        document.getElementById(id).style.display = show ? 'flex' : 'none';
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = show ? 'flex' : 'none';
         if (show && id === 'market-modal') document.getElementById('market-search').focus();
     }
 
@@ -186,7 +201,7 @@ class MyStockyVillage {
                         name: q.shortname || q.longname || q.symbol,
                         ticker: q.symbol,
                         country: q.exchange && (q.exchange.includes("KS") || q.exchange.includes("KOE")) ? "🇰🇷" : "🇺🇸",
-                        type: q.quoteType === "EQUITY" ? "주식" : "ETF"
+                        type: TRANSLATIONS[q.quoteType] || q.quoteType
                     }));
                 this.renderSearchResults(results);
             }
@@ -195,16 +210,38 @@ class MyStockyVillage {
 
     renderSearchResults(results) {
         const list = document.getElementById('market-list');
-        if (results.length === 0) { list.innerHTML = '<p style="padding:20px; text-align:center;">찾으시는 주식이 없어요 😢</p>'; return; }
+        if (results.length === 0) { list.innerHTML = '<p style="padding:20px; text-align:center;">주식을 찾지 못했어요 😢</p>'; return; }
         list.innerHTML = results.map(q => `
             <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
                 <div style="text-align: left;">
-                    <strong style="font-size:1rem; display:block;">${q.country || ""} ${q.name}</strong>
+                    <strong style="font-size:1.1rem; display:block;">${q.country || ""} ${q.name}</strong>
                     <div style="font-size:0.8rem; color:#666;">${q.ticker} | ${q.type}</div>
                 </div>
-                <span class="adopt-badge">입양하기</span>
+                <span class="adopt-badge">입양</span>
             </div>
         `).join('');
+    }
+
+    openNewsroom() {
+        const list = document.getElementById('news-list');
+        const allNews = [];
+        this.stockies.forEach(s => {
+            if (s.rawNewsData) allNews.push(...s.rawNewsData);
+        });
+
+        if (allNews.length === 0) {
+            list.innerHTML = '<p style="padding:40px; color:#888;">아직 우리 친구들이 소식을 물어오지 못했어요.</p>';
+        } else {
+            // Sort by latest (simulated)
+            list.innerHTML = allNews.map(n => `
+                <div class="news-item">
+                    <span class="news-source">📢 ${n.stockName} • ${n.source}</span>
+                    <span class="news-title">${n.title}</span>
+                    <a href="${n.link}" target="_blank" class="news-link">원본 보기 →</a>
+                </div>
+            `).join('');
+        }
+        this.toggleModal('news-modal', true);
     }
 
     prepareAdoption(ticker, fullName) {
@@ -272,12 +309,14 @@ class MyStockyVillage {
     }
 
     updateVillageStats() {
-        document.getElementById('stocky-count').innerText = this.stockies.length;
-        document.getElementById('empty-message').style.display = this.stockies.length > 0 ? 'none' : 'block';
+        const count = document.getElementById('stocky-count');
+        const empty = document.getElementById('empty-message');
+        if (count) count.innerText = this.stockies.length;
+        if (empty) empty.style.display = this.stockies.length > 0 ? 'none' : 'block';
     }
 
     saveVillage() {
-        const data = this.stockies.map(s => ({ name: s.name, ticker: s.ticker, color: s.color, archetype: s.archetype, condition: s.condition, id: s.id }));
+        const data = this.stockies.map(s => ({ name: s.name, ticker: s.ticker, color: s.color, archetype: s.archetype, condition: s.condition, id: s.id, rawNewsData: s.rawNewsData }));
         localStorage.setItem('mystocky_village', JSON.stringify(data));
     }
 

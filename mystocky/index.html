@@ -32,15 +32,23 @@
                 <span class="icon">🗞️</span>
                 <span class="label">뉴스룸</span>
             </button>
-            <button class="action-btn" id="btn-stats">
-                <span class="icon">📊</span>
-                <span class="label">마을통계</span>
-            </button>
             <button class="action-btn secondary" id="btn-save">
                 <span class="icon">💾</span>
                 <span class="label">마을저장</span>
             </button>
         </nav>
+
+        <!-- Newsroom Modal -->
+        <div id="news-modal" class="modal">
+            <div class="modal-content" style="max-width: 450px;">
+                <h3>🗞️ 스토키 뉴스룸</h3>
+                <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">우리 마을 친구들의 최신 소식이에요!</p>
+                <div id="news-list" class="news-results">
+                    <!-- News items will be injected here -->
+                </div>
+                <button class="close-modal">닫기</button>
+            </div>
+        </div>
 
         <!-- Market Modal (Search) -->
         <div id="market-modal" class="modal">
