@@ -1,27 +1,30 @@
-// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (YouTube Mukbang Fix)
+// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (Functional Link Version)
 
 const FOOD_DATABASE = [
-    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08", r: "빌런들에게 뺏긴 기를 매운맛으로 복수!", s: "엽기떡볶이", tags: ["stress", "spicy"] },
-    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1", r: "탈탈 털린 체력, 고기로 기름칠!", s: "삼겹살", tags: ["exhausted", "meat"] },
-    { n: "전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933", r: "너덜해진 위장을 달래주는 따뜻한 위로.", s: "전복죽", tags: ["tired", "mild"] },
-    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1626644496439-af0a4ad2d995", r: "무사히 인계를 마친 나를 위한 셀프 선물.", s: "BHC 뿌링클", tags: ["reward", "fried"] },
-    { n: "마라탕 & 꿔바로우", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619", r: "얼얼한 마라맛으로 복잡한 생각 싹 잊기!", s: "마라탕", tags: ["stress", "spicy"] },
-    { n: "모듬 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c", r: "깔끔하고 고급스럽게 기분 전환!", s: "초밥", tags: ["stable", "light"] },
-    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43", r: "으슬으슬한 몸을 데워주는 뜨끈한 국물.", s: "쌀국수", tags: ["exhausted", "warm"] },
-    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd", r: "육즙 팡팡! 든든하게 채우는 행복.", s: "수제버거", tags: ["hungry", "heavy"] },
-    { n: "바삭 등심 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211", r: "바삭바삭 소리에 우울함도 다 깨질 거야.", s: "돈까스", tags: ["stable", "crispy"] },
-    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947", r: "진한 국물에 소주 한 잔, 오늘 스트레스 안녕.", s: "곱창전골", tags: ["stress", "heavy"] },
-    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3", r: "열 오르는 기분을 시원하게 식혀주는 당 충전.", s: "망고빙수", tags: ["angry", "cold"] },
-    { n: "직화 보쌈", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1", r: "담백한 고기로 내일 에너지를 미리 충전!", s: "보쌈", tags: ["meat", "heavy"] }
+    { n: "엽기떡볶이", r: "빌런들에게 뺏긴 기를 매운맛으로 복수!", s: "엽기떡볶이", tags: ["stress", "spicy"] },
+    { n: "삼겹살 구이", r: "탈탈 털린 체력, 고기로 기름칠!", s: "삼겹살", tags: ["exhausted", "meat"] },
+    { n: "전복죽", r: "너덜해진 위장을 달래주는 따뜻한 위로.", s: "전복죽", tags: ["tired", "mild"] },
+    { n: "뿌링클 치킨", r: "무사히 인계를 마친 나를 위한 셀프 선물.", s: "BHC 뿌링클", tags: ["reward", "fried"] },
+    { n: "마라탕 & 꿔바로우", r: "얼얼한 마라맛으로 복잡한 생각 싹 잊기!", s: "마라탕", tags: ["stress", "spicy"] },
+    { n: "모듬 초밥", r: "깔끔하고 고급스럽게 기분 전환!", s: "초밥", tags: ["stable", "light"] },
+    { n: "소고기 쌀국수", r: "으슬으슬한 몸을 데워주는 뜨끈한 국물.", s: "쌀국수", tags: ["exhausted", "warm"] },
+    { n: "수제 치즈버거", r: "육즙 팡팡! 든든하게 채우는 행복.", s: "수제버거", tags: ["hungry", "heavy"] },
+    { n: "바삭 등심 돈카츠", r: "바삭바삭 소리에 우울함도 다 깨질 거야.", s: "돈까스", tags: ["stable", "crispy"] },
+    { n: "곱창 전골", r: "진한 국물에 소주 한 잔, 오늘 스트레스 안녕.", s: "곱창전골", tags: ["stress", "heavy"] },
+    { n: "망고 빙수", r: "열 오르는 기분을 시원하게 식혀주는 당 충전.", s: "망고빙수", tags: ["angry", "cold"] },
+    { n: "직화 보쌈", r: "담백한 고기로 내일 에너지를 미리 충전!", s: "보쌈", tags: ["meat", "heavy"] },
+    { n: "닭갈비", r: "철판 위에서 볶아지는 매콤한 스트레스 해소!", s: "닭갈비", tags: ["stress", "spicy"] },
+    { n: "로제 찜닭", r: "부드럽고 매콤한 로제의 유혹.", s: "로제찜닭", tags: ["reward", "heavy"] },
+    { n: "부대찌개", r: "햄 가득, 든든한 국물로 에너지 충전!", s: "부대찌개", tags: ["hungry", "warm"] }
 ];
 
-const EXTRA_FOODS = ["치즈 닭갈비", "로제 찜닭", "부대찌개", "김치찜", "냉모밀", "마제소바", "텐동", "나시고랭", "팟타이", "푸팟퐁커리", "타코", "라자냐", "에그인헬", "감바스", "뇨끼", "리조또", "휘낭시에", "크로플", "젤라또", "티라미수", "그릭요거트", "반미", "분짜", "탄두리치킨", "인도커리", "샥슈카", "파에야", "봉골레", "라구파스타", "잠봉뵈르", "지코바", "허니콤보", "고추바사삭", "가마로강정", "신전떡볶이", "청년다방", "응급실떡볶이", "배떡", "직화오돌뼈", "닭발", "염통꼬치", "순대", "튀김범벅", "물어묵", "매운오뎅", "붕어빵", "호떡", "소떡소떡", "멘보샤", "크림새우", "유린기", "깐풍기", "양장피", "마파두부", "짬뽕", "볶음밥", "딤섬", "고구마맛탕", "츄러스", "소르베", "말차빙수", "앙버터", "바게트", "소금빵", "도넛", "핫도그", "칠리독", "콘독", "어니언링", "해물파전", "김치전", "육전", "편육", "제육볶음", "오징어소면", "낙지볶음", "장어덮밥", "스테이크덮밥", "우츠동", "가츠동", "에비동", "카레라이스", "오므라이스", "새우볶음밥", "잡채밥", "비빔냉면", "회냉면", "콩국수", "비빔국수", "잔치국수", "수제비", "칼국수", "모듬만두", "갈비탕", "곰탕", "설렁탕", "순대국", "내장탕", "뼈해장국", "감자탕", "추어탕", "육개장", "미역국", "소고기무국", "콩나물국밥", "선지국밥", "해장국", "닭개장", "삼계탕", "찜닭", "안동찜닭", "간장치킨", "양념치킨", "마늘치킨", "또봉이", "시장통닭", "오리주물럭", "훈제오리", "불고기", "갈비찜", "돼지갈비", "소갈비", "등갈비", "폭립", "치즈돈까스", "고구마돈까스", "차돌박이", "우삼겹", "대창", "막창", "곱창", "특양", "대창덮밥", "연어장덮밥", "간장새우장", "양념게장", "꼬막비빔밥", "물회", "조개구이", "방어회", "광어회", "우럭회", "도미회", "참치회", "육사시미", "산낙지", "낙곱새", "쭈꾸미볶음", "꼼장어", "장어구이"];
-EXTRA_FOODS.forEach(name => {
-    FOOD_DATABASE.push({ n: name, i: `https://loremflickr.com/800/600/${encodeURIComponent(name)},food`, r: `오늘 당신의 컨디션에 딱 맞는 ${name}! 기분을 전환해 줄 거예요.`, s: name, tags: ["mild", "hungry"] });
+const EXTRA_NAMES = ["김치찜", "냉모밀", "마제소바", "텐동", "나시고랭", "팟타이", "푸팟퐁커리", "타코", "라자냐", "에그인헬", "감바스", "뇨끼", "리조또", "휘낭시에", "크로플", "젤라또", "티라미수", "그릭요거트", "반미", "분짜", "탄두리치킨", "인도커리", "샥슈카", "파에야", "봉골레", "라구파스타", "잠봉뵈르", "지코바", "허니콤보", "고추바사삭", "가마로강정", "신전떡볶이", "청년다방", "응급실떡볶이", "배떡", "직화오돌뼈", "닭발", "염통꼬치", "순대", "튀김범벅", "물어묵", "매운오뎅", "붕어빵", "호떡", "소떡소떡", "멘보샤", "크림새우", "유린기", "깐풍기", "양장피", "마파두부", "짬뽕", "볶음밥", "딤섬", "고구마맛탕", "츄러스", "소르베", "말차빙수", "앙버터", "바게트", "소금빵", "도넛", "핫도그", "칠리독", "콘독", "어니언링", "해물파전", "김치전", "육전", "편육", "제육볶음", "오징어소면", "낙지볶음", "장어덮밥", "스테이크덮밥", "우츠동", "가츠동", "에비동", "카레라이스", "오므라이스", "새우볶음밥", "잡채밥", "비빔냉면", "회냉면", "콩국수", "비빔국수", "잔치국수", "수제비", "칼국수", "모듬만두", "갈비탕", "곰탕", "설렁탕", "순대국", "내장탕", "뼈해장국", "감자탕", "추어탕", "육개장", "미역국", "소고기무국", "콩나물국밥", "선지국밥", "해장국", "닭개장", "삼계탕", "찜닭", "안동찜닭", "간장치킨", "양념치킨", "마늘치킨", "또봉이", "시장통닭", "오리주물럭", "훈제오리", "불고기", "갈비찜", "돼지갈비", "소갈비", "등갈비", "폭립", "치즈돈까스", "고구마돈까스", "차돌박이", "우삼겹", "대창", "막창", "곱창", "특양", "대창덮밥", "연어장덮밥", "간장새우장", "양념게장", "꼬막비빔밥", "물회", "조개구이", "방어회", "광어회", "우럭회", "도미회", "참치회", "육사시미", "산낙지", "낙곱새", "쭈꾸미볶음", "꼼장어", "장어구이"];
+EXTRA_NAMES.forEach(name => {
+    FOOD_DATABASE.push({ n: name, r: `오늘 당신의 컨디션에 딱 맞는 ${name}! 기분을 전환해 줄 거예요.`, s: name, tags: ["mild", "hungry"] });
 });
 
 const SUMMARIES = [
-    "오늘 빌런 보호자 때문에 멘탈이 바스러진 당신, 강력한 수혈이 시급해요 😭",
+    "빌런 보호자 때문에 멘탈이 바스러진 오늘, 강력한 수혈이 시급해요 😭",
     "스테이션에서 탈탈 털린 오늘... 든든한 고기 수혈로 기력을 보충해야 해요.",
     "오늘은 모든 게 스테이블! 평화로운 기분을 이어갈 깔끔한 한 끼 어때요?",
     "상처받은 마음에 위로가 필요한 시간, 따뜻하고 부드러운 음식이 딱이에요.",
@@ -70,7 +73,7 @@ const BRANCHES = {
             { t: "인계하고 설명하느라 목이 다 쉼", s: "warm" },
             { t: "차팅 쏟아져서 눈 침침, 손목 아픔", s: "mild" },
             { t: "신경 썼더니 뒷목 당기고 머리 아파", s: "spicy" },
-            { t: "그냥 숨 쉬는 것도 귀찮은 무기력", s: "heavy" }
+            { t: "그냥 전체적으로 기절 직전이야", s: "heavy" }
         ]},
         { text: "오늘 인계할 때 어땠어?", options: [
             { t: "깔끔하게 털고 나왔어! 칼퇴!", s: "stable" },
@@ -114,10 +117,12 @@ const BRANCHES = {
             { t: "이브닝(Evening)", s: "energy" },
             { t: "나이트(Night)", s: "heavy" }
         ]},
-        { text: "출근 전 지금 기분은?", options: [
-            { t: "가기 싫어서 눈물 나", s: "reward" },
-            { t: "무사 스테이블하길 기도 중", s: "stable" },
-            { t: "아무 생각이 없다", s: "mild" }
+        { text: "출근 전 지금 컨디션은?", options: [
+            { t: "오늘 왠지 스테이블할 것 같아", s: "stable" },
+            { t: "벌써부터 다리가 후들거려", s: "meat" },
+            { t: "가기 싫어서 눈물 날 것 같아", s: "reward" },
+            { t: "카페인이 절실하게 필요해", s: "energy" },
+            { t: "그냥 아무 생각이 없다", s: "mild" }
         ]},
         { text: "가장 걱정되는 게 뭐야?", options: [
             { t: "IV 실패", s: "stress" },
@@ -203,62 +208,24 @@ class MoodFoodApp {
         const summaryIdx = (this.selectedTags.length * 7) % SUMMARIES.length;
         document.getElementById('status-summary-box').innerText = SUMMARIES[summaryIdx];
 
-        picks.forEach((food, idx) => {
-            const cardId = `food-card-${idx}`;
+        picks.forEach((food) => {
+            const ytLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(food.s + " 먹방")}`;
             const card = document.createElement('div');
             card.className = 'food-card';
-            card.id = cardId;
             card.innerHTML = `
-                <div class="food-img-area">
-                    <img src="${food.i}" alt="${food.n}" class="main-food-img">
-                    <div class="play-overlay">▶️</div>
-                    <div class="youtube-badge">Mukbang</div>
-                </div>
                 <div class="food-info">
                     <span class="food-name">${food.n}</span>
                     <p class="food-reason">💡 추천 이유: ${this.responses[2] || "지친 하루"} 상황이라 ${food.r}</p>
+                    <a href="${ytLink}" target="_blank" class="youtube-btn">🎥 유튜브에서 먹방 영상 보기</a>
                     <div class="order-btn-group">
-                        <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}', event)">배민</a>
-                        <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}', event)">쿠팡</a>
+                        <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}', event)">배민 주문</a>
+                        <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}', event)">쿠팡 주문</a>
                         <a href="#" class="mini-order-btn mini-kakao" onclick="window.game.sendToBF('${food.n}', event)">사줘!</a>
                     </div>
                 </div>
             `;
             container.appendChild(card);
-            this.updateMukbangThumbnail(food, cardId);
         });
-    }
-
-    async updateMukbangThumbnail(food, cardId) {
-        const card = document.getElementById(cardId);
-        const imgArea = card.querySelector('.food-img-area');
-        const img = card.querySelector('.main-food-img');
-        
-        try {
-            const query = encodeURIComponent(food.s + " 먹방");
-            const targetUrl = `https://www.youtube.com/results?search_query=${query}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-            const response = await fetch(proxyUrl);
-            const data = await response.json();
-            const contents = data.contents;
-            
-            // Refined regex to find videoId
-            const videoMatch = contents.match(/"videoId":"([^"]+)"/);
-            if (videoMatch) {
-                const videoId = videoMatch[1];
-                const thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-                img.src = thumbUrl;
-                
-                // Set link to video
-                imgArea.onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-            } else {
-                // Fallback to direct search link if ID extraction fails
-                imgArea.onclick = () => window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
-            }
-        } catch (e) {
-            console.error("YouTube fetch failed", e);
-            imgArea.onclick = () => window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(food.s + " 먹방")}`, '_blank');
-        }
     }
 
     goOrder(type, search, event) {

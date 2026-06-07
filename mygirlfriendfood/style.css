@@ -41,13 +41,6 @@ body {
 .header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 5px; }
 .header p { font-size: 0.85rem; color: #888; }
 
-.mode-switcher { position: absolute; top: 0; right: 0; z-index: 100; }
-.nurse-btn-link {
-    background: var(--white); border: 2px solid var(--primary); color: var(--primary);
-    padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; cursor: pointer;
-}
-.nurse-btn-link.active { background: var(--primary); color: #fff; }
-
 .hidden { display: none !important; }
 
 /* Progress Bar */
@@ -68,32 +61,45 @@ body {
 .answer-btn { width: 100%; padding: 16px; background: #fff8f9; border: 2px solid #ffeff1; border-radius: 15px; font-size: 0.95rem; font-weight: 700; color: var(--text); cursor: pointer; transition: 0.2s; text-align: center; }
 .answer-btn:active { background: var(--primary); color: #fff; transform: scale(0.98); }
 
-/* Result Area */
+/* Result Area (No Image Version) */
 .status-summary-box {
     background: var(--white); border: 2.5px solid var(--primary); border-radius: 20px;
     padding: 18px; text-align: center; font-size: 0.95rem; font-weight: 800;
     line-height: 1.5; color: var(--text); margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(255, 77, 109, 0.1);
 }
 
-.results-container { display: flex; flex-direction: column; gap: 20px; }
-.food-card { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.results-container { display: flex; flex-direction: column; gap: 15px; }
 
-.food-img-area { width: 100%; height: 200px; background: #000; position: relative; cursor: pointer; }
-.food-img-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: opacity 0.3s; }
-.food-img-area:hover img { opacity: 1; }
-.play-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: #fff; text-shadow: 0 0 20px rgba(0,0,0,0.5); pointer-events: none; }
-.youtube-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(255,0,0,0.9); color: #fff; padding: 3px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 900; }
+.food-card {
+    background: var(--white);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    text-align: center;
+    animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-.food-info { padding: 18px; text-align: center; }
-.food-name { font-size: 1.4rem; color: var(--primary); margin-bottom: 8px; display: block; }
-.food-reason { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 15px; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-.order-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.mini-order-btn { padding: 15px 5px; border-radius: 12px; text-decoration: none; color: #fff; font-weight: 800; font-size: 0.9rem; text-align: center; display: flex; align-items: center; justify-content: center; }
+.food-name { font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; display: block; }
+.food-reason { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 20px; }
+
+.youtube-btn {
+    width: 100%; padding: 12px; background: var(--youtube); color: #fff;
+    border-radius: 12px; text-decoration: none; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 12px; font-size: 0.9rem;
+}
+
+.order-btn-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.mini-order-btn { 
+    padding: 12px 5px; border-radius: 12px; text-decoration: none; 
+    color: #fff; font-weight: 800; font-size: 0.8rem; text-align: center; 
+    display: flex; align-items: center; justify-content: center;
+}
 .mini-baemin { background-color: var(--baemin); }
 .mini-coupang { background-color: var(--coupang); }
+.mini-kakao { background-color: var(--kakao); color: #3c1e1e; }
 
 .reset-btn { width: 100%; padding: 20px; background: none; border: none; color: #aaa; font-weight: 700; cursor: pointer; margin-top: 15px; }
 .footer { margin-top: auto; padding: 30px 0; text-align: center; font-size: 0.75rem; color: #ccc; }
