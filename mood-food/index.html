@@ -3,68 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>가영아밥먹자 | 그녀를 위한 맛있는 솔루션</title>
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <title>가영아밥먹자 💝 | 섬세한 기분 분석 & 맛있는 메뉴</title>
+    <link rel="stylesheet" href="style.css?v=1.2">
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="mobile-only">
     <div class="app-wrapper">
         <header class="header">
             <h1>가영아밥먹자 💝</h1>
-            <p>가영이의 기분에 딱 맞는 메뉴를 골라줄게</p>
+            <p id="header-subtitle">가영이의 기분에 딱 맞는 메뉴를 골라줄게</p>
         </header>
 
         <main class="main-content">
-            <section id="mood-selection" class="step">
-                <div class="step-title">1. 기분 상태를 선택하세요</div>
-                <div class="mood-grid">
-                    <button class="mood-btn" data-mood="angry">
-                        <span class="emoji">😡</span>
-                        <span class="label">화가 났다</span>
-                    </button>
-                    <button class="mood-btn" data-mood="sad">
-                        <span class="emoji">😢</span>
-                        <span class="label">서운하다</span>
-                    </button>
-                    <button class="mood-btn" data-mood="tired">
-                        <span class="emoji">😴</span>
-                        <span class="label">지쳤다</span>
-                    </button>
-                    <button class="mood-btn" data-mood="happy">
-                        <span class="emoji">🥰</span>
-                        <span class="label">매우 행복</span>
-                    </button>
-                    <button class="mood-btn" data-mood="stress">
-                        <span class="emoji">🤯</span>
-                        <span class="label">스트레스</span>
-                    </button>
-                    <button class="mood-btn" data-mood="unknown">
-                        <span class="emoji">🤔</span>
-                        <span class="label">알 수 없음</span>
-                    </button>
+            <!-- Progress Bar -->
+            <div id="survey-progress-container" class="hidden">
+                <div class="progress-info">
+                    <span id="progress-text">질문 1 / 10</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill" style="width: 10%;"></div>
+                </div>
+            </div>
+
+            <!-- Start Screen -->
+            <section id="start-screen" class="step">
+                <div class="welcome-card">
+                    <span class="welcome-emoji">🍱</span>
+                    <h2>안녕 가영아!</h2>
+                    <p>오늘 기분이 어떤지 몇 가지만 물어볼게.<br>딱 맞는 음식을 추천해줄게!</p>
+                    <button id="btn-start-survey" class="start-btn">기분 분석 시작하기</button>
                 </div>
             </section>
 
+            <!-- Survey Section -->
+            <section id="survey-area" class="step hidden">
+                <div id="question-card" class="question-card">
+                    <h3 id="question-text">오늘 하루는 어땠어?</h3>
+                    <div id="answer-buttons" class="answer-grid">
+                        <!-- Buttons will be injected by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Result Section -->
             <section id="result-area" class="step hidden">
-                <div class="step-title">2. 맞춤 추천 음식</div>
+                <div class="step-title">가영이를 위한 오늘의 메뉴!</div>
                 <div id="food-card" class="food-card">
-                    <!-- Recommended food will be injected here -->
+                    <span class="food-emoji" id="res-emoji">🍰</span>
+                    <span class="food-name" id="res-name">음식 이름</span>
+                    <p class="food-reason" id="res-reason">추천 이유가 들어갑니다.</p>
                 </div>
                 
                 <div class="order-links">
-                    <a href="#" id="link-baemin" class="order-btn baemin">배달의민족에서 찾기</a>
-                    <a href="#" id="link-coupang" class="order-btn coupang">쿠팡이츠에서 찾기</a>
+                    <a href="#" id="link-baemin" class="order-btn baemin">배달의민족 앱으로 주문</a>
+                    <a href="#" id="link-coupang" class="order-btn coupang">쿠팡이츠 앱으로 주문</a>
                 </div>
                 
-                <button id="btn-reset" class="reset-btn">처음으로</button>
+                <button id="btn-reset" class="reset-btn">다시 분석하기</button>
             </section>
         </main>
 
         <footer class="footer">
-            <p>© 2026 MoodFood - 사랑받는 남친의 필수 앱</p>
+            <p>© 2026 가영아밥먹자 - 사랑을 담아 만든 코드</p>
         </footer>
     </div>
 
-    <script src="main.js"></script>
+    <script src="main.js?v=1.2"></script>
 </body>
 </html>
