@@ -225,14 +225,24 @@ class MoodFoodApp {
 
     sendToBF(foodName, event) {
         if(event) event.stopPropagation();
-        const msg = `자기야 나 오늘 근무 끝나고 너무 고생했어... 😭 분석해보니까 오늘 [${foodName}] 먹어야 한대! 나 이거 사주면 기분 싹 풀릴 것 같아 💝`;
+        
+        const bWebUrl = `https://www.baemin.com/search?keyword=${encodeURIComponent(foodName)}`;
+        const cWebUrl = `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(foodName)}`;
+        
+        // Refined Message with direct order links
+        const msg = `자기야 나 오늘 근무 끝나고 너무 고생했어... 😭 분석해보니까 오늘 [${foodName}] 먹어야 한대! 나 이거 사주면 기분 싹 풀릴 것 같아 💝\n\n🛵 배민에서 사주기: ${bWebUrl}\n\n🚀 쿠팡이츠에서 사주기: ${cWebUrl}`;
+        
         if (navigator.share) {
-            navigator.share({ title: '괜찮아, 밥먹자 🏥💝', text: msg, url: window.location.href }).catch(e => console.log('Share failed', e));
+            navigator.share({
+                title: '괜찮아, 밥먹자 🏥💝',
+                text: msg,
+                url: window.location.href
+            }).catch(e => console.log('Share failed', e));
         } else {
             const tempInput = document.createElement('textarea');
             tempInput.value = msg; document.body.appendChild(tempInput);
             tempInput.select(); document.execCommand('copy'); document.body.removeChild(tempInput);
-            alert("메시지가 복사되었습니다! 남자친구에게 카톡으로 보내주세요:\n\n" + msg);
+            alert("메시지와 주문 링크가 복사되었습니다! 남자친구에게 카톡으로 보내주세요:\n\n" + msg);
         }
     }
 
