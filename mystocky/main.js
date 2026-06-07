@@ -112,7 +112,21 @@ class Stocky {
 
     showNews() {
         if (!this.bubble) return;
-        const msg = this.news.length > 0 ? this.news[Math.floor(Math.random() * this.news.length)] : `${this.ticker} 관련 한국어 소식을 찾는 중이에요! ☁️`;
+        
+        const cuteGreetings = [
+            "오늘 우리 분위기는 어때? 궁금해! ✨",
+            "주인님, 오늘 소식 들으셨어요?",
+            "헤헤, 마을 산책하기 딱 좋은 날이야!",
+            "내 주식 친구들은 잘 지내고 있을까? 궁금해! 🐾",
+            "기분 좋은 소식이 들려오면 좋겠다!",
+            "오늘은 어떤 일이 생길까? 두근두근해!💓",
+            "주인님을 보면 기운이 나요!"
+        ];
+
+        const msg = this.news.length > 0 
+            ? this.news[Math.floor(Math.random() * this.news.length)] 
+            : cuteGreetings[Math.floor(Math.random() * cuteGreetings.length)];
+            
         this.bubble.innerText = msg;
         this.bubble.style.display = 'block';
         setTimeout(() => { if (this.bubble) this.bubble.style.display = 'none'; }, 6000);

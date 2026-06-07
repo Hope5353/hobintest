@@ -21,14 +21,34 @@ body {
 
 .app-container {
     width: 100%; max-width: 480px; height: 100%;
-    background: #a29bfe; 
+    /* Lush Forest Background */
+    background: #78e08f; 
     background-image: 
-        radial-gradient(#ffffff 15%, transparent 16%),
-        radial-gradient(#ffffff 15%, transparent 16%);
-    background-size: 60px 60px;
-    background-position: 0 0, 30px 30px;
+        radial-gradient(rgba(255,255,255,0.3) 10%, transparent 11%),
+        linear-gradient(180deg, #b8e994 0%, #78e08f 100%);
+    background-size: 40px 40px, 100% 100%;
     display: flex; flex-direction: column; position: relative;
+    box-shadow: 0 0 50px rgba(0,0,0,0.2);
 }
+
+/* Grass and Nature Textures */
+.game-view::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('https://www.transparenttextures.com/patterns/p6-dark.png');
+    opacity: 0.15; pointer-events: none;
+}
+
+.game-view::after {
+    content: '🍃'; position: absolute; bottom: 20px; right: 20px; font-size: 2rem; opacity: 0.2;
+}
+
+/* Header & Navigation Polish */
+.game-header {
+    padding: 15px 20px; background: rgba(255,255,255,0.9);
+    border-bottom: 5px solid var(--border-dark);
+    z-index: 100;
+}
+
 
 /* Header */
 .game-header {
