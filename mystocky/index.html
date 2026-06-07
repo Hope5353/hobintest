@@ -55,18 +55,23 @@
             </div>
         </div>
 
-        <!-- Naming Modal -->
+        <!-- Naming & Character Selection Modal -->
         <div id="naming-modal" class="modal">
             <div class="modal-content">
-                <h3 id="naming-title">이름 짓기</h3>
-                <div class="character-preview" id="naming-preview">
-                    <span id="naming-emoji" style="font-size: 4rem;">🥚</span>
+                <h3 id="naming-title">Stocky 입양하기</h3>
+                <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">마음에 드는 스토키를 선택해 주세요!</p>
+                
+                <div class="candidate-selector" id="candidate-container">
+                    <!-- 3 random candidates will be injected here -->
                 </div>
-                <p id="naming-ticker-info"></p>
+
+                <p id="naming-ticker-info" style="font-weight: bold; margin-top: 15px;"></p>
+                
                 <div class="naming-wrapper">
                     <input type="text" id="naming-input" placeholder="스토키의 이름을 지어주세요!">
                 </div>
-                <button id="btn-adopt-confirm" class="confirm-btn">입양하기</button>
+                
+                <button id="btn-adopt-confirm" class="confirm-btn">이 마을에 데려오기</button>
                 <button class="close-modal">취소</button>
             </div>
         </div>

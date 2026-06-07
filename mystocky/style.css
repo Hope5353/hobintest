@@ -73,7 +73,35 @@ body {
     border-radius: 20px;
 }
 
-/* Stocky Character Styling (Simplified & Enlarged) */
+/* Candidate Selection */
+.candidate-selector {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.candidate-item {
+    padding: 10px;
+    border: 3px solid transparent;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.85);
+}
+
+.candidate-item.selected {
+    border-color: var(--primary-color);
+    background: var(--secondary-color);
+    transform: scale(1);
+    box-shadow: var(--shadow);
+}
+
+/* Stocky Character Styling (Clean & Varied) */
 .stocky-wrapper {
     position: absolute;
     width: 100px;
@@ -95,12 +123,11 @@ body {
     align-items: flex-end;
 }
 
-/* Body: Simple Bean/Egg shape */
+/* Body Shapes (Species) */
 .stocky-body {
     width: 70px;
     height: 75px;
     background: var(--white);
-    border-radius: 30px 30px 25px 25px; /* Cuter bean shape */
     border: 4px solid #2d3436;
     display: flex;
     justify-content: center;
@@ -108,10 +135,32 @@ body {
     position: relative;
     box-shadow: inset -6px -6px 0 rgba(0,0,0,0.05);
     z-index: 2;
-    overflow: hidden;
+    transition: all 0.3s;
 }
 
-/* Simple Dot Eyes */
+.species-round { border-radius: 35px 35px 30px 30px; }
+.species-box { border-radius: 15px 15px 10px 10px; }
+.species-tall { width: 60px; height: 85px; border-radius: 30px 30px 20px 20px; }
+
+/* Stock Badge (Replacement for overlapping emoji) */
+.stock-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: white;
+    border: 2px solid #2d3436;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    z-index: 5;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+/* Face Detail */
 .stocky-eyes {
     position: absolute;
     top: 22px;
@@ -128,13 +177,34 @@ body {
     border-radius: 50%;
 }
 
-/* Mouth/Icon: Larger and centered */
-.stocky-emoji-face {
-    font-size: 2rem;
-    margin-top: 15px;
+.stocky-blush {
+    position: absolute;
+    top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 10px;
+    opacity: 0.4;
 }
 
-/* Simple Feet */
+.blush {
+    width: 12px;
+    height: 6px;
+    background: #ff7675;
+    border-radius: 50%;
+}
+
+/* Mouth */
+.stocky-mouth {
+    position: absolute;
+    top: 32px;
+    width: 10px;
+    height: 5px;
+    border-bottom: 2px solid #2d3436;
+    border-radius: 0 0 5px 5px;
+}
+
+/* Feet */
 .stocky-feet {
     position: absolute;
     bottom: -4px;
@@ -151,6 +221,7 @@ body {
     background: #2d3436;
     border-radius: 6px;
 }
+
 
 /* Flipped direction */
 .facing-left { transform: scaleX(-1); }
