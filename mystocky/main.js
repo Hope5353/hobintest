@@ -39,17 +39,27 @@ class Stocky {
 
     render() {
         const wrapper = document.createElement('div');
-        wrapper.className = 'stocky-wrapper floating';
+        wrapper.className = 'stocky-wrapper walking';
         wrapper.id = `stocky-${this.id}`;
         
         const moodClass = this.condition > 3 ? 'mood-great' : (this.condition > 0 ? 'mood-happy' : (this.condition < 0 ? 'mood-sad' : ''));
         
         wrapper.innerHTML = `
-            <div class="stocky-bubble">주가 소식을 기다리는 중...</div>
-            <div class="stocky-body ${moodClass}" style="background-color: ${this.color}">
-                ${this.icon}
+            <div class="stocky-bubble">뉴스 소식을 기다리는 중...</div>
+            <div class="stocky-character-container">
+                <div class="stocky-body ${moodClass}" style="background-color: ${this.color}">
+                    <div class="stocky-eyes">
+                        <div class="stocky-eye"></div>
+                        <div class="stocky-eye"></div>
+                    </div>
+                    <div class="stocky-emoji-face">${this.icon}</div>
+                </div>
+                <div class="stocky-feet">
+                    <div class="stocky-foot left"></div>
+                    <div class="stocky-foot right"></div>
+                </div>
             </div>
-            <div class="stocky-name-tag">${this.name} (${this.ticker})</div>
+            <div class="stocky-name-tag">${this.name}</div>
         `;
         
         wrapper.onclick = (e) => {
@@ -67,6 +77,13 @@ class Stocky {
         if (!this.element) return;
         this.element.style.left = `${this.x}px`;
         this.element.style.top = `${this.y}px`;
+        
+        // Flip character based on X direction
+        if (this.vx > 0) {
+            this.element.classList.remove('facing-left');
+        } else if (this.vx < 0) {
+            this.element.classList.add('facing-left');
+        }
     }
 
     move(bounds) {
