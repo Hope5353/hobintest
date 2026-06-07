@@ -1,70 +1,34 @@
-// MyStocky: High-End Pet Village Engine
+// MyStocky: High-End Pet Village Engine with Lucky Clover & Study Systems
 
-// Asset Engine: Generates 30+ unique combinations of Dog/Cat breeds
 class PetGenerator {
-    static getSpecies() {
-        return [
-            { type: 'dog', ears: ['floppy', 'pointy', 'folded'], tails: ['stubby', 'curled'] },
-            { type: 'cat', ears: ['pointy', 'small'], tails: ['long', 'stubby'] }
-        ];
-    }
-
     static generateCandidate() {
-        const speciesPool = this.getSpecies();
-        const spec = speciesPool[Math.floor(Math.random() * speciesPool.length)];
-        const colors = ["#f5ebe0", "#e3d5ca", "#d5bdaf", "#edede9", "#d6ccc2", "#f5f5f5", "#ccb7ae", "#8d99ae"];
-        const patterns = ["solid", "patch", "tuxedo", "siamese"];
-        
+        const types = ['dog', 'cat'];
+        const colors = ["#ffccd5", "#fffffc", "#d8e2dc", "#ece4db", "#ffead0", "#e2ece9", "#f0efeb", "#def1f9", "#ff9ff3", "#feca57"];
         return {
-            species: spec.type,
-            earType: spec.ears[Math.floor(Math.random() * spec.ears.length)],
-            tailType: spec.tails[Math.floor(Math.random() * spec.tails.length)],
+            type: types[Math.floor(Math.random() * types.length)],
             color: colors[Math.floor(Math.random() * colors.length)],
-            pattern: patterns[Math.floor(Math.random() * patterns.length)],
-            accentColor: "#3d405b"
+            earStyle: Math.random() > 0.5 ? 'floppy' : 'pointy'
         };
     }
 
-    static getSVG(design) {
-        const { species, earType, tailType, color, pattern, accentColor } = design;
-        
-        // Dynamic Ear SVG components
-        let earsSVG = '';
-        if (earType === 'pointy') {
-            earsSVG = `<path d="M15,25 L25,5 L35,25 Z" fill="${color}" stroke="${accentColor}" stroke-width="3"/>
-                       <path d="M65,25 L75,5 L85,25 Z" fill="${color}" stroke="${accentColor}" stroke-width="3"/>`;
-        } else if (earType === 'floppy') {
-            earsSVG = `<path d="M10,25 Q5,25 5,45 Q15,55 25,40 L25,25 Z" fill="${color}" stroke="${accentColor}" stroke-width="3"/>
-                       <path d="M90,25 Q95,25 95,45 Q85,55 75,40 L75,25 Z" fill="${color}" stroke="${accentColor}" stroke-width="3"/>`;
-        } else { // folded/small
-            earsSVG = `<circle cx="25" cy="25" r="12" fill="${color}" stroke="${accentColor}" stroke-width="3"/>
-                       <circle cx="75" cy="25" r="12" fill="${color}" stroke="${accentColor}" stroke-width="3"/>`;
-        }
-
-        // Body with Pattern logic
-        let bodyOverlay = '';
-        if (pattern === 'patch') bodyOverlay = `<circle cx="30" cy="50" r="15" fill="rgba(0,0,0,0.1)"/>`;
-        if (pattern === 'siamese') bodyOverlay = `<ellipse cx="50" cy="55" rx="15" ry="10" fill="rgba(0,0,0,0.2)"/>`;
-
+    static getHTML(design) {
+        const earClass = design.type === 'dog' ? 'ear-dog-floppy' : 'ear-cat-pointy';
         return `
-            <svg viewBox="0 0 100 100" class="pet-svg">
-                <!-- Tail -->
-                <path d="M80,75 Q95,75 90,60" fill="none" stroke="${accentColor}" stroke-width="5" stroke-linecap="round"/>
-                <!-- Ears -->
-                ${earsSVG}
-                <!-- Body -->
-                <rect x="20" y="30" width="60" height="60" rx="25" fill="${color}" stroke="${accentColor}" stroke-width="4"/>
-                ${bodyOverlay}
-                <!-- Face -->
-                <circle cx="40" cy="55" r="3" fill="${accentColor}"/>
-                <circle cx="60" cy="55" r="3" fill="${accentColor}"/>
-                <path d="M48,65 Q50,68 52,65" fill="none" stroke="${accentColor}" stroke-width="2" stroke-linecap="round"/>
-                <!-- Whiskers for Cats -->
-                ${species === 'cat' ? `
-                    <line x1="15" y1="60" x2="30" y2="60" stroke="${accentColor}" stroke-width="1"/>
-                    <line x1="70" y1="60" x2="85" y2="60" stroke="${accentColor}" stroke-width="1"/>
-                ` : ''}
-            </svg>
+            <div class="pet-body" style="background-color: ${design.color}">
+                <div class="pet-ear ${earClass} left"></div>
+                <div class="pet-ear ${earClass} right"></div>
+                <div class="pet-face">
+                    <div class="pet-eyes">
+                        <div class="pet-eye"></div>
+                        <div class="pet-eye"></div>
+                    </div>
+                    <div class="pet-blush">
+                        <div class="blush-dot"></div>
+                        <div class="blush-dot"></div>
+                    </div>
+                    <div class="pet-mouth"></div>
+                </div>
+            </div>
         `;
     }
 }
@@ -76,16 +40,18 @@ class Stocky {
         this.name = data.name;
         this.ticker = data.ticker;
         this.design = data.design || PetGenerator.generateCandidate();
-        this.condition = parseFloat(data.condition) || 0;
-        this.news = data.news || [];
+        this.lucky = data.lucky || 0;
+        this.intel = data.intel || 0;
+        this.condition = 0;
+        this.news = [];
         
-        this.x = Math.random() * (window.innerWidth - 120);
-        this.y = 150 + Math.random() * (window.innerHeight - 450);
-        this.vx = (Math.random() - 0.5) * 0.15; // Slow movement
+        this.x = Math.random() * (window.innerWidth - 100);
+        this.y = 180 + Math.random() * (window.innerHeight - 450);
+        this.vx = (Math.random() - 0.5) * 0.15;
         this.vy = (Math.random() - 0.5) * 0.15;
         
         this.element = null;
-        this.bubble = null;
+        this.statsBubble = null;
         this.render();
     }
 
@@ -93,125 +59,117 @@ class Stocky {
         const wrapper = document.createElement('div');
         wrapper.className = 'stocky-wrapper walking';
         wrapper.id = `stocky-${this.id}`;
-        
         wrapper.innerHTML = `
-            <div class="stocky-bubble">🐾</div>
-            <div class="pet-svg-container">
-                ${PetGenerator.getSVG(this.design)}
+            <div class="stocky-stats-bubble">
+                <div class="stat-bar-container">
+                    <div class="bar-label">🍀 행운 <span>${this.lucky}%</span></div>
+                    <div class="bar-bg"><div class="bar-fill fill-lucky" style="width: ${this.lucky}%"></div></div>
+                </div>
+                <div class="stat-bar-container">
+                    <div class="bar-label">🎓 지능 <span>${this.intel}%</span></div>
+                    <div class="bar-bg"><div class="bar-fill fill-intel" style="width: ${this.intel}%"></div></div>
+                </div>
             </div>
+            <div class="stocky-bubble">뉴스 공부 중...</div>
+            <div class="pet-container">${PetGenerator.getHTML(this.design)}</div>
             <div class="stocky-name-tag">${this.name}</div>
         `;
-        
-        wrapper.onclick = (e) => { e.stopPropagation(); this.react(); };
+        wrapper.onclick = (e) => { e.stopPropagation(); this.toggleStats(); };
         this.element = wrapper;
+        this.statsBubble = wrapper.querySelector('.stocky-stats-bubble');
         this.bubble = wrapper.querySelector('.stocky-bubble');
         document.getElementById('village').appendChild(wrapper);
         this.updateElementPosition();
+    }
+
+    toggleStats() {
+        const isVisible = this.statsBubble.style.display === 'flex';
+        this.statsBubble.style.display = isVisible ? 'none' : 'flex';
+        if (!isVisible) {
+            this.element.classList.add('bouncing');
+            setTimeout(() => this.element.classList.remove('bouncing'), 1000);
+        }
     }
 
     updateElementPosition() {
         if (!this.element) return;
         this.element.style.left = `${this.x}px`;
         this.element.style.top = `${this.y}px`;
-        const container = this.element.querySelector('.pet-svg-container');
-        if (this.vx > 0) container.style.transform = 'scaleX(1)';
-        else if (this.vx < 0) container.style.transform = 'scaleX(-1)';
+        if (this.vx > 0) this.element.classList.remove('facing-left');
+        else if (this.vx < 0) this.element.classList.add('facing-left');
     }
 
-    move(bounds) {
-        const speedMultiplier = 1 + Math.abs(this.condition) * 0.02;
-        this.x += this.vx * speedMultiplier;
-        this.y += this.vy * speedMultiplier;
-
+    move(bounds, clovers) {
+        this.x += this.vx;
+        this.y += this.vy;
         if (this.x < 0 || this.x > bounds.width - 100) { this.vx *= -1; this.x = Math.max(0, Math.min(this.x, bounds.width - 100)); }
-        if (this.y < 150 || this.y > bounds.height - 200) { this.vy *= -1; this.y = Math.max(150, Math.min(this.y, bounds.height - 200)); }
+        if (this.y < 180 || this.y > bounds.height - 200) { this.vy *= -1; this.y = Math.max(180, Math.min(this.y, bounds.height - 200)); }
+        
+        // Collision with clovers
+        clovers.forEach((c, idx) => {
+            const dist = Math.sqrt((this.x - c.x)**2 + (this.y - c.y)**2);
+            if (dist < 40) {
+                this.game.eatClover(idx);
+                this.lucky = Math.min(100, this.lucky + 5);
+                this.updateStatsUI();
+                this.showTempMsg("🍀 행운이 올랐어!");
+            }
+        });
+        
         this.updateElementPosition();
     }
 
-    react() {
-        this.element.classList.add('bouncing');
-        this.showNews();
-        setTimeout(() => { this.element.classList.remove('bouncing'); }, 2000);
+    updateStatsUI() {
+        this.element.querySelector('.fill-lucky').style.width = `${this.lucky}%`;
+        this.element.querySelector('.fill-intel').style.width = `${this.intel}%`;
+        this.element.querySelector('.stat-bar-container:nth-child(1) span').innerText = `${this.lucky}%`;
+        this.element.querySelector('.stat-bar-container:nth-child(2) span').innerText = `${this.intel}%`;
     }
 
-    async fetchNewsAndMood() {
-        try {
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(this.name + " " + this.ticker)}`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-            const response = await fetch(proxyUrl);
-            const outerData = await response.json();
-            const data = JSON.parse(outerData.contents);
-            if (data.news && data.news.length > 0) {
-                this.news = data.news.map(n => n.title);
-                this.rawNewsData = data.news.map(n => ({ title: n.title, source: n.publisher, link: n.link, stockName: this.name }));
-            }
-        } catch (e) { console.error("Fetch failed"); }
-    }
-
-    showNews() {
-        if (!this.bubble) return;
-        const greets = ["오늘 날씨 어때? ☀️", "나랑 놀아줘! 🐾", "주인님 반가워요!", "마을이 참 예뻐요 🌿"];
-        const msg = this.news.length > 0 ? this.news[Math.floor(Math.random() * this.news.length)] : greets[Math.floor(Math.random() * greets.length)];
+    showTempMsg(msg) {
         this.bubble.innerText = msg;
         this.bubble.style.display = 'block';
-        setTimeout(() => { if (this.bubble) this.bubble.style.display = 'none'; }, 6000);
+        setTimeout(() => this.bubble.style.display = 'none', 3000);
+    }
+
+    study() {
+        this.intel = Math.min(100, this.intel + 10);
+        this.updateStatsUI();
+        this.showTempMsg("🎓 뉴스 열공 중!");
     }
 }
 
 class MyStockyVillage {
     constructor() {
         this.stockies = [];
-        this.searchTimeout = null;
-        this.pendingAdoption = null;
-        this.candidates = [];
-        this.selectedCandidateIdx = 0;
+        this.clovers = [];
         this.villageEl = document.getElementById('village');
         this.init();
     }
 
     init() {
-        this.renderEnvironment();
         this.setupEventListeners();
         this.loadVillage();
         this.animate();
-        this.refreshData();
-    }
-
-    renderEnvironment() {
-        const layer = document.createElement('div');
-        layer.className = 'grass-layer';
-        for (let i = 0; i < 20; i++) {
-            const tuft = document.createElement('span');
-            tuft.className = 'tuft';
-            tuft.innerText = Math.random() > 0.5 ? '🌿' : '🌱';
-            tuft.style.left = Math.random() * 100 + '%';
-            tuft.style.top = 30 + Math.random() * 60 + '%';
-            layer.appendChild(tuft);
-        }
-        this.villageEl.appendChild(layer);
+        this.startSpawning();
     }
 
     setupEventListeners() {
         document.getElementById('btn-market').onclick = () => this.toggleModal('market-modal', true);
-        document.getElementById('btn-news-center').onclick = () => this.openNewsroom();
+        document.getElementById('btn-news-center').onclick = () => this.studyAll();
         document.querySelectorAll('.close-modal').forEach(btn => {
-            btn.onclick = () => { this.toggleModal('market-modal', false); this.toggleModal('naming-modal', false); this.toggleModal('news-modal', false); };
+            btn.onclick = () => { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); };
         });
-
         const searchInput = document.getElementById('market-search');
         searchInput.oninput = (e) => {
-            const rawQuery = e.target.value.trim();
-            clearTimeout(this.searchTimeout);
-            if (rawQuery === "") { this.renderSearchResults([]); return; }
-            this.searchTimeout = setTimeout(() => this.searchGlobal(rawQuery), 400);
+            const query = e.target.value.trim();
+            if (query.length < 2) return;
+            this.searchGlobal(query);
         };
         document.getElementById('btn-adopt-confirm').onclick = () => this.confirmAdoption();
     }
 
-    toggleModal(id, show) {
-        const modal = document.getElementById(id);
-        if (modal) modal.style.display = show ? 'flex' : 'none';
-    }
+    toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
 
     async searchGlobal(query) {
         try {
@@ -221,8 +179,8 @@ class MyStockyVillage {
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
             if (data.quotes) {
-                const results = data.quotes.filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF")
-                    .map(q => ({ name: q.shortname || q.longname || q.symbol, ticker: q.symbol, country: q.exchange && (q.exchange.includes("KS") || q.exchange.includes("KOE")) ? "🇰🇷" : "🇺🇸" }));
+                const results = data.quotes.filter(q => q.quoteType === "EQUITY")
+                    .map(q => ({ name: q.shortname || q.longname || q.symbol, ticker: q.symbol, country: q.exchange && q.exchange.includes("KS") ? "🇰🇷" : "🇺🇸" }));
                 this.renderSearchResults(results);
             }
         } catch (e) { console.error("Search failed"); }
@@ -230,14 +188,10 @@ class MyStockyVillage {
 
     renderSearchResults(results) {
         const list = document.getElementById('market-list');
-        if (results.length === 0) { list.innerHTML = '<p style="padding:20px;">결과가 없어요!</p>'; return; }
         list.innerHTML = results.map(q => `
             <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
-                <div style="text-align: left;">
-                    <strong>${q.country} ${q.name}</strong>
-                    <div style="font-size:0.8rem; color:#888;">${q.ticker}</div>
-                </div>
-                <span class="adopt-badge">선택</span>
+                <div style="text-align: left;"><strong>${q.country} ${q.name}</strong><div>${q.ticker}</div></div>
+                <span class="adopt-badge">영입</span>
             </div>
         `).join('');
     }
@@ -245,22 +199,17 @@ class MyStockyVillage {
     prepareAdoption(ticker, fullName) {
         if (this.stockies.length >= 5) { alert("마을이 꽉 찼어요!"); return; }
         this.pendingAdoption = { ticker, fullName };
-        this.candidates = [];
-        for (let i = 0; i < 3; i++) { this.candidates.push(PetGenerator.generateCandidate()); }
-        this.renderCandidates();
-        document.getElementById('naming-ticker-info').innerText = `${fullName} (${ticker})`;
-        this.toggleModal('market-modal', false);
-        this.toggleModal('naming-modal', true);
-    }
-
-    renderCandidates() {
+        this.candidates = [PetGenerator.generateCandidate(), PetGenerator.generateCandidate(), PetGenerator.generateCandidate()];
         const container = document.getElementById('candidate-container');
         container.innerHTML = this.candidates.map((c, idx) => `
             <div class="candidate-item ${idx === 0 ? 'selected' : ''}" onclick="window.game.selectCandidate(${idx}, this)">
-                <div style="width:60px; height:60px;">${PetGenerator.getSVG(c)}</div>
+                <div style="transform: scale(0.6)">${PetGenerator.getHTML(c)}</div>
             </div>
         `).join('');
         this.selectedCandidateIdx = 0;
+        document.getElementById('naming-ticker-info').innerText = `${fullName} (${ticker})`;
+        this.toggleModal('market-modal', false);
+        this.toggleModal('naming-modal', true);
     }
 
     selectCandidate(idx, el) {
@@ -270,55 +219,55 @@ class MyStockyVillage {
     }
 
     confirmAdoption() {
-        const nickname = document.getElementById('naming-input').value.trim();
-        if (!nickname) { alert("이름을 지어주세요!"); return; }
-        const design = this.candidates[this.selectedCandidateIdx];
-        const newStocky = new Stocky({ name: nickname, ticker: this.pendingAdoption.ticker, design }, this);
-        this.stockies.push(newStocky);
+        const name = document.getElementById('naming-input').value.trim();
+        if (!name) return alert("이름을 지어주세요!");
+        const stocky = new Stocky({ name, ticker: this.pendingAdoption.ticker, design: this.candidates[this.selectedCandidateIdx] }, this);
+        this.stockies.push(stocky);
         this.toggleModal('naming-modal', false);
         this.saveVillage();
-        this.updateVillageStats();
-        newStocky.fetchNewsAndMood();
     }
 
-    openNewsroom() {
-        const list = document.getElementById('news-list');
-        const allNews = [];
-        this.stockies.forEach(s => { if (s.rawNewsData) allNews.push(...s.rawNewsData); });
-        if (allNews.length === 0) list.innerHTML = '<p style="padding:40px;">아직 소식이 없어요.</p>';
-        else list.innerHTML = allNews.map(n => `<div class="news-item"><span class="news-source">📢 ${n.stockName}</span><span class="news-title">${n.title}</span><a href="${n.link}" target="_blank" class="news-link">원본 보기 →</a></div>`).join('');
-        this.toggleModal('news-modal', true);
+    studyAll() {
+        if (this.stockies.length === 0) return alert("공부할 스토키가 없어요!");
+        this.stockies.forEach(s => s.study());
+    }
+
+    eatClover(idx) {
+        const clover = this.clovers[idx];
+        if (clover && clover.el) clover.el.remove();
+        this.clovers.splice(idx, 1);
+    }
+
+    startSpawning() {
+        setInterval(() => {
+            if (this.clovers.length < 5) {
+                const x = Math.random() * (window.innerWidth - 50);
+                const y = 180 + Math.random() * (window.innerHeight - 400);
+                const el = document.createElement('div');
+                el.className = 'world-item';
+                el.innerText = '🍀';
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                this.villageEl.appendChild(el);
+                this.clovers.push({ x, y, el });
+            }
+        }, 8000);
     }
 
     animate() {
         const bounds = this.villageEl.getBoundingClientRect();
-        this.stockies.forEach(s => s.move(bounds));
+        this.stockies.forEach(s => s.move(bounds, this.clovers));
         requestAnimationFrame(() => this.animate());
     }
 
-    updateVillageStats() {
-        document.getElementById('stocky-count').innerText = this.stockies.length;
-        document.getElementById('empty-message').style.display = this.stockies.length > 0 ? 'none' : 'block';
-    }
-
     saveVillage() {
-        const data = this.stockies.map(s => ({ name: s.name, ticker: s.ticker, design: s.design, condition: s.condition, id: s.id, rawNewsData: s.rawNewsData }));
-        localStorage.setItem('mystocky_village', JSON.stringify(data));
+        const data = this.stockies.map(s => ({ name: s.name, ticker: s.ticker, design: s.design, lucky: s.lucky, intel: s.intel, id: s.id }));
+        localStorage.setItem('mystocky_village_v2', JSON.stringify(data));
     }
 
     loadVillage() {
-        const saved = localStorage.getItem('mystocky_village');
-        if (saved) {
-            const data = JSON.parse(saved);
-            data.forEach(d => { this.stockies.push(new Stocky(d, this)); });
-            this.updateVillageStats();
-        }
-    }
-
-    refreshData() {
-        this.stockies.forEach(s => s.fetchNewsAndMood());
-        setInterval(() => { if (this.stockies.length > 0) this.stockies[Math.floor(Math.random() * this.stockies.length)].showNews(); }, 15000);
-        setInterval(() => { this.stockies.forEach(s => s.fetchNewsAndMood()); }, 300000);
+        const saved = localStorage.getItem('mystocky_village_v2');
+        if (saved) JSON.parse(saved).forEach(d => this.stockies.push(new Stocky(d, this)));
     }
 }
 
