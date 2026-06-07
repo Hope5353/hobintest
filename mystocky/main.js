@@ -1,4 +1,4 @@
-// MyStocky: Premium 3-Character Pet Village Engine
+// MyStocky: Mobile Optimized Virtual Pet Engine
 
 const PET_TYPES = [
     { type: 'shiba', name: '진저 시바', icon: '🦊' },
@@ -34,19 +34,23 @@ class Stocky {
         this.id = data.id || Date.now() + Math.random().toString(36).substr(2, 9);
         this.nickname = data.name;
         this.ticker = data.ticker;
-        this.petType = data.petType || PET_TYPES[0].type;
+        this.petType = data.petType || 'shiba';
         this.lucky = data.lucky || 0;
         this.intel = data.intel || 0;
-        this.condition = 0;
-        this.news = [];
-        this.rawNewsData = [];
         
-        this.x = Math.random() * (window.innerWidth - 120);
-        this.y = 180 + Math.random() * (window.innerHeight - 450);
+        // Dynamic boundary-safe initial positions
+        const bounds = this.game.getVillageBounds();
+        this.x = Math.random() * (bounds.width - 80);
+        this.y = bounds.height * 0.4 + Math.random() * (bounds.height * 0.4);
+        
         this.vx = (Math.random() - 0.5) * 0.15;
         this.vy = (Math.random() - 0.5) * 0.15;
         
         this.element = null;
+        this.statsBubble = null;
+        this.bubble = null;
+        this.news = [];
+        this.rawNewsData = [];
         this.render();
     }
 
@@ -65,10 +69,8 @@ class Stocky {
                     <div class="bar-bg"><div class="bar-fill fill-intel" style="width: ${this.intel}%"></div></div>
                 </div>
             </div>
-            <div class="stocky-bubble">공부하는 중...</div>
-            <div class="pet-visual-container">
-                ${PetRenderer.getHTML(this.petType)}
-            </div>
+            <div class="stocky-bubble">열공 중!</div>
+            <div class="pet-visual-container">${PetRenderer.getHTML(this.petType)}</div>
             <div class="stocky-name-tag">${this.nickname}</div>
         `;
         wrapper.onclick = (e) => { e.stopPropagation(); this.toggleStats(); };
@@ -90,8 +92,7 @@ class Stocky {
 
     updateElementPosition() {
         if (!this.element) return;
-        this.element.style.left = `${this.x}px`;
-        this.element.style.top = `${this.y}px`;
+        this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
         const visual = this.element.querySelector('.pet-visual-container');
         if (this.vx > 0) visual.style.transform = 'scaleX(1)';
         else if (this.vx < 0) visual.style.transform = 'scaleX(-1)';
@@ -100,29 +101,42 @@ class Stocky {
     move(bounds, clovers) {
         this.x += this.vx;
         this.y += this.vy;
-        if (this.x < 0 || this.x > bounds.width - 110) { this.vx *= -1; this.x = Math.max(0, Math.min(this.x, bounds.width - 110)); }
-        if (this.y < 180 || this.y > bounds.height - 200) { this.vy *= -1; this.y = Math.max(180, Math.min(this.y, bounds.height - 200)); }
+
+        // Strict Mobile Bounds
+        if (this.x < 0 || this.x > bounds.width - 80) { 
+            this.vx *= -1; 
+            this.x = Math.max(0, Math.min(this.x, bounds.width - 80)); 
+        }
+        if (this.y < bounds.height * 0.3 || this.y > bounds.height - 120) { 
+            this.vy *= -1; 
+            this.y = Math.max(bounds.height * 0.3, Math.min(this.y, bounds.height - 120)); 
+        }
         
+        // Clover collision with offset center
         clovers.forEach((c, idx) => {
-            const dist = Math.sqrt((this.x + 50 - c.x)**2 + (this.y + 50 - c.y)**2);
-            if (dist < 40) {
+            const dist = Math.sqrt((this.x + 40 - c.x)**2 + (this.y + 40 - c.y)**2);
+            if (dist < 35) {
                 this.game.eatClover(idx);
-                this.lucky = Math.min(100, this.lucky + 5);
+                this.lucky = Math.min(100, this.lucky + 10);
                 this.updateStatsUI();
-                this.showTempMsg("🍀 행운이 올랐어!");
+                this.showTempMsg("🍀 냠냠! 행운 UP");
             }
         });
+        
         this.updateElementPosition();
     }
 
     updateStatsUI() {
+        if (!this.element) return;
         this.element.querySelector('.fill-lucky').style.width = `${this.lucky}%`;
         this.element.querySelector('.fill-intel').style.width = `${this.intel}%`;
-        this.element.querySelectorAll('.bar-label span')[0].innerText = `${this.lucky}%`;
-        this.element.querySelectorAll('.bar-label span')[1].innerText = `${this.intel}%`;
+        const labels = this.element.querySelectorAll('.bar-label span');
+        labels[0].innerText = `${this.lucky}%`;
+        labels[1].innerText = `${this.intel}%`;
     }
 
     showTempMsg(msg) {
+        if (!this.bubble) return;
         this.bubble.innerText = msg;
         this.bubble.style.display = 'block';
         setTimeout(() => { if (this.bubble) this.bubble.style.display = 'none'; }, 4000);
@@ -131,9 +145,8 @@ class Stocky {
     study(newsData) {
         this.intel = Math.min(100, this.intel + 5);
         this.rawNewsData = newsData;
-        this.news = newsData.map(n => n.title);
         this.updateStatsUI();
-        this.showTempMsg("🎓 뉴스 열공 완료!");
+        this.showTempMsg("🎓 지능 쑥쑥!");
     }
 }
 
@@ -152,6 +165,13 @@ class MyStockyVillage {
         this.startSpawning();
     }
 
+    getVillageBounds() {
+        return {
+            width: this.villageEl.clientWidth || window.innerWidth,
+            height: this.villageEl.clientHeight || (window.innerHeight - 150)
+        };
+    }
+
     setupEventListeners() {
         document.getElementById('btn-market').onclick = () => this.toggleModal('market-modal', true);
         document.getElementById('btn-news-center').onclick = () => this.studyAndNews();
@@ -167,7 +187,10 @@ class MyStockyVillage {
         document.getElementById('btn-adopt-confirm').onclick = () => this.confirmAdoption();
     }
 
-    toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    toggleModal(id, show) {
+        const m = document.getElementById(id);
+        if (m) m.style.display = show ? 'flex' : 'none';
+    }
 
     async searchGlobal(query) {
         try {
@@ -188,20 +211,20 @@ class MyStockyVillage {
         const list = document.getElementById('market-list');
         list.innerHTML = results.map(q => `
             <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
-                <div style="text-align: left;"><strong>${q.country} ${q.name}</strong><div>${q.ticker}</div></div>
-                <span class="adopt-badge">선택</span>
+                <div style="text-align: left;"><strong>${q.country} ${q.name}</strong><div style="font-size:0.75rem; color:#888;">${q.ticker}</div></div>
+                <span class="adopt-badge">입양</span>
             </div>
         `).join('');
     }
 
     prepareAdoption(ticker, fullName) {
-        if (this.stockies.length >= 5) return alert("마을이 꽉 찼어요!");
+        if (this.stockies.length >= 5) return alert("마을 정원이 찼어요!");
         this.pendingAdoption = { ticker, fullName };
         const container = document.getElementById('candidate-container');
         container.innerHTML = PET_TYPES.map((p, idx) => `
             <div class="candidate-item ${idx === 0 ? 'selected' : ''}" onclick="window.game.selectCandidate(${idx}, this)">
                 <div style="transform: scale(0.6)">${PetRenderer.getHTML(p.type)}</div>
-                <p style="font-size:0.7rem; margin-top:5px;">${p.name}</p>
+                <p style="font-size:0.75rem; font-weight:bold;">${p.name}</p>
             </div>
         `).join('');
         this.selectedCandidateIdx = 0;
@@ -218,7 +241,7 @@ class MyStockyVillage {
 
     confirmAdoption() {
         const name = document.getElementById('naming-input').value.trim();
-        if (!name) return alert("이름을 지어주세요!");
+        if (!name) return alert("이름을 정해주세요!");
         const petType = PET_TYPES[this.selectedCandidateIdx].type;
         const stocky = new Stocky({ name, ticker: this.pendingAdoption.ticker, petType }, this);
         this.stockies.push(stocky);
@@ -227,11 +250,9 @@ class MyStockyVillage {
     }
 
     async studyAndNews() {
-        if (this.stockies.length === 0) return alert("먼저 스토키를 입양해 주세요!");
-        
-        // 1. Show Newsroom Modal
+        if (this.stockies.length === 0) return alert("입양부터 시작해볼까요?");
         const newsList = document.getElementById('news-list');
-        newsList.innerHTML = '<p style="padding:20px;">뉴스 가져오는 중...</p>';
+        newsList.innerHTML = '<p style="padding:20px;">뉴스 찾는 중...</p>';
         this.toggleModal('news-modal', true);
 
         const allNews = [];
@@ -247,16 +268,16 @@ class MyStockyVillage {
                     allNews.push(...mapped);
                     s.study(mapped);
                 }
-            } catch (e) { console.error("News fetch failed"); }
+            } catch (e) {}
         }
 
-        if (allNews.length === 0) newsList.innerHTML = '<p style="padding:20px;">최신 소식이 없습니다.</p>';
+        if (allNews.length === 0) newsList.innerHTML = '<p style="padding:20px;">공부할 내용이 아직 없어요.</p>';
         else {
             newsList.innerHTML = allNews.map(n => `
                 <div class="news-item">
-                    <span class="news-source">📢 ${n.stockName} • ${n.source}</span>
+                    <span style="font-size:0.7rem; color:var(--ui-accent); font-weight:bold;">📢 ${n.stockName} • ${n.source}</span>
                     <span class="news-title">${n.title}</span>
-                    <a href="${n.link}" target="_blank" class="news-link">원본 보기 →</a>
+                    <a href="${n.link}" target="_blank" class="news-link">자세히 보기 →</a>
                 </div>
             `).join('');
         }
@@ -270,9 +291,10 @@ class MyStockyVillage {
 
     startSpawning() {
         setInterval(() => {
+            const bounds = this.getVillageBounds();
             if (this.clovers.length < 3) {
-                const x = 50 + Math.random() * (window.innerWidth - 150);
-                const y = 200 + Math.random() * (window.innerHeight - 450);
+                const x = 50 + Math.random() * (bounds.width - 100);
+                const y = bounds.height * 0.4 + Math.random() * (bounds.height * 0.4);
                 const el = document.createElement('div');
                 el.className = 'world-item';
                 el.innerText = '🍀';
@@ -280,22 +302,22 @@ class MyStockyVillage {
                 this.villageEl.appendChild(el);
                 this.clovers.push({ x, y, el });
             }
-        }, 10000);
+        }, 12000);
     }
 
     animate() {
-        const bounds = this.villageEl.getBoundingClientRect();
+        const bounds = this.getVillageBounds();
         this.stockies.forEach(s => s.move(bounds, this.clovers));
         requestAnimationFrame(() => this.animate());
     }
 
     saveVillage() {
         const data = this.stockies.map(s => ({ name: s.nickname, ticker: s.ticker, petType: s.petType, lucky: s.lucky, intel: s.intel, id: s.id }));
-        localStorage.setItem('mystocky_village_v3', JSON.stringify(data));
+        localStorage.setItem('mystocky_village_v4', JSON.stringify(data));
     }
 
     loadVillage() {
-        const saved = localStorage.getItem('mystocky_village_v3');
+        const saved = localStorage.getItem('mystocky_village_v4');
         if (saved) JSON.parse(saved).forEach(d => this.stockies.push(new Stocky(d, this)));
     }
 }
