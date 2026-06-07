@@ -3,71 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- Deployment Trigger: 2026-06-07 01:00 -->
-    <title>MyStocky | 주식 다마고치</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for a cute vibe -->
+    <title>MyStocky | 나의 주식 마을</title>
+    <link rel="stylesheet" href="style.css?v=1.1">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
 <body class="mobile-first">
     <div class="app-container">
         <header class="game-header">
             <div class="status-bar">
-                <span id="stock-name">새로운 친구를 영입하세요!</span>
-                <span id="stock-level">Lv. 1</span>
-            </div>
-            <div class="stats">
-                <div class="stat-item">💖 <span id="hp">100</span></div>
-                <div class="stat-item">🍎 <span id="hunger">100</span></div>
-                <div class="stat-item">💰 <span id="balance">0.0%</span></div>
+                <span class="logo">🏘️ Stocky Village</span>
+                <span id="village-stats">🏠 <span id="stocky-count">0</span> / 5</span>
             </div>
         </header>
 
-        <main class="game-view">
-            <div class="character-area">
-                <div id="mystocky-character" class="character-idle">
-                    <!-- Character SVG or Image will go here -->
-                    <div class="character-placeholder">🥚</div>
-                </div>
-                <div class="speech-bubble" id="message">나만의 주식 다마고치를 키워보세요!</div>
-            </div>
+        <main class="game-view" id="village">
+            <!-- Stocky characters will be injected here -->
+             <div id="empty-message" class="empty-msg">
+                 <p>마을이 텅 비어있어요!<br>거래소에서 첫 Stocky를 데려오세요.</p>
+             </div>
         </main>
 
         <nav class="action-menu">
-            <button class="action-btn" id="btn-feed">
-                <span class="icon">🍱</span>
-                <span class="label">먹이주기</span>
-            </button>
-            <button class="action-btn" id="btn-play">
-                <span class="icon">🎮</span>
-                <span class="label">놀아주기</span>
-            </button>
-            <button class="action-btn" id="btn-clean">
-                <span class="icon">🧹</span>
-                <span class="label">청소하기</span>
-            </button>
-            <button class="action-btn secondary" id="btn-market">
+            <button class="action-btn" id="btn-market">
                 <span class="icon">🏪</span>
                 <span class="label">거래소</span>
             </button>
+            <button class="action-btn" id="btn-news-center">
+                <span class="icon">🗞️</span>
+                <span class="label">뉴스룸</span>
+            </button>
+            <button class="action-btn" id="btn-stats">
+                <span class="icon">📊</span>
+                <span class="label">마을통계</span>
+            </button>
+            <button class="action-btn secondary" id="btn-save">
+                <span class="icon">💾</span>
+                <span class="label">마을저장</span>
+            </button>
         </nav>
 
-        <!-- Market Modal -->
+        <!-- Market Modal (Search) -->
         <div id="market-modal" class="modal">
             <div class="modal-content">
-                <h3>새 종목 입양하기</h3>
-                <div id="market-list" class="market-grid"></div>
-                <button class="close-modal">나중에 할게요</button>
+                <h3>새 Stocky 영입</h3>
+                <div class="search-wrapper">
+                    <input type="text" id="market-search" placeholder="종목명 또는 티커 (예: 삼성전자, NVDA)">
+                    <button id="btn-search-trigger">검색</button>
+                </div>
+                <div id="market-list" class="search-results"></div>
+                <button class="close-modal">닫기</button>
+            </div>
+        </div>
+
+        <!-- Naming Modal -->
+        <div id="naming-modal" class="modal">
+            <div class="modal-content">
+                <h3 id="naming-title">이름 짓기</h3>
+                <div class="character-preview" id="naming-preview">
+                    <span id="naming-emoji" style="font-size: 4rem;">🥚</span>
+                </div>
+                <p id="naming-ticker-info"></p>
+                <div class="naming-wrapper">
+                    <input type="text" id="naming-input" placeholder="스토키의 이름을 지어주세요!">
+                </div>
+                <button id="btn-adopt-confirm" class="confirm-btn">입양하기</button>
+                <button class="close-modal">취소</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <!-- Add SDKs for Firebase products that you want to use -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     
-    <script src="main.js"></script>
+    <script src="main.js?v=1.1"></script>
 </body>
 </html>
