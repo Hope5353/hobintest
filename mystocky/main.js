@@ -1,4 +1,20 @@
 // MyStocky: Stock Tamagotchi Village Logic
+
+// Instant access to top stocks to make search feel "fast" like Stock Squad
+const LOCAL_TOP_STOCKS = [
+    { name: "삼성전자", ticker: "005930.KS", country: "🇰🇷", type: "주식" },
+    { name: "SK하이닉스", ticker: "000660.KS", country: "🇰🇷", type: "주식" },
+    { name: "현대차", ticker: "005380.KS", country: "🇰🇷", type: "주식" },
+    { name: "기아", ticker: "000270.KS", country: "🇰🇷", type: "주식" },
+    { name: "엔비디아", ticker: "NVDA", country: "🇺🇸", type: "주식" },
+    { name: "테슬라", ticker: "TSLA", country: "🇺🇸", type: "주식" },
+    { name: "애플", ticker: "AAPL", country: "🇺🇸", type: "주식" },
+    { name: "마이크로소프트", ticker: "MSFT", country: "🇺🇸", type: "주식" },
+    { name: "비트코인 ETF", ticker: "IBIT", country: "🇺🇸", type: "ETF" },
+    { name: "S&P 500 ETF", ticker: "SPY", country: "🇺🇸", type: "ETF" },
+    { name: "나스닥 100 ETF", ticker: "QQQ", country: "🇺🇸", type: "ETF" }
+];
+
 class Stocky {
     constructor(data, game) {
         this.game = game;
@@ -10,11 +26,11 @@ class Stocky {
         this.condition = data.condition || 0; // Daily change %
         this.news = data.news || [];
         
-        // Random initial position
+        // Random initial position within village bounds
         this.x = Math.random() * (window.innerWidth - 100);
         this.y = Math.random() * (window.innerHeight - 300);
-        this.vx = (Math.random() - 0.5) * 2;
-        this.vy = (Math.random() - 0.5) * 2;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
         
         this.element = null;
         this.bubble = null;
@@ -44,8 +60,6 @@ class Stocky {
         this.element = wrapper;
         this.bubble = wrapper.querySelector('.stocky-bubble');
         document.getElementById('village').appendChild(wrapper);
-        
-        // Initial placement
         this.updateElementPosition();
     }
 
@@ -56,12 +70,10 @@ class Stocky {
     }
 
     move(bounds) {
-        // Speed based on condition
         const speedMultiplier = 1 + Math.abs(this.condition) * 0.1;
         this.x += this.vx * speedMultiplier;
         this.y += this.vy * speedMultiplier;
 
-        // Bounce off walls
         if (this.x < 0 || this.x > bounds.width - 80) {
             this.vx *= -1;
             this.x = Math.max(0, Math.min(this.x, bounds.width - 80));
@@ -86,7 +98,6 @@ class Stocky {
 
     async fetchNewsAndMood() {
         try {
-            // Fetch quote and news from Yahoo Finance
             const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${this.ticker}`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
@@ -94,16 +105,14 @@ class Stocky {
             const data = JSON.parse(outerData.contents);
             
             if (data.quotes && data.quotes.length > 0) {
-                // In a real app we'd get regularMarketChangePercent, for now random placeholder or 1st quote
-                // Simplified simulation:
-                this.condition = (Math.random() * 10 - 5).toFixed(2); 
+                this.condition = (Math.random() * 8 - 4).toFixed(2); // Simulated for now
             }
 
             if (data.news && data.news.length > 0) {
                 this.news = data.news.map(n => n.title);
             }
         } catch (e) {
-            console.error("Failed to fetch data for", this.ticker, e);
+            console.error("Failed to fetch data", this.ticker, e);
         }
     }
 
@@ -115,15 +124,14 @@ class Stocky {
             this.bubble.innerText = `${this.ticker} 소식을 찾고 있어요!`;
         }
         this.bubble.style.display = 'block';
-        setTimeout(() => {
-            this.bubble.style.display = 'none';
-        }, 5000);
+        setTimeout(() => { this.bubble.style.display = 'none'; }, 5000);
     }
 }
 
 class MyStockyVillage {
     constructor() {
         this.stockies = [];
+        this.searchTimeout = null;
         this.villageEl = document.getElementById('village');
         this.init();
     }
@@ -136,7 +144,9 @@ class MyStockyVillage {
     }
 
     setupEventListeners() {
+        console.log("Setting up event listeners...");
         document.getElementById('btn-market').onclick = () => this.toggleModal('market-modal', true);
+        
         document.querySelectorAll('.close-modal').forEach(btn => {
             btn.onclick = () => {
                 this.toggleModal('market-modal', false);
@@ -144,69 +154,121 @@ class MyStockyVillage {
             };
         });
 
-        document.getElementById('btn-search-trigger').onclick = () => this.searchStock();
-        document.getElementById('market-search').onkeypress = (e) => {
-            if (e.key === 'Enter') this.searchStock();
+        const searchInput = document.getElementById('market-search');
+        const searchTrigger = document.getElementById('btn-search-trigger');
+
+        const performSearch = () => {
+            const rawQuery = searchInput.value.trim();
+            console.log("Performing search for:", rawQuery);
+            clearTimeout(this.searchTimeout);
+            
+            if (rawQuery === "") {
+                this.renderSearchResults([]);
+                return;
+            }
+
+            const query = rawQuery.toLowerCase();
+            const localResults = LOCAL_TOP_STOCKS.filter(s => 
+                s.name.toLowerCase().includes(query) || s.ticker.toLowerCase().includes(query)
+            );
+            this.renderSearchResults(localResults);
+            this.searchGlobal(rawQuery, localResults);
         };
+
+        // Fast instant search on input
+        searchInput.oninput = (e) => {
+            const rawQuery = e.target.value.trim();
+            clearTimeout(this.searchTimeout);
+            
+            if (rawQuery === "") {
+                this.renderSearchResults([]);
+                return;
+            }
+
+            const query = rawQuery.toLowerCase();
+            const localResults = LOCAL_TOP_STOCKS.filter(s => 
+                s.name.toLowerCase().includes(query) || s.ticker.toLowerCase().includes(query)
+            );
+            this.renderSearchResults(localResults);
+
+            this.searchTimeout = setTimeout(() => this.searchGlobal(rawQuery, localResults), 400);
+        };
+
+        // Handle Enter key
+        searchInput.onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        };
+
+        // Handle Search Button
+        if (searchTrigger) {
+            searchTrigger.onclick = performSearch;
+        }
 
         document.getElementById('btn-adopt-confirm').onclick = () => this.confirmAdoption();
     }
 
     toggleModal(id, show) {
         document.getElementById(id).style.display = show ? 'flex' : 'none';
+        if (show && id === 'market-modal') document.getElementById('market-search').focus();
     }
 
-    async searchStock() {
-        const query = document.getElementById('market-search').value.trim();
-        if (!query) return;
-
+    async searchGlobal(query, localResults) {
         const list = document.getElementById('market-list');
-        list.innerHTML = '<div class="loading-spinner-container"><p style="padding:20px; color: var(--primary-color);">🔍 스토키 찾는 중...</p></div>';
+        if (!document.getElementById('search-status')) {
+            const status = document.createElement('p');
+            status.id = 'search-status';
+            status.style.cssText = 'padding:10px; font-size:0.75rem; color:var(--primary-color); text-align:center;';
+            status.innerText = '🌐 글로벌 검색 중...';
+            list.prepend(status);
+        }
 
         try {
-            // Updated URL to include more quotes and fuzzy query
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=20&enableFuzzyQuery=true`;
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=15&enableFuzzyQuery=true`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
             
-            if (data.quotes && data.quotes.length > 0) {
-                // More inclusive filtering (EQUITY, ETF, INDEX, etc.)
-                const results = data.quotes.filter(q => 
-                    q.quoteType === "EQUITY" || 
-                    q.quoteType === "ETF" || 
-                    q.quoteType === "INDEX" || 
-                    q.quoteType === "CURRENCY"
-                );
-
-                if (results.length === 0) {
-                    list.innerHTML = '<p style="padding:20px; color:#888;">일치하는 종목을 찾지 못했어요 😢</p>';
-                    return;
-                }
-
-                list.innerHTML = results.map(q => {
-                    const name = q.shortname || q.longname || q.symbol;
-                    const exchange = q.exchDisp || q.exchange || "Market";
-                    const type = q.quoteType === "EQUITY" ? "주식" : (q.quoteType === "ETF" ? "ETF" : "지수");
-                    
-                    return `
-                        <div class="search-item" onclick="window.game.prepareAdoption('${q.symbol}', '${name.replace(/'/g, "\\'")}')">
-                            <div style="flex: 1;">
-                                <strong style="display:block; margin-bottom: 2px;">${name}</strong>
-                                <div class="ticker">${q.symbol} | ${exchange} | ${type}</div>
-                            </div>
-                            <span class="adopt-badge">➕ 영입</span>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                list.innerHTML = '<p style="padding:20px; color:#888;">일치하는 종목을 찾지 못했어요 😢</p>';
+            if (data.quotes) {
+                const globalResults = data.quotes
+                    .filter(q => q.quoteType === "EQUITY" || q.quoteType === "ETF" || q.quoteType === "INDEX")
+                    .map(q => ({
+                        name: q.shortname || q.longname || q.symbol,
+                        ticker: q.symbol,
+                        country: q.exchange.includes("KS") || q.exchange.includes("KOE") ? "🇰🇷" : "🇺🇸",
+                        type: q.quoteType === "EQUITY" ? "주식" : "ETF"
+                    }));
+                
+                const seen = new Set(localResults.map(s => s.ticker));
+                const combined = [...localResults];
+                globalResults.forEach(s => { if (!seen.has(s.ticker)) { combined.push(s); seen.add(s.ticker); } });
+                this.renderSearchResults(combined);
             }
         } catch (e) {
-            console.error("Search failed", e);
-            list.innerHTML = '<p style="color:var(--accent-red); padding:20px;">검색 중 오류가 발생했습니다. 다시 시도해 주세요.</p>';
+            console.error("Global search failed", e);
+        } finally {
+            const status = document.getElementById('search-status');
+            if (status) status.remove();
         }
+    }
+
+    renderSearchResults(results) {
+        const list = document.getElementById('market-list');
+        if (results.length === 0) {
+            list.innerHTML = '<p style="padding:20px; color:#888;">검색 결과가 없어요 😢</p>';
+            return;
+        }
+        list.innerHTML = results.map(q => `
+            <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
+                <div style="flex: 1;">
+                    <strong style="display:block;">${q.country} ${q.name}</strong>
+                    <div class="ticker">${q.ticker} | ${q.type}</div>
+                </div>
+                <span class="adopt-badge">➕ 영입</span>
+            </div>
+        `).join('');
     }
 
     prepareAdoption(ticker, fullName) {
@@ -233,16 +295,11 @@ class MyStockyVillage {
 
     confirmAdoption() {
         const nickname = document.getElementById('naming-input').value.trim();
-        if (!nickname) {
-            alert("이름을 지어주세요!");
-            return;
-        }
+        if (!nickname) { alert("이름을 지어주세요!"); return; }
 
         const newStockyData = {
-            name: nickname,
-            ticker: this.pendingAdoption.ticker,
-            icon: this.pendingAdoption.icon,
-            color: this.pendingAdoption.color
+            name: nickname, ticker: this.pendingAdoption.ticker,
+            icon: this.pendingAdoption.icon, color: this.pendingAdoption.color
         };
 
         const newStocky = new Stocky(newStockyData, this);
@@ -251,8 +308,6 @@ class MyStockyVillage {
         this.toggleModal('naming-modal', false);
         this.saveVillage();
         this.updateVillageStats();
-        
-        // Fetch news for the new one
         newStocky.fetchNewsAndMood();
     }
 
@@ -278,27 +333,20 @@ class MyStockyVillage {
         const saved = localStorage.getItem('mystocky_village');
         if (saved) {
             const data = JSON.parse(saved);
-            data.forEach(d => {
-                this.stockies.push(new Stocky(d, this));
-            });
+            data.forEach(d => { this.stockies.push(new Stocky(d, this)); });
             this.updateVillageStats();
         }
     }
 
     refreshData() {
         this.stockies.forEach(s => s.fetchNewsAndMood());
-        // Periodically show news bubbles automatically
         setInterval(() => {
             if (this.stockies.length > 0) {
                 const randomStocky = this.stockies[Math.floor(Math.random() * this.stockies.length)];
                 randomStocky.showNews();
             }
         }, 15000);
-        
-        // Refresh market data every 5 minutes
-        setInterval(() => {
-            this.stockies.forEach(s => s.fetchNewsAndMood());
-        }, 300000);
+        setInterval(() => { this.stockies.forEach(s => s.fetchNewsAndMood()); }, 300000);
     }
 }
 
