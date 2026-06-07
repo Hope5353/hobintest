@@ -1,230 +1,222 @@
-// 가영아밥먹자 🏥💝 High-Precision 10-Step Branching Engine with Verified Images
+// 괜찮아, 밥먹자 🏥💝 High-Precision Branching Logic (Realistic Nurse Insights) - Universal Edition
 
 const FOOD_DATABASE = [
-    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?q=80&w=800", r: "스트레스가 확 풀리는 매운맛!", s: "엽기떡볶이", tags: ["stress", "spicy", "heavy", "퇴근"] },
-    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=800", r: "기력 보충엔 역시 지글지글 고기!", s: "삼겹살", tags: ["exhausted", "meat", "heavy", "퇴근", "오프"] },
-    { n: "따뜻한 전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?q=80&w=800", r: "속 편하게 먹고 푹 잠들기 좋아.", s: "전복죽", tags: ["tired", "mild", "warm", "퇴근"] },
-    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1626644496439-af0a4ad2d995?q=80&w=800", r: "행복해지는 마법의 시즈닝 치킨!", s: "BHC 뿌링클", tags: ["reward", "fried", "stress", "퇴근", "오프"] },
-    { n: "마라탕", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?q=80&w=800", r: "알싸한 맛으로 병원 냄새 싹 잊어버려!", s: "마라탕", tags: ["stress", "spicy", "hungry", "퇴근"] },
-    { n: "연어 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800", r: "깔끔하고 고급스럽게 즐기는 한 끼.", s: "연어초밥", tags: ["stable", "light", "reward", "출근 전", "오프"] },
-    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800", r: "지친 속을 따뜻하게 데워주는 힐링푸드.", s: "쌀국수", tags: ["exhausted", "warm", "after_night", "퇴근"] },
-    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800", r: "든든하게 채우는 입안 가득 행복!", s: "수제버거", tags: ["hungry", "heavy", "meat", "퇴근", "오프"] },
-    { n: "바삭한 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211?q=80&w=800", r: "겉바속촉, 가영이의 미소 치트키.", s: "돈까스", tags: ["stable", "crispy", "reward", "퇴근", "오프"] },
-    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800", r: "진한 국물과 고소한 곱창의 조화.", s: "곱창전골", tags: ["stress", "heavy", "warm", "퇴근"] },
-    { n: "에그 샌드위치", i: "https://images.unsplash.com/photo-1539252554452-da001b2d1531?q=80&w=800", r: "근무 전, 가볍고 든든한 에너지.", s: "샌드위치", tags: ["before_work", "light", "energy", "출근 전"] },
-    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=800", r: "열 오르는 기분을 시원하게 식혀줘.", s: "망고빙수", tags: ["angry", "cold", "reward", "퇴근", "오프"] },
-    { n: "해물찜", i: "https://images.unsplash.com/photo-1511910849309-0dffb8785146?q=80&w=800", r: "푸짐한 해산물로 영양 보충!", s: "해물찜", tags: ["meat", "spicy", "heavy", "퇴근"] },
-    { n: "베트남 분짜", i: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800", r: "상큼하고 쫄깃하게 입맛 돋우기.", s: "분짜", tags: ["stable", "light", "오프"] },
-    { n: "안심 스테이크", i: "https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=800", r: "고생한 가영이를 위한 특별한 정찬.", s: "스테이크", tags: ["reward", "meat", "stable", "오프"] },
-    { n: "돈코츠 라멘", i: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800", r: "진한 국물 한 모금으로 피로 회복.", s: "라멘", tags: ["warm", "tired", "after_night", "퇴근"] },
-    { n: "포케 샐러드", i: "https://images.unsplash.com/photo-1546069901-d5bfbd25dd24?q=80&w=800", r: "부담 없이 건강하게 채우는 한 끼.", s: "포케", tags: ["light", "stable", "energy", "출근 전"] },
-    { n: "짜장면&탕수육", i: "https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=800", r: "고민될 땐 역시 바삭하고 든든하게!", s: "짜장면", tags: ["hungry", "fried", "heavy", "퇴근", "오프"] },
-    { n: "소고기 샤브샤브", i: "https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=800", r: "야채와 고기의 완벽한 밸런스.", s: "샤브샤브", tags: ["warm", "mild", "meat", "퇴근", "오프"] },
-    { n: "베이글&크림치즈", i: "https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?q=80&w=800", r: "여유로운 오프날 브런치 감성.", s: "베이글", tags: ["off", "light", "reward", "오프"] }
+    { n: "마라탕 & 꿔바로우", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?q=80&w=800", r: "알싸한 맛으로 병원 냄새와 스트레스를 싹!", s: "마라탕", tags: ["stress", "spicy", "heavy"] },
+    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?q=80&w=800", r: "빌런 때문에 오른 혈압을 매운맛으로!", s: "엽기떡볶이", tags: ["angry", "spicy", "heavy"] },
+    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=800", r: "온종일 스테이션 지킨 체력을 고기로 보충!", s: "삼겹살", tags: ["exhausted", "meat", "heavy"] },
+    { n: "전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?q=80&w=800", r: "밤샘 후 지친 위장을 달래주는 따뜻한 위로.", s: "전복죽", tags: ["tired", "mild", "warm"] },
+    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1626644496439-af0a4ad2d995?q=80&w=800", r: "인계 성공적으로 마친 나를 위한 셀프 선물.", s: "BHC 뿌링클", tags: ["reward", "fried", "stable"] },
+    { n: "연어 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800", r: "깔끔하고 고급스럽게 기분 전환하고 싶을 때.", s: "연어초밥", tags: ["stable", "light", "reward"] },
+    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800", r: "퇴근 후 으슬으슬한 몸을 데워주는 뜨끈한 국물.", s: "쌀국수", tags: ["exhausted", "warm", "tired"] },
+    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800", r: "든든하게 입안 가득 채우는 육즙의 행복.", s: "수제버거", tags: ["hungry", "heavy", "meat"] },
+    { n: "바삭한 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211?q=80&w=800", r: "겉바속촉, 우울함을 날리는 바삭한 소리.", s: "돈까스", tags: ["stable", "crispy", "mild"] },
+    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800", r: "오늘 받은 스트레스, 진한 국물에 소주 한 잔.", s: "곱창전골", tags: ["stress", "heavy", "warm"] },
+    { n: "에그 샌드위치", i: "https://images.unsplash.com/photo-1539252554452-da001b2d1531?q=80&w=800", r: "출근 전 가볍고 빠르게, 일할 에너지 충전!", s: "샌드위치", tags: ["light", "energy", "before"] },
+    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=800", r: "열 오르는 기분을 시원하게 식혀줘.", s: "망고빙수", tags: ["angry", "cold", "reward"] },
+    { n: "직화 보쌈 세트", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=800", r: "기름기 뺀 단백질로 오늘 하루 고생한 나에게!", s: "보쌈", tags: ["meat", "heavy", "stable"] },
+    { n: "스테이크", i: "https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=800", r: "나이트 전, 최후의 만찬으로 든든하게!", s: "스테이크", tags: ["reward", "meat", "before"] },
+    { n: "해물 파전", i: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800", r: "비오는 오프날, 막걸리와 함께하는 힐링.", s: "해물파전", tags: ["off", "fried", "mild"] }
 ];
 
 const BRANCHES = {
     root: {
-        text: "가영아, 지금 어떤 상황이야?",
+        text: "고생했어! 지금 어떤 상황이야?",
         options: [
-            { t: "근무 막 마쳤어! (퇴근)", next: "after", s: "퇴근" },
-            { t: "이제 근무 가야 해... (출근 전)", next: "before", s: "출근 전" },
-            { t: "오늘은 꿀 같은 휴식! (오프)", next: "off", s: "오프" }
+            { t: "방금 퇴근했어! (지침)", next: "after", s: "after" },
+            { t: "이제 곧 출근해야 해 (긴장)", next: "before", s: "before" },
+            { t: "행복한 오프(Off) 중!", next: "off", s: "off" }
         ]
     },
     after: [
         { text: "오늘 스테이션 상황은 어땠어?", options: [
             { t: "완전 스테이블(Stable)! 평화로웠어", s: "stable" },
-            { t: "조금 바빴지만 버틸만했어", s: "mild" },
-            { t: "정신없어서 영혼 탈탈 털림", s: "stress" },
-            { t: "완전 헬파티... 역대급이야", s: "stress" },
-            { t: "이벤트가 너무 많았어 😭", s: "spicy" }
+            { t: "조금 바빴지만 인계는 잘 끝냈어", s: "mild" },
+            { t: "신규/빌런 듀오 때문에 멘탈 나감", s: "stress" },
+            { t: "완전 헬파티... 물 한 모금 못 마심", s: "exhausted" },
+            { t: "이벤트 터져서 뒷수습 하느라 고생", s: "angry" }
         ]},
-        { text: "어느 근무가 끝난 거야?", options: [
-            { t: "데이 (Day) 퇴근!", s: "energy" },
-            { t: "이브닝 (Evening) 퇴근!", s: "tired" },
-            { t: "나이트 (Night) 퇴근!", s: "after_night" },
-            { t: "연속 근무 드디어 끝...", s: "exhausted" },
-            { t: "중간에 조기 퇴근? (부럽)", s: "stable" }
+        { text: "지금 몸에서 어디가 제일 힘들어?", options: [
+            { t: "종일 서 있어서 다리가 무거워", s: "exhausted" },
+            { t: "인계 주느라 목이 다 쉬었어", s: "warm" },
+            { t: "차팅 하느라 눈이 침침하고 머리 아파", s: "mild" },
+            { t: "그냥 전체적으로 기절 직전이야", s: "heavy" },
+            { t: "배고파서 손이 다 떨려", s: "hungry" }
         ]},
-        { text: "지금 몸 상태 중 어디가 제일 힘들어?", options: [
-            { t: "다리가 퉁퉁 부어서 무거워", s: "exhausted" },
-            { t: "어깨랑 허리가 끊어질 것 같아", s: "meat" },
-            { t: "눈이 침침하고 머리가 지끈거려", s: "warm" },
-            { t: "온몸에 힘이 하나도 없어", s: "meat" },
-            { t: "그냥 전체적으로 기절 직전이야", s: "mild" }
-        ]},
-        { text: "밥 먹을 시간은 좀 있었어?", options: [
-            { t: "아예 굶었어... 배고파 죽음", s: "hungry" },
-            { t: "중간에 간식만 조금?", s: "hungry" },
-            { t: "병원 밥 대충 넘겼어", s: "mild" },
-            { t: "그래도 챙겨 먹긴 했어", s: "light" },
-            { t: "지금 식욕이 아예 없어", s: "light" }
-        ]},
-        { text: "지금 가장 땡기는 맛은 뭐야?", options: [
-            { t: "무조건 매운 거! 매운 거!!", s: "spicy" },
-            { t: "달달한 게 미친 듯이 땡겨", s: "reward" },
-            { t: "기름지고 고소한 거", s: "fried" },
-            { t: "뜨끈하고 시원한 국물", s: "warm" },
-            { t: "담백하고 속 편한 거", s: "mild" }
-        ]},
-        { text: "보호자나 의사가 힘들게 하진 않았어?", options: [
-            { t: "응, 다들 친절했어", s: "stable" },
-            { t: "한두 명 빌런이 있었지", s: "stress" },
-            { t: "진짜 뒷목 잡을 뻔했어", s: "spicy" },
-            { t: "그냥 일 자체가 힘들었어", s: "mild" },
-            { t: "동료들이랑 수다로 풀었어", s: "reward" }
+        { text: "오늘 제일 짜증 났던 포인트는?", options: [
+            { t: "말 안 듣는 환자/보호자", s: "angry" },
+            { t: "이해 안 가는 의사/오더", s: "stress" },
+            { t: "끝나지 않는 차팅과 잡일", s: "tired" },
+            { t: "갑자기 터진 응급 상황", s: "stress" },
+            { t: "내 실수 아닐까 하는 걱정", s: "mild" }
         ]},
         { text: "식사하고 바로 잠들 예정이야?", options: [
-            { t: "응, 씻고 바로 기절할래", s: "mild" },
-            { t: "넷플릭스 좀 보다 잘래", s: "fried" },
-            { t: "맥주 한 잔 시원하게 하고 싶어", s: "fried" },
-            { t: "잠이 안 와서 좀 놀아야지", s: "heavy" },
-            { t: "이제 막 밤을 지새워야 해", s: "energy" }
+            { t: "씻고 바로 기절하고 싶어", s: "mild" },
+            { t: "넷플릭스 보며 스트레스 풀래", s: "heavy" },
+            { t: "잠이 안 와서 술 한잔 생각나", s: "fried" },
+            { t: "이제 막 밤을 지새워야 해", s: "energy" },
+            { t: "수다 떨면서 스트레스 풀래", s: "reward" }
         ]},
-        { text: "오늘 고생한 가영이에게 주는 상은?", options: [
-            { t: "화려하게 한 상 차려먹기", s: "heavy" },
-            { t: "맛있게 적당히 즐기기", s: "reward" },
-            { t: "간단하지만 맛있는 거", s: "light" },
-            { t: "남자친구가 사주는 맛있는 거!", s: "reward" },
-            { t: "나를 위한 건강한 선물", s: "stable" }
+        { text: "나이트 근무를 마친 거야?", options: [
+            { t: "응, 밤새고 아침 햇살 보는 중", s: "warm" },
+            { t: "아니, 데이나 이브닝이었어", s: "meat" }
         ]},
-        { text: "내일 가영이의 듀티는 뭐야?", options: [
-            { t: "또 근무 가야 해... (연근)", s: "meat" },
-            { t: "오예! 드디어 오프야!", s: "heavy" },
-            { t: "다른 듀티로 바뀌어", s: "mild" },
-            { t: "아직 스케줄을 몰라", s: "mild" },
-            { t: "내일도 나이트야", s: "after_night" }
+        { text: "밥 먹을 여유는 좀 있었어?", options: [
+            { t: "아예 굶었어... 10시간 공복", s: "hungry" },
+            { t: "병원 밥 대충 마셨어", s: "heavy" },
+            { t: "중간에 간식은 좀 먹었지", s: "light" },
+            { t: "식욕조차 없을 만큼 힘들어", s: "mild" },
+            { t: "그래도 챙겨 먹으려고 노력함", s: "stable" }
+        ]},
+        { text: "지금 당장 땡기는 자극의 정도는?", options: [
+            { t: "미친듯이 맵고 짠 거!", s: "spicy" },
+            { t: "달달해서 당 충전되는 거", s: "reward" },
+            { t: "기름지고 고소한 튀김류", s: "fried" },
+            { t: "뜨끈하고 시원한 국물", s: "warm" },
+            { t: "담백하고 가벼운 샐러드", s: "light" }
+        ]},
+        { text: "내일도 똑같이 출근해?", options: [
+            { t: "응... 벌써부터 한숨 나와", s: "meat" },
+            { t: "내일은 드디어 오프야!", s: "heavy" },
+            { t: "듀티가 바뀌어서 적응해야 해", s: "energy" },
+            { t: "아직 잘 모르겠어", s: "mild" },
+            { t: "오프 뒤에 다시 근무야", s: "reward" }
+        ]},
+        { text: "오늘 스스로에게 몇 점 주고 싶어?", options: [
+            { t: "100점! 완벽하게 해냈어", s: "reward" },
+            { t: "70점, 무사히 끝나서 다행이야", s: "stable" },
+            { t: "40점, 자책하고 싶지 않은데 힘들어", s: "mild" },
+            { t: "보상 받고 싶은 마음 1000%", s: "heavy" },
+            { t: "그냥 내일이 안 왔으면 좋겠어", s: "spicy" }
         ]}
     ],
     before: [
-        { text: "어느 근무 들어가기 전이야?", options: [
-            { t: "데이 (Day) 출근 전", s: "light" },
-            { t: "이브닝 (Evening) 출근 전", s: "energy" },
-            { t: "나이트 (Night) 출근 전", s: "heavy" },
-            { t: "교육이나 미팅 가야 해", s: "light" },
-            { t: "지금 막 눈 떴어", s: "energy" }
+        { text: "무슨 근무 들어가기 전이야?", options: [
+            { t: "데이(Day) - 아직 잠 덜 깸", s: "light" },
+            { t: "이브닝(Evening) - 곧 헬게이트", s: "energy" },
+            { t: "나이트(Night) - 밤샘 대비", s: "heavy" },
+            { t: "교육이나 오버타임 하러 감", s: "mild" },
+            { t: "이제 막 눈 떴어", s: "energy" }
         ]},
-        { text: "지금 기분은 솔직히 어때?", options: [
-            { t: "가기 싫어서 눈물 나", s: "reward" },
-            { t: "돈 벌러 가자... 해탈함", s: "mild" },
-            { t: "오늘은 좀 힘이 나!", s: "energy" },
-            { t: "무사히 스테이블하길 기도 중", s: "stable" },
+        { text: "출근 전 지금 컨디션은 어때?", options: [
+            { t: "오늘 왠지 스테이블할 것 같아", s: "stable" },
+            { t: "벌써부터 다리가 후들거려", s: "meat" },
+            { t: "가기 싫어서 눈물 날 것 같아", s: "reward" },
+            { t: "카페인이 절실하게 필요해", s: "energy" },
             { t: "그냥 아무 생각이 없어", s: "mild" }
         ]},
-        { text: "지금 배고픈 정도는?", options: [
-            { t: "든든하게 먹어야 버텨", s: "heavy" },
-            { t: "적당히 먹고 싶어", s: "mild" },
-            { t: "속 더부룩하면 일 못 해", s: "light" },
-            { t: "입맛 없지만 살려고 먹어", s: "energy" },
-            { t: "커피 한 잔이면 될 듯", s: "light" }
-        ]},
-        { text: "오늘 스테이션 분위기 예상은?", options: [
-            { t: "스테이블(Stable)할 것 같아", s: "stable" },
-            { t: "왠지 헬파티의 예감이...", s: "spicy" },
-            { t: "멤버가 좋아서 괜찮을 듯", s: "stable" },
-            { t: "그냥 평소랑 비슷하겠지", s: "mild" },
-            { t: "바쁠 게 뻔해서 걱정돼", s: "meat" }
-        ]},
-        { text: "지금 가영이에게 필요한 건?", options: [
-            { t: "강력한 카페인과 당분", s: "reward" },
-            { t: "속이 뜨끈해지는 국밥", s: "warm" },
-            { t: "힘이 불끈 나는 고기", s: "meat" },
-            { t: "기분 좋아지는 상큼한 거", s: "light" },
-            { t: "바삭바삭 씹는 재미", s: "crispy" }
-        ]},
         { text: "출근해서 밥 먹을 시간 있을까?", options: [
-            { t: "절대 없어, 지금이 마지막", s: "heavy" },
-            { t: "눈치껏 간식 먹겠지", s: "energy" },
-            { t: "병원 밥 먹을 거야", s: "mild" },
-            { t: "몰라, 바쁘면 못 먹는 거지", s: "heavy" },
-            { t: "교대로 잘 챙겨 먹어", s: "stable" }
+            { t: "절대 없어, 지금이 마지막이야", s: "heavy" },
+            { t: "바쁘면 또 굶겠지 뭐", s: "heavy" },
+            { t: "병원 밥 먹을 시간은 나겠지", s: "mild" },
+            { t: "눈치껏 간식 먹을 거야", s: "light" },
+            { t: "교대로 꼬박꼬박 챙겨 먹음", s: "stable" }
         ]},
-        { text: "근무 후 가영이의 계획은?", options: [
-            { t: "바로 친구 만나러 가기", s: "energy" },
-            { t: "집에 와서 잠만 자기", s: "mild" },
-            { t: "운동하러 가기 (갓생)", s: "meat" },
-            { t: "남자친구랑 데이트!", s: "reward" },
-            { t: "밀린 공부나 과제하기", s: "energy" }
+        { text: "오늘 멤버(스테이션)는 어때?", options: [
+            { t: "천사들만 모인 최고의 조합", s: "stable" },
+            { t: "무난무난해서 괜찮아", s: "mild" },
+            { t: "빌런이 섞여있어서 걱정돼", s: "spicy" },
+            { t: "다 모르는 사람/신규라 불안해", s: "stress" },
+            { t: "나 혼자 다 해야 할 것 같아", s: "meat" }
         ]},
-        { text: "가장 생각나는 음식 장르는?", options: [
-            { t: "한식 (밥심!)", s: "meat" },
-            { t: "일식/중식", s: "fried" },
-            { t: "양식/패스트푸드", s: "heavy" },
-            { t: "분식/스낵", s: "spicy" },
-            { t: "상큼한 샐러드/과일", s: "light" }
+        { text: "지각할까봐 서두르고 있어?", options: [
+            { t: "응, 지금 뛰어가야 해!", s: "light" },
+            { t: "조금 여유 있어서 뭐 먹으려고", s: "heavy" },
+            { t: "이미 병원 근처 편의점이야", s: "mild" },
+            { t: "가는 내내 자고 싶어", s: "tired" },
+            { t: "미리 와서 공부/준비 중", s: "energy" }
         ]},
-        { text: "가영아, 지금 몸 어디가 뻐근해?", options: [
-            { t: "자고 일어났는데도 피곤해", s: "warm" },
-            { t: "목이랑 어깨가 뭉쳐있어", s: "meat" },
-            { t: "온몸이 찌뿐둥해", s: "energy" },
-            { t: "다행히 오늘은 컨디션 좋아", s: "stable" },
-            { t: "머리가 조금 아파", s: "mild" }
+        { text: "지금 입안의 상태는?", options: [
+            { t: "쓰고 텁텁해서 상큼한 게 필요해", s: "light" },
+            { t: "텅 비어서 고소한 게 땡겨", s: "meat" },
+            { t: "매콤한 걸로 정신 차리고 싶어", s: "spicy" },
+            { t: "입맛 없는데 뭐라도 넣어야 함", s: "warm" },
+            { t: "달달한 게 들어가야 힘이 나", s: "reward" }
+        ]},
+        { text: "오늘의 근무 예상 강도는?", options: [
+            { t: "1단계 - 아주 평화로움", s: "stable" },
+            { t: "2단계 - 평소만큼 바쁨", s: "mild" },
+            { t: "3단계 - 정신없을 예정", s: "heavy" },
+            { t: "4단계 - 멘붕 오기 직전", s: "stress" },
+            { t: "5단계 - 이미 나는 없다", s: "meat" }
+        ]},
+        { text: "근무 후에 약속 있어?", options: [
+            { t: "응, 맛있는 거 먹으러 가!", s: "reward" },
+            { t: "아니, 바로 씻고 잘 거야", s: "warm" },
+            { t: "운동 가기로 마음먹었어", s: "energy" },
+            { t: "밀린 공부나 과제해야 해", s: "mild" },
+            { t: "그때 가서 정할래", s: "light" }
+        ]},
+        { text: "가장 걱정되는 게 뭐야?", options: [
+            { t: "환자 상태 갑자기 나빠질까봐", s: "mild" },
+            { t: "IV 실패해서 등땀 날까봐", s: "stress" },
+            { t: "선생님들한테 혼날까봐", s: "angry" },
+            { t: "너무 바빠서 화장실 못 갈까봐", s: "heavy" },
+            { t: "그냥 가기 싫은 게 제일 커", s: "reward" }
         ]}
     ],
     off: [
-        { text: "오늘 오프는 어떻게 보내는 중?", options: [
-            { t: "하루종일 집에서 요양 중", s: "mild" },
-            { t: "드라이브나 여행 가기", s: "energy" },
-            { t: "밀린 잠 12시간 자기", s: "reward" },
-            { t: "맛있는 거 찾아다니기", s: "heavy" },
-            { t: "자기계발/공부하기", s: "stable" }
+        { text: "오늘 오프는 어떻게 시작했어?", options: [
+            { t: "오후 2시까지 기절해있었어", s: "reward" },
+            { t: "아침 일찍 일어나서 놀러 감", s: "energy" },
+            { t: "밀린 병원 일/공부 하는 중", s: "stable" },
+            { t: "하루종일 침대 위에서 뒹굴", s: "mild" },
+            { t: "대청소하고 이불 빨래 완료", s: "heavy" }
         ]},
-        { text: "지금 가영이의 행복 지수는?", options: [
-            { t: "오프라서 너무 행복해!", s: "stable" },
-            { t: "그냥 평화롭고 좋아", s: "stable" },
-            { t: "내일 출근 생각에 우울해", s: "reward" },
-            { t: "어제 일이 자꾸 생각나", s: "spicy" },
-            { t: "그냥저냥 무난해", s: "mild" }
+        { text: "내일 출근 생각하면 어때?", options: [
+            { t: "생각 안 하려고 노력 중!", s: "stable" },
+            { t: "벌써부터 심장이 두근거려", s: "warm" },
+            { t: "사직서 쓰고 싶은 충동...", s: "stress" },
+            { t: "그냥 돈 벌러 가야지 체념함", s: "mild" },
+            { t: "오프가 하루 더 있어서 행복!", s: "reward" }
         ]},
-        { text: "오늘 식사 컨셉은?", options: [
-            { t: "오프니까 화려하게 폭식!", s: "heavy" },
-            { t: "분위기 있는 곳에서 외식", s: "reward" },
-            { t: "가볍고 건강하게 관리", s: "light" },
-            { t: "배달 시켜서 편하게 먹기", s: "mild" },
-            { t: "집밥 느낌으로 든든하게", s: "meat" }
-        ]},
-        { text: "지금 날씨는 어때?", options: [
-            { t: "화창하고 맑음", s: "stable" },
-            { t: "꾸물꾸물 흐림", s: "warm" },
-            { t: "비가 오네? 파전각", s: "fried" },
-            { t: "너무 덥다...", s: "cold" },
-            { t: "추워서 나가기 싫어", s: "warm" }
+        { text: "오늘 하루의 행복 지수는?", options: [
+            { t: "100% 터질 듯이 행복해", s: "reward" },
+            { t: "80% 그냥 평화롭고 좋아", s: "stable" },
+            { t: "50% 무난무난한 하루", s: "mild" },
+            { t: "20% 어제 일이 자꾸 떠올라", s: "spicy" },
+            { t: "0% 오프인데도 몸이 아파", s: "warm" }
         ]},
         { text: "가장 땡기는 음식 식감은?", options: [
             { t: "바삭바삭 튀김류", s: "fried" },
             { t: "쫄깃쫄깃 고기/회", s: "meat" },
-            { t: "아삭아삭 신선함", s: "light" },
-            { t: "부드러운 크림/치즈", s: "reward" },
-            { t: "뜨끈한 국물", s: "warm" }
+            { t: "아삭아삭 신선한 채소", s: "light" },
+            { t: "부드럽고 달콤한 것", s: "reward" },
+            { t: "뜨끈한 국물 요리", s: "warm" }
         ]},
-        { text: "활동량은 어느 정도야?", options: [
-            { t: "침대와 한 몸 (0%)", s: "light" },
-            { t: "집안일 좀 했어", s: "mild" },
-            { t: "밖에서 많이 걸었어", s: "meat" },
-            { t: "운동까지 완료!", s: "energy" },
-            { t: "지금 나갈 준비 중", s: "energy" }
+        { text: "오늘의 활동량은 어느 정도?", options: [
+            { t: "0% - 침대와 한 몸", s: "light" },
+            { t: "30% - 동네 카페 마실", s: "mild" },
+            { t: "60% - 밖에서 친구 만남", s: "energy" },
+            { t: "100% - 여행이나 운동 완료", s: "meat" },
+            { t: "준비하느라 바쁨", s: "energy" }
         ]},
-        { text: "가영아, 지금 소화 상태는?", options: [
-            { t: "완전 튼튼! 다 먹을래", s: "heavy" },
-            { t: "보통이야", s: "mild" },
-            { t: "약간 더부룩해", s: "light" },
-            { t: "어제 많이 먹어서 조심 중", s: "light" },
-            { t: "아주 배고파서 쓰러짐", s: "heavy" }
+        { text: "활동하면서 스트레스 풀렸어?", options: [
+            { t: "응, 다 잊어버렸어!", s: "stable" },
+            { t: "어느 정도는 풀린 듯", s: "mild" },
+            { t: "아직 조금 남아있어", s: "spicy" },
+            { t: "맛있는 걸 먹어야 풀릴 듯", s: "heavy" },
+            { t: "오프가 더 길었으면 좋겠어", s: "reward" }
         ]},
         { text: "음식의 칼로리는 신경 써?", options: [
             { t: "오프인데? 신경 안 써!", s: "heavy" },
             { t: "조금은...? 말로만", s: "meat" },
             { t: "내일 출근을 위해 관리하자", s: "light" },
             { t: "맛있으면 0칼로리", s: "fried" },
-            { t: "식단 중이야 😭", s: "light" }
+            { t: "요즘 식단 중이야 😭", s: "light" }
         ]},
-        { text: "지금 생각나는 나라 음식은?", options: [
+        { text: "어느 나라 음식이 땡겨?", options: [
             { t: "정갈한 한식", s: "meat" },
             { t: "화려한 일식/중식", s: "reward" },
             { t: "기름진 양식/버거", s: "heavy" },
-            { t: "이국적인 동남아식", s: "light" },
-            { t: "그냥 아무거나 맛있으면 됨", s: "mild" }
+            { t: "상큼한 동남아/샐러드", s: "light" },
+            { t: "아무거나 맛있는 거면 됨", s: "mild" }
+        ]},
+        { text: "마지막으로 오늘의 휴식 컨셉은?", options: [
+            { t: "고생한 나를 위한 보상 데이", s: "reward" },
+            { t: "내일을 위한 완벽한 충전", s: "stable" },
+            { t: "밀린 일을 해결하는 갓생", s: "energy" },
+            { t: "그냥 아무것도 안 하기", s: "mild" },
+            { t: "사랑하는 사람과 함께하기", s: "reward" }
         ]}
     ]
 };
@@ -278,7 +270,7 @@ class MoodFoodApp {
         const pFill = document.getElementById('progress-bar-fill');
         
         pFill.style.width = `${((this.responses.length + 1) / 10) * 100}%`;
-        document.getElementById('progress-text').innerText = `가영이 기분 분석 중... (${this.responses.length + 1}/10)`;
+        document.getElementById('progress-text').innerText = `기분 분석 중... (${this.responses.length + 1}/10)`;
 
         qText.innerText = q.text;
         aGrid.innerHTML = '';
@@ -318,9 +310,9 @@ class MoodFoodApp {
         container.innerHTML = '';
 
         const situation = this.responses[0];
-        const moodState = this.responses[1];
+        const state = this.responses[1];
         document.getElementById('result-summary').innerText = 
-            `가영아, 지금 "${situation}" 상황에서 "${moodState}"라니 고생 정말 많았어 😭\n가영이의 컨디션을 정밀 분석해서 고른 3가지 메뉴야!`;
+            `지금 "${situation}" 상황에서 "${state}"라니 정말 고생 많았어 😭\n가영이의 마음과 몸 상태를 분석해서 고른 3가지 메뉴야!`;
 
         picks.forEach(food => {
             const card = document.createElement('div');
@@ -331,7 +323,7 @@ class MoodFoodApp {
                 </div>
                 <div class="food-info">
                     <span class="food-name">${food.n}</span>
-                    <p class="food-reason">💡 추천 이유: 가영이가 지금 ${moodState}이고 ${situation}이라서 ${food.r}</p>
+                    <p class="food-reason">💡 추천 이유: 지금 ${state} 상황이고 ${situation}이라서 ${food.r}</p>
                     <div class="order-btn-group">
                         <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}')">배민</a>
                         <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}')">쿠팡</a>
@@ -351,7 +343,7 @@ class MoodFoodApp {
 
     sendToBF(foodName) {
         const msg = `자기야 나 지금 ${this.responses[0]}인데 ${this.responses[1]}해서 너무 힘들어... 😭 분석해보니까 오늘 [${foodName}] 먹어야 한대! 이거 사주면 가영이 기분 싹 풀릴 듯? 💝`;
-        if (navigator.share) { navigator.share({ title: '가영아밥먹자 🏥💝', text: msg, url: window.location.href }); }
+        if (navigator.share) { navigator.share({ title: '괜찮아, 밥먹자 🏥💝', text: msg, url: window.location.href }); }
         else { alert("메시지가 복사되었습니다! 남자친구에게 보내주세요:\n\n" + msg); }
     }
 
