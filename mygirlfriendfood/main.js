@@ -1,4 +1,4 @@
-// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (Functional Link Version)
+// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (Deep-Link & Sharing Final Fix)
 
 const FOOD_DATABASE = [
     { n: "엽기떡볶이", r: "빌런들에게 뺏긴 기를 매운맛으로 복수!", s: "엽기떡볶이", tags: ["stress", "spicy"] },
@@ -12,10 +12,7 @@ const FOOD_DATABASE = [
     { n: "바삭 등심 돈카츠", r: "바삭바삭 소리에 우울함도 다 깨질 거야.", s: "돈까스", tags: ["stable", "crispy"] },
     { n: "곱창 전골", r: "진한 국물에 소주 한 잔, 오늘 스트레스 안녕.", s: "곱창전골", tags: ["stress", "heavy"] },
     { n: "망고 빙수", r: "열 오르는 기분을 시원하게 식혀주는 당 충전.", s: "망고빙수", tags: ["angry", "cold"] },
-    { n: "직화 보쌈", r: "담백한 고기로 내일 에너지를 미리 충전!", s: "보쌈", tags: ["meat", "heavy"] },
-    { n: "닭갈비", r: "철판 위에서 볶아지는 매콤한 스트레스 해소!", s: "닭갈비", tags: ["stress", "spicy"] },
-    { n: "로제 찜닭", r: "부드럽고 매콤한 로제의 유혹.", s: "로제찜닭", tags: ["reward", "heavy"] },
-    { n: "부대찌개", r: "햄 가득, 든든한 국물로 에너지 충전!", s: "부대찌개", tags: ["hungry", "warm"] }
+    { n: "직화 보쌈", r: "담백한 고기로 내일 에너지를 미리 충전!", s: "보쌈", tags: ["meat", "heavy"] }
 ];
 
 const EXTRA_NAMES = ["김치찜", "냉모밀", "마제소바", "텐동", "나시고랭", "팟타이", "푸팟퐁커리", "타코", "라자냐", "에그인헬", "감바스", "뇨끼", "리조또", "휘낭시에", "크로플", "젤라또", "티라미수", "그릭요거트", "반미", "분짜", "탄두리치킨", "인도커리", "샥슈카", "파에야", "봉골레", "라구파스타", "잠봉뵈르", "지코바", "허니콤보", "고추바사삭", "가마로강정", "신전떡볶이", "청년다방", "응급실떡볶이", "배떡", "직화오돌뼈", "닭발", "염통꼬치", "순대", "튀김범벅", "물어묵", "매운오뎅", "붕어빵", "호떡", "소떡소떡", "멘보샤", "크림새우", "유린기", "깐풍기", "양장피", "마파두부", "짬뽕", "볶음밥", "딤섬", "고구마맛탕", "츄러스", "소르베", "말차빙수", "앙버터", "바게트", "소금빵", "도넛", "핫도그", "칠리독", "콘독", "어니언링", "해물파전", "김치전", "육전", "편육", "제육볶음", "오징어소면", "낙지볶음", "장어덮밥", "스테이크덮밥", "우츠동", "가츠동", "에비동", "카레라이스", "오므라이스", "새우볶음밥", "잡채밥", "비빔냉면", "회냉면", "콩국수", "비빔국수", "잔치국수", "수제비", "칼국수", "모듬만두", "갈비탕", "곰탕", "설렁탕", "순대국", "내장탕", "뼈해장국", "감자탕", "추어탕", "육개장", "미역국", "소고기무국", "콩나물국밥", "선지국밥", "해장국", "닭개장", "삼계탕", "찜닭", "안동찜닭", "간장치킨", "양념치킨", "마늘치킨", "또봉이", "시장통닭", "오리주물럭", "훈제오리", "불고기", "갈비찜", "돼지갈비", "소갈비", "등갈비", "폭립", "치즈돈까스", "고구마돈까스", "차돌박이", "우삼겹", "대창", "막창", "곱창", "특양", "대창덮밥", "연어장덮밥", "간장새우장", "양념게장", "꼬막비빔밥", "물회", "조개구이", "방어회", "광어회", "우럭회", "도미회", "참치회", "육사시미", "산낙지", "낙곱새", "쭈꾸미볶음", "꼼장어", "장어구이"];
@@ -117,12 +114,10 @@ const BRANCHES = {
             { t: "이브닝(Evening)", s: "energy" },
             { t: "나이트(Night)", s: "heavy" }
         ]},
-        { text: "출근 전 지금 컨디션은?", options: [
-            { t: "오늘 왠지 스테이블할 것 같아", s: "stable" },
-            { t: "벌써부터 다리가 후들거려", s: "meat" },
-            { t: "가기 싫어서 눈물 날 것 같아", s: "reward" },
-            { t: "카페인이 절실하게 필요해", s: "energy" },
-            { t: "그냥 아무 생각이 없다", s: "mild" }
+        { text: "출근 전 지금 기분은?", options: [
+            { t: "가기 싫어서 눈물 나", s: "reward" },
+            { t: "무사 스테이블하길 기도 중", s: "stable" },
+            { t: "아무 생각이 없다", s: "mild" }
         ]},
         { text: "가장 걱정되는 게 뭐야?", options: [
             { t: "IV 실패", s: "stress" },
@@ -230,21 +225,42 @@ class MoodFoodApp {
 
     goOrder(type, search, event) {
         if(event) event.stopPropagation();
-        const url = type === 'baemin' ? `baemin://search?keyword=${encodeURIComponent(search)}` : `coupangeats://search?q=${encodeURIComponent(search)}`;
+        // Fixed Deep Links for Search Results
+        const url = type === 'baemin' 
+            ? `baemin://search?keyword=${encodeURIComponent(search)}` 
+            : `coupangeats://search?q=${encodeURIComponent(search)}`;
+        
         window.location.href = url;
+
+        // Web Fallback if app not installed
         setTimeout(() => {
             const webUrl = type === 'baemin' 
                 ? `https://www.baemin.com/search?keyword=${encodeURIComponent(search)}` 
                 : `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(search)}`;
-            if (window.confirm("배달 앱이 설치되어 있나요? 웹으로 이동할까요?")) window.location.href = webUrl;
+            if (window.confirm("앱이 실행되지 않았나요? 웹으로 이동할까요?")) window.location.href = webUrl;
         }, 1500);
     }
 
     sendToBF(foodName, event) {
         if(event) event.stopPropagation();
-        const msg = `자기야 나 오늘 분석해보니까 [${foodName}] 먹어야 한대! 이거 사주면 기분 싹 풀릴 것 같아 💝`;
-        if (navigator.share) navigator.share({ title: '괜찮아, 밥먹자 🏥💝', text: msg, url: window.location.href });
-        else alert("메시지가 복사되었습니다! 남자친구에게 보내주세요:\n\n" + msg);
+        // Refined Message for Kakao Sharing
+        const msg = `자기야 나 오늘 근무 끝나고 너무 고생했어... 😭 분석해보니까 오늘 [${foodName}] 먹어야 한대! 나 이거 사주면 기분 싹 풀릴 것 같아 💝`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: '괜찮아, 밥먹자 🏥💝',
+                text: msg,
+                url: window.location.href
+            }).catch(e => console.log('Share failed', e));
+        } else {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = msg;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert("메시지가 복사되었습니다! 남자친구에게 카톡으로 보내주세요:\n\n" + msg);
+        }
     }
 
     resetApp() {
