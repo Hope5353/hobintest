@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>가영아밥먹자 💝 | 섬세한 기분 분석 & 맛있는 메뉴</title>
-    <link rel="stylesheet" href="style.css?v=1.3">
+    <title>가영아밥먹자 🏥💝 | 간호사 여친을 위한 맞춤 식단</title>
+    <link rel="stylesheet" href="style.css?v=1.4">
     <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="mobile-only">
     <div class="app-wrapper">
         <header class="header">
-            <h1>가영아밥먹자 💝</h1>
-            <p id="header-subtitle">가영이의 기분에 딱 맞는 메뉴를 골라줄게</p>
+            <h1>가영아밥먹자 🏥💝</h1>
+            <p id="header-subtitle">오늘 가영이의 듀티에 딱 맞는 밥을 골라줄게</p>
         </header>
 
         <main class="main-content">
             <!-- Progress Bar -->
             <div id="survey-progress-container" class="hidden">
                 <div class="progress-info">
-                    <span id="progress-text">질문 1 / 10</span>
+                    <span id="progress-text">듀티 확인 중...</span>
                 </div>
                 <div class="progress-bar-bg">
                     <div id="progress-bar-fill" class="progress-bar-fill" style="width: 10%;"></div>
@@ -28,17 +28,17 @@
             <!-- Start Screen -->
             <section id="start-screen" class="step">
                 <div class="welcome-card">
-                    <span class="welcome-emoji">🍱</span>
-                    <h2>안녕 가영아!</h2>
-                    <p>오늘 기분이 어떤지 10가지만 물어볼게.<br>가장 잘 어울리는 후보 3개를 골라줄게!</p>
-                    <button id="btn-start-survey" class="start-btn">기분 분석 시작하기</button>
+                    <span class="welcome-emoji">🩺</span>
+                    <h2>고생했어 가영아!</h2>
+                    <p>오늘 듀티가 어땠어? 가영이의 컨디션에<br>가장 필요한 메뉴 3개를 골라줄게!</p>
+                    <button id="btn-start-survey" class="start-btn">오늘의 듀티 분석 시작</button>
                 </div>
             </section>
 
             <!-- Survey Section -->
             <section id="survey-area" class="step hidden">
                 <div id="question-card" class="question-card">
-                    <h3 id="question-text">질문 로딩 중...</h3>
+                    <h3 id="question-text">오늘의 듀티는 뭐야?</h3>
                     <div id="answer-buttons" class="answer-grid">
                         <!-- Buttons injected by JS -->
                     </div>
@@ -47,11 +47,11 @@
 
             <!-- Result Section -->
             <section id="result-area" class="step hidden">
-                <div class="step-title">가영이를 위한 BEST 3 추천!</div>
-                <p style="text-align:center; font-size:0.85rem; color:#888; margin-bottom:20px;">가장 땡기는 음식을 선택해서 주문해봐!</p>
+                <div class="step-title">가영아, 이런 메뉴는 어때? ✨</div>
+                <p style="text-align:center; font-size:0.85rem; color:#666; margin-bottom:15px;">먹고 싶은 메뉴를 골라 주문하거나,<br>남자친구에게 "사달라고" 보내봐!</p>
                 
                 <div id="results-container" class="results-container">
-                    <!-- 3 Result Cards will be injected here -->
+                    <!-- 3 Result Cards with "Send to BF" button -->
                 </div>
                 
                 <button id="btn-reset" class="reset-btn">다시 분석하기</button>
@@ -59,10 +59,11 @@
         </main>
 
         <footer class="footer">
-            <p>© 2026 가영아밥먹자 - 사랑을 담아 만든 코드</p>
+            <p>© 2026 가영아밥먹자 Nurse Edition - 사랑받는 남친의 조공 코드</p>
         </footer>
     </div>
 
-    <script src="main.js?v=1.3"></script>
+    <!-- Kakao SDK for sharing (Optional, using simple link for now) -->
+    <script src="main.js?v=1.4"></script>
 </body>
 </html>
