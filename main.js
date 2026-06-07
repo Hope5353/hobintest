@@ -1,4 +1,4 @@
-// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (HYPER-REALISTIC)
+// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (YouTube Mukbang Fix)
 
 const FOOD_DATABASE = [
     { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08", r: "빌런들에게 뺏긴 기를 매운맛으로 복수!", s: "엽기떡볶이", tags: ["stress", "spicy"] },
@@ -14,6 +14,11 @@ const FOOD_DATABASE = [
     { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3", r: "열 오르는 기분을 시원하게 식혀주는 당 충전.", s: "망고빙수", tags: ["angry", "cold"] },
     { n: "직화 보쌈", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1", r: "담백한 고기로 내일 에너지를 미리 충전!", s: "보쌈", tags: ["meat", "heavy"] }
 ];
+
+const EXTRA_FOODS = ["치즈 닭갈비", "로제 찜닭", "부대찌개", "김치찜", "냉모밀", "마제소바", "텐동", "나시고랭", "팟타이", "푸팟퐁커리", "타코", "라자냐", "에그인헬", "감바스", "뇨끼", "리조또", "휘낭시에", "크로플", "젤라또", "티라미수", "그릭요거트", "반미", "분짜", "탄두리치킨", "인도커리", "샥슈카", "파에야", "봉골레", "라구파스타", "잠봉뵈르", "지코바", "허니콤보", "고추바사삭", "가마로강정", "신전떡볶이", "청년다방", "응급실떡볶이", "배떡", "직화오돌뼈", "닭발", "염통꼬치", "순대", "튀김범벅", "물어묵", "매운오뎅", "붕어빵", "호떡", "소떡소떡", "멘보샤", "크림새우", "유린기", "깐풍기", "양장피", "마파두부", "짬뽕", "볶음밥", "딤섬", "고구마맛탕", "츄러스", "소르베", "말차빙수", "앙버터", "바게트", "소금빵", "도넛", "핫도그", "칠리독", "콘독", "어니언링", "해물파전", "김치전", "육전", "편육", "제육볶음", "오징어소면", "낙지볶음", "장어덮밥", "스테이크덮밥", "우츠동", "가츠동", "에비동", "카레라이스", "오므라이스", "새우볶음밥", "잡채밥", "비빔냉면", "회냉면", "콩국수", "비빔국수", "잔치국수", "수제비", "칼국수", "모듬만두", "갈비탕", "곰탕", "설렁탕", "순대국", "내장탕", "뼈해장국", "감자탕", "추어탕", "육개장", "미역국", "소고기무국", "콩나물국밥", "선지국밥", "해장국", "닭개장", "삼계탕", "찜닭", "안동찜닭", "간장치킨", "양념치킨", "마늘치킨", "또봉이", "시장통닭", "오리주물럭", "훈제오리", "불고기", "갈비찜", "돼지갈비", "소갈비", "등갈비", "폭립", "치즈돈까스", "고구마돈까스", "차돌박이", "우삼겹", "대창", "막창", "곱창", "특양", "대창덮밥", "연어장덮밥", "간장새우장", "양념게장", "꼬막비빔밥", "물회", "조개구이", "방어회", "광어회", "우럭회", "도미회", "참치회", "육사시미", "산낙지", "낙곱새", "쭈꾸미볶음", "꼼장어", "장어구이"];
+EXTRA_FOODS.forEach(name => {
+    FOOD_DATABASE.push({ n: name, i: `https://loremflickr.com/800/600/${encodeURIComponent(name)},food`, r: `오늘 당신의 컨디션에 딱 맞는 ${name}! 기분을 전환해 줄 거예요.`, s: name, tags: ["mild", "hungry"] });
+});
 
 const SUMMARIES = [
     "오늘 빌런 보호자 때문에 멘탈이 바스러진 당신, 강력한 수혈이 시급해요 😭",
@@ -32,9 +37,9 @@ const BRANCHES = {
     root: {
         text: "고생했어! 지금 어떤 상황이야?",
         options: [
-            { t: "방금 퇴근했어! (지침)", next: "shift_after", s: "퇴근" },
-            { t: "이제 곧 출근해야 해 (긴장)", next: "before", s: "출근 전" },
-            { t: "행복한 오프(Off) 중!", next: "off", s: "오프" }
+            { t: "방금 퇴근했어! (지침)", next: "shift_after", s: "after" },
+            { t: "이제 곧 출근해야 해 (긴장)", next: "before", s: "before" },
+            { t: "행복한 오프(Off) 중!", next: "off", s: "off" }
         ]
     },
     shift_after: {
@@ -109,12 +114,10 @@ const BRANCHES = {
             { t: "이브닝(Evening)", s: "energy" },
             { t: "나이트(Night)", s: "heavy" }
         ]},
-        { text: "출근 전 지금 컨디션은?", options: [
-            { t: "오늘 왠지 스테이블할 것 같아", s: "stable" },
-            { t: "벌써부터 다리가 후들거려", s: "meat" },
-            { t: "가기 싫어서 눈물 날 것 같아", s: "reward" },
-            { t: "카페인이 절실하게 필요해", s: "energy" },
-            { t: "그냥 아무 생각이 없다", s: "mild" }
+        { text: "출근 전 지금 기분은?", options: [
+            { t: "가기 싫어서 눈물 나", s: "reward" },
+            { t: "무사 스테이블하길 기도 중", s: "stable" },
+            { t: "아무 생각이 없다", s: "mild" }
         ]},
         { text: "가장 걱정되는 게 뭐야?", options: [
             { t: "IV 실패", s: "stress" },
@@ -200,12 +203,14 @@ class MoodFoodApp {
         const summaryIdx = (this.selectedTags.length * 7) % SUMMARIES.length;
         document.getElementById('status-summary-box').innerText = SUMMARIES[summaryIdx];
 
-        for (let food of picks) {
+        picks.forEach((food, idx) => {
+            const cardId = `food-card-${idx}`;
             const card = document.createElement('div');
             card.className = 'food-card';
+            card.id = cardId;
             card.innerHTML = `
-                <div class="food-img-area" id="img-area-${food.s}">
-                    <img src="${food.i}" alt="${food.n}">
+                <div class="food-img-area">
+                    <img src="${food.i}" alt="${food.n}" class="main-food-img">
                     <div class="play-overlay">▶️</div>
                     <div class="youtube-badge">Mukbang</div>
                 </div>
@@ -213,42 +218,63 @@ class MoodFoodApp {
                     <span class="food-name">${food.n}</span>
                     <p class="food-reason">💡 추천 이유: ${this.responses[2] || "지친 하루"} 상황이라 ${food.r}</p>
                     <div class="order-btn-group">
-                        <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}')">배민</a>
-                        <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}')">쿠팡</a>
-                        <a href="#" class="mini-order-btn mini-kakao" onclick="window.game.sendToBF('${food.n}')">사줘!</a>
+                        <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}', event)">배민</a>
+                        <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}', event)">쿠팡</a>
+                        <a href="#" class="mini-order-btn mini-kakao" onclick="window.game.sendToBF('${food.n}', event)">사줘!</a>
                     </div>
                 </div>
             `;
             container.appendChild(card);
-            this.updateMukbangThumbnail(food);
-        }
+            this.updateMukbangThumbnail(food, cardId);
+        });
     }
 
-    async updateMukbangThumbnail(food) {
-        const area = document.getElementById(`img-area-${food.s}`);
+    async updateMukbangThumbnail(food, cardId) {
+        const card = document.getElementById(cardId);
+        const imgArea = card.querySelector('.food-img-area');
+        const img = card.querySelector('.main-food-img');
+        
         try {
             const query = encodeURIComponent(food.s + " 먹방");
             const targetUrl = `https://www.youtube.com/results?search_query=${query}`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const data = await response.json();
-            const videoMatch = data.contents.match(/"videoId":"([^"]+)"/);
+            const contents = data.contents;
+            
+            // Refined regex to find videoId
+            const videoMatch = contents.match(/"videoId":"([^"]+)"/);
             if (videoMatch) {
                 const videoId = videoMatch[1];
-                const thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-                area.querySelector('img').src = thumb;
-                area.onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+                const thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                img.src = thumbUrl;
+                
+                // Set link to video
+                imgArea.onclick = () => window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+            } else {
+                // Fallback to direct search link if ID extraction fails
+                imgArea.onclick = () => window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error("YouTube fetch failed", e);
+            imgArea.onclick = () => window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(food.s + " 먹방")}`, '_blank');
+        }
     }
 
-    goOrder(type, search) {
+    goOrder(type, search, event) {
+        if(event) event.stopPropagation();
         const url = type === 'baemin' ? `baemin://search?keyword=${encodeURIComponent(search)}` : `coupangeats://search?q=${encodeURIComponent(search)}`;
         window.location.href = url;
-        setTimeout(() => { if (window.confirm("배달 앱이 설치되어 있나요? 웹으로 이동할까요?")) window.location.href = type === 'baemin' ? `https://www.baemin.com/search?keyword=${encodeURIComponent(search)}` : `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(search)}`; }, 1500);
+        setTimeout(() => {
+            const webUrl = type === 'baemin' 
+                ? `https://www.baemin.com/search?keyword=${encodeURIComponent(search)}` 
+                : `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(search)}`;
+            if (window.confirm("배달 앱이 설치되어 있나요? 웹으로 이동할까요?")) window.location.href = webUrl;
+        }, 1500);
     }
 
-    sendToBF(foodName) {
+    sendToBF(foodName, event) {
+        if(event) event.stopPropagation();
         const msg = `자기야 나 오늘 분석해보니까 [${foodName}] 먹어야 한대! 이거 사주면 기분 싹 풀릴 것 같아 💝`;
         if (navigator.share) navigator.share({ title: '괜찮아, 밥먹자 🏥💝', text: msg, url: window.location.href });
         else alert("메시지가 복사되었습니다! 남자친구에게 보내주세요:\n\n" + msg);
@@ -261,4 +287,5 @@ class MoodFoodApp {
         window.scrollTo(0, 0);
     }
 }
+
 window.game = new MoodFoodApp();
