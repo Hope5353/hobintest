@@ -3,221 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>STOCK SQUAD | 전략적 주식 드림팀</title>
-    <!-- Cache busting with major version 2.3 -->
-    <link rel="stylesheet" href="style.css?v=2.3">
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <!-- Google AdSense -->
-    <meta name="google-adsense-account" content="ca-pub-7722735349463695">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7722735349463695"
-     crossorigin="anonymous"></script>
+    <title>가영아밥먹자 💝 | 섬세한 기분 분석 & 맛있는 메뉴</title>
+    <link rel="stylesheet" href="style.css?v=1.2">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body class="gaming-theme">
-    <div class="overlay"></div>
+<body class="mobile-only">
     <div class="app-wrapper">
-        <header class="main-nav">
-            <button id="guide-btn" class="guide-btn top-left-guide" title="사용 가이드">GUIDE</button>
-            <div class="logo-area">
-                <span class="icon">🏆</span>
-                <div class="logo-text">
-                    <h1 class="glitch-text" data-text="STOCK SQUAD">STOCK SQUAD</h1>
-                    <span class="tagline">MANAGEMENT & ANALYSIS</span>
-                </div>
-            </div>
-            <div class="top-controls">
-                <div class="strategy-badge" id="current-strategy">분석 중</div>
-                <div class="formation-selector">
-                    <label>FORMATION</label>
-                    <select id="formation-select">
-                        <option value="4-4-2">4-4-2</option>
-                        <option value="4-3-3" selected>4-3-3</option>
-                        <option value="3-5-2">3-5-2</option>
-                        <option value="4-2-3-1">4-2-3-1</option>
-                        <option value="3-4-3">3-4-3</option>
-                        <option value="5-3-2">5-3-2</option>
-                        <option value="5-4-1">5-4-1</option>
-                    </select>
-                </div>
-                <div class="action-btns">
-                    <button id="save-btn" class="save-btn" title="스쿼드 저장">SAVE</button>
-                    <button id="load-btn" class="load-btn" title="스쿼드 불러오기">LOAD</button>
-                    <button id="share-btn" class="share-btn" title="친구에게 공유">SHARE</button>
-                    <a href="index.html" class="exit-btn">RESET</a>
-                </div>
-            </div>
+        <header class="header">
+            <h1>가영아밥먹자 💝</h1>
+            <p id="header-subtitle">가영이의 기분에 딱 맞는 메뉴를 골라줄게</p>
         </header>
 
-        <main class="stadium-layout">
-            <div class="pitch-container">
-                <!-- Top Ad Slot -->
-                <div class="ad-container">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-7722735349463695"
-                         data-ad-slot="auto"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
+        <main class="main-content">
+            <!-- Progress Bar -->
+            <div id="survey-progress-container" class="hidden">
+                <div class="progress-info">
+                    <span id="progress-text">질문 1 / 10</span>
                 </div>
-
-                <div class="pitch">
-                    <div id="squad-field" class="players-overlay">
-                        <!-- Player cards will be rendered here dynamically -->
-                    </div>
-                </div>
-                
-                <div class="coach-advice-panel">
-                    <div class="coach-header">
-                        <span class="coach-icon">👨‍🏫</span>
-                        <h3>COACH ADVICE</h3>
-                    </div>
-                    <div id="coach-message" class="coach-content">
-                        포트폴리오를 분석 중입니다. 선수를 영입해 주세요!
-                    </div>
-                    <div id="recommendation-area" class="rec-list">
-                        <!-- Recommendations will appear here -->
-                    </div>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill" style="width: 10%;"></div>
                 </div>
             </div>
 
-            <aside class="transfer-market">
-                <div class="market-header">
-                    <h2>TRANSFER MARKET</h2>
-                    <div class="search-input-wrapper">
-                        <input type="text" id="market-search" placeholder="종목명 또는 티커 검색...">
-                        <span class="search-icon">🔍</span>
+            <!-- Start Screen -->
+            <section id="start-screen" class="step">
+                <div class="welcome-card">
+                    <span class="welcome-emoji">🍱</span>
+                    <h2>안녕 가영아!</h2>
+                    <p>오늘 기분이 어떤지 몇 가지만 물어볼게.<br>딱 맞는 음식을 추천해줄게!</p>
+                    <button id="btn-start-survey" class="start-btn">기분 분석 시작하기</button>
+                </div>
+            </section>
+
+            <!-- Survey Section -->
+            <section id="survey-area" class="step hidden">
+                <div id="question-card" class="question-card">
+                    <h3 id="question-text">오늘 하루는 어땠어?</h3>
+                    <div id="answer-buttons" class="answer-grid">
+                        <!-- Buttons will be injected by JS -->
                     </div>
+                </div>
+            </section>
+
+            <!-- Result Section -->
+            <section id="result-area" class="step hidden">
+                <div class="step-title">가영이를 위한 오늘의 메뉴!</div>
+                <div id="food-card" class="food-card">
+                    <span class="food-emoji" id="res-emoji">🍰</span>
+                    <span class="food-name" id="res-name">음식 이름</span>
+                    <p class="food-reason" id="res-reason">추천 이유가 들어갑니다.</p>
                 </div>
                 
-                <div id="market-list" class="stock-grid">
-                    <!-- Stock items will appear here -->
+                <div class="order-links">
+                    <a href="#" id="link-baemin" class="order-btn baemin">배달의민족 앱으로 주문</a>
+                    <a href="#" id="link-coupang" class="order-btn coupang">쿠팡이츠 앱으로 주문</a>
                 </div>
-
-                <div class="my-roster-section">
-                    <h3>MY ROSTER (영입 목록)</h3>
-                    <div id="my-roster-list" class="roster-grid">
-                        <!-- My picked stocks will appear here -->
-                    </div>
-                </div>
-
-                <div class="squad-stats">
-                    <h3>SQUAD PERFORMANCE</h3>
-                    
-                    <div class="total-score-container">
-                        <label>SQUAD OVERALL (OVR)</label>
-                        <span id="squad-ovr" class="ovr-value">0</span>
-                    </div>
-
-                    <div class="stat-bars">
-                        <div class="stat-item">
-                            <label>공격력 (레버리지/성장성)</label>
-                            <div class="bar-bg"><div id="stat-atk" class="bar-fill" style="width: 0%"></div></div>
-                        </div>
-                        <div class="stat-item">
-                            <label>조직력 (안정성)</label>
-                            <div class="bar-bg"><div id="stat-link" class="bar-fill" style="width: 0%"></div></div>
-                        </div>
-                        <div class="stat-item">
-                            <label>수비력 (배당/현금흐름)</label>
-                            <div class="bar-bg"><div id="stat-def" class="bar-fill" style="width: 0%"></div></div>
-                        </div>
-                    </div>
-                    <div class="squad-summary-grid">
-                        <div class="summary-item">
-                            <label>시장 민감도 (Beta)</label>
-                            <span id="avg-beta">0.00</span>
-                        </div>
-                        <div class="summary-item">
-                            <label>평균 배당률 (Yield)</label>
-                            <span id="avg-yield">0.0%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom Ad Slot in Sidebar -->
-                <div class="ad-container" style="margin-top:20px;">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-7722735349463695"
-                         data-ad-slot="auto"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
-                </div>
-            </aside>
+                
+                <button id="btn-reset" class="reset-btn">다시 분석하기</button>
+            </section>
         </main>
 
-        <footer class="app-footer">
-            <div class="footer-links">
-                <a href="privacy.html">개인정보처리방침</a>
-                <a href="terms.html">이용약관</a>
-            </div>
-            <p class="copyright">© 2026 STOCK SQUAD. All rights reserved. 본 서비스에서 제공하는 정보는 투자 권유가 아니며, 모든 투자의 책임은 본인에게 있습니다.</p>
+        <footer class="footer">
+            <p>© 2026 가영아밥먹자 - 사랑을 담아 만든 코드</p>
         </footer>
     </div>
 
-    <!-- Player Selection Modal -->
-    <div id="selection-modal" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-title">영입 가능한 선수 목록</h3>
-            <div id="modal-market-list" class="stock-grid" style="max-height: 60vh; overflow-y: auto; margin-top: 15px;"></div>
-            <button class="close-modal">닫기</button>
-        </div>
-    </div>
-
-    <!-- Usage Guide Modal -->
-    <div id="guide-modal" class="modal">
-        <div class="modal-content guide-content-wrapper">
-            <h2>🏆 STOCK SQUAD 가이드</h2>
-
-            <div class="guide-section">
-                <h3>📖 사용법 설명</h3>
-                <ol>
-                    <li><strong>포메이션 선택</strong>: 상단 메뉴에서 원하는 팀 전략(4-3-3 등)을 선택하세요.</li>
-                    <li><strong>선수 영입(직접)</strong>: 경기장의 빈 자리(<strong>+</strong>)를 클릭하면 해당 포지션에 어울리는 추천 주식이 뜹니다.</li>
-                    <li><strong>선수 검색</strong>: 오른쪽 TRANSFER MARKET에서 종목명이나 티커를 검색해 영입할 수 있습니다.</li>
-                    <li><strong>스쿼드 완성</strong>: 영입된 종목을 클릭하여 스쿼드에 배치하고, 코치의 실시간 조언을 확인하세요.</li>
-                    <li><strong>저장 및 공유</strong>: 완성된 '베스트 11'은 <strong>SAVE</strong>로 저장하거나 <strong>SHARE</strong>로 친구에게 보낼 수 있습니다.</li>
-                </ol>
-            </div>
-
-            <div class="guide-section">
-                <h3>⚽ 포지션별 특징</h3>
-                <div class="guide-grid">
-                    <div class="guide-item fw">
-                        <span class="label">FW (공격수)</span>
-                        <p>높은 성장성과 변동성을 가진 종목. 테슬라, 엔비디아와 같은 기술주나 2차전지주가 적합합니다. (High Beta)</p>
-                    </div>
-                    <div class="guide-item mf">
-                        <span class="label">MF (미드필더)</span>
-                        <p>팀의 중심을 잡는 우량주 및 지수 ETF. 애플, 마이크로소프트, S&P500 등 안정적인 성장을 지향합니다.</p>
-                    </div>
-                    <div class="guide-item df">
-                        <span class="label">DF (수비수)</span>
-                        <p>낮은 변동성과 꾸준한 배당을 주는 가치주. 삼성전자, 현대차, 코카콜라 등 하락장에서 버티는 힘이 강합니다.</p>
-                    </div>
-                    <div class="guide-item gk">
-                        <span class="label">GK (골키퍼)</span>
-                        <p>자산을 지키는 최후의 보루. 금(Gold), 미국채권(TLT) 등 시장 상황과 반대로 움직이거나 안전한 자산이 어울립니다.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="guide-section">
-                <h3>📊 스탯 읽는 법</h3>
-                <ul style="color:#f8fafc; font-size:0.85rem; line-height:1.8; padding-left:20px;">
-                    <li><strong>시장 민감도 (Beta)</strong>: 1.0보다 높으면 시장보다 화끈하게 움직이는 <strong>공격형</strong>, 낮으면 시장 흔들림에 강한 <strong>안정형</strong> 팀입니다.</li>
-                    <li><strong>평균 배당률 (Yield)</strong>: 팀의 기초 체력입니다. 높을수록 주가 하락 시에도 꼬박꼬박 수익을 챙기는 <strong>탄탄한 수비력</strong>을 의미합니다.</li>
-                    <li><strong>SQUAD OVERALL (OVR)</strong>: 팀의 밸런스, 현재 수익 상태, 선수 층의 두께를 종합한 <strong>스쿼드 완성도</strong>입니다.</li>
-                </ul>
-            </div>
-
-            <button class="close-guide">이해했습니다!</button>
-        </div>
-    </div>
-
-    <script src="main.js?v=2.3"></script>
-    </body>
-    </html>
-
+    <script src="main.js?v=1.2"></script>
+</body>
+</html>
