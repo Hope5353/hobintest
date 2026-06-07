@@ -24,6 +24,7 @@ class SquadManager {
         this.myRoster = []; 
         this.searchTimeout = null;
         this.currentMarketData = [];
+        this.pendingStock = null; // Currently selected stock for manual placement
         this.init();
     }
 
@@ -42,6 +43,7 @@ class SquadManager {
             const oldPlayers = Object.values(this.squad);
             this.formation = e.target.value;
             this.squad = {}; 
+            this.pendingStock = null;
             oldPlayers.forEach(stock => this.autoAssign(stock.ticker, true));
             this.renderField();
             this.renderRoster();
@@ -87,6 +89,15 @@ class SquadManager {
                     // Refresh coach advice immediately after adding to roster
                     this.updateStats(); 
                 }
+            }
+        });
+
+        // Global click listener to cancel pending selection if clicking outside field/roster
+        document.addEventListener('click', (e) => {
+            if (this.pendingStock && !e.target.closest('.pitch') && !e.target.closest('.my-roster-section')) {
+                this.pendingStock = null;
+                this.renderField();
+                this.renderRoster();
             }
         });
     }
@@ -203,11 +214,12 @@ class SquadManager {
         if (this.myRoster.length === 0) { list.innerHTML = '<p style="padding:10px; color:#555; font-size:0.7rem;">영입된 종목이 없습니다.</p>'; return; }
         list.innerHTML = this.myRoster.map(stock => {
             const inSquad = Object.values(this.squad).some(s => s.ticker === stock.ticker);
+            const isPending = this.pendingStock?.ticker === stock.ticker;
             return `
-                <div class="roster-item ${inSquad ? 'active-in-squad' : ''}" onclick="window.squadApp.assignFromRoster('${stock.ticker}')">
+                <div class="roster-item ${inSquad ? 'active-in-squad' : ''} ${isPending ? 'selecting' : ''}" onclick="window.squadApp.assignFromRoster('${stock.ticker}')">
                     <div class="item-info">
                         <span class="m-name">${stock.country} ${stock.name}</span>
-                        <span class="m-ticker">${stock.subPos} ${inSquad ? '(배치완료)' : ''}</span>
+                        <span class="m-ticker">${stock.subPos} ${inSquad ? '(배치완료)' : (isPending ? '(배치할 곳 선택...)' : '')}</span>
                     </div>
                     <div class="item-stats" style="display:flex; align-items:center;">
                         <span class="m-change ${stock.change >= 0 ? 'up' : 'down'}">${stock.change}%</span>
@@ -219,6 +231,7 @@ class SquadManager {
     }
 
     releaseFromRoster(ticker) {
+        if (this.pendingStock?.ticker === ticker) this.pendingStock = null;
         for (let key in this.squad) { if (this.squad[key].ticker === ticker) delete this.squad[key]; }
         this.myRoster = this.myRoster.filter(s => s.ticker !== ticker);
         this.renderField(); this.renderRoster(); this.updateStats();
@@ -393,8 +406,25 @@ class SquadManager {
     assignFromRoster(ticker) {
         const stock = this.myRoster.find(s => s.ticker === ticker);
         if (!stock) return;
-        if (Object.values(this.squad).some(s => s.ticker === stock.ticker)) { alert("이미 스쿼드에 배치된 선수입니다!"); return; }
-        this.autoAssign(ticker);
+        
+        // If clicking already in squad, allow re-assignment by removing it first
+        if (Object.values(this.squad).some(s => s.ticker === stock.ticker)) {
+            for (let key in this.squad) {
+                if (this.squad[key].ticker === ticker) {
+                    delete this.squad[key];
+                    break;
+                }
+            }
+        }
+
+        if (this.pendingStock?.ticker === ticker) {
+            this.pendingStock = null; // Toggle off if clicked again
+        } else {
+            this.pendingStock = stock;
+        }
+        
+        this.renderField();
+        this.renderRoster();
     }
 
     autoAssign(ticker, silent = false) {
@@ -437,18 +467,55 @@ class SquadManager {
                 const posKey = `${role}-${i}`;
                 const slot = document.createElement('div');
                 slot.className = 'player-slot';
+                
+                if (this.pendingStock) {
+                    const isRecommendedRole = this.pendingStock.mainPos === role;
+                    if (!this.squad[posKey]) {
+                        slot.classList.add('highlight-target');
+                        if (isRecommendedRole) slot.classList.add('recommended-target');
+                    }
+                }
+
                 if (this.squad[posKey]) {
                     slot.innerHTML = this.createCardHTML(this.squad[posKey]);
-                    slot.onclick = () => this.removeStock(posKey);
+                    slot.onclick = (e) => {
+                        e.stopPropagation();
+                        if (this.pendingStock) {
+                            this.handleSlotAssignment(posKey);
+                        } else {
+                            this.removeStock(posKey);
+                        }
+                    };
                 } else {
                     const displayPos = this.getDisplayPos(role, i, count);
                     slot.innerHTML = `<div class="plus-icon">+</div><span class="pos-tag">${displayPos}</span>`;
-                    slot.onclick = () => this.openSelectionModal(role, posKey);
+                    slot.onclick = (e) => {
+                        e.stopPropagation();
+                        if (this.pendingStock) {
+                            this.handleSlotAssignment(posKey);
+                        } else {
+                            this.openSelectionModal(role, posKey);
+                        }
+                    };
                 }
                 rowDiv.appendChild(slot);
             }
             field.appendChild(rowDiv);
         });
+    }
+
+    handleSlotAssignment(posKey) {
+        const ticker = this.pendingStock.ticker;
+        // Remove from any other position first to prevent duplicates
+        for (let key in this.squad) {
+            if (this.squad[key].ticker === ticker) delete this.squad[key];
+        }
+        
+        this.squad[posKey] = this.pendingStock;
+        this.pendingStock = null;
+        this.renderField();
+        this.renderRoster();
+        this.updateStats();
     }
 
     openSelectionModal(role, posKey) {
