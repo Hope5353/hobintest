@@ -1,26 +1,26 @@
-// 가영아밥먹자 🏥💝 High-Precision 10-Step Branching Engine
+// 가영아밥먹자 🏥💝 High-Precision 10-Step Branching Engine with Verified Images
 
 const FOOD_DATABASE = [
-    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?q=80&w=800", r: "스트레스가 확 풀리는 매운맛!", s: "엽기떡볶이", tags: ["stress", "spicy", "heavy"] },
-    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=800", r: "기력 보충엔 역시 지글지글 고기!", s: "삼겹살", tags: ["exhausted", "meat", "heavy"] },
-    { n: "전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?q=80&w=800", r: "속 편하게 먹고 푹 잠들기 좋아.", s: "전복죽", tags: ["tired", "mild", "warm"] },
-    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=800", r: "행복해지는 마법의 시즈닝 치킨!", s: "BHC 뿌링클", tags: ["reward", "fried", "stress"] },
-    { n: "마라탕", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?q=80&w=800", r: "알싸한 맛으로 병원 냄새 싹 잊어버려!", s: "마라탕", tags: ["stress", "spicy", "hungry"] },
-    { n: "연어 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800", r: "깔끔하고 고급스럽게 즐기는 한 끼.", s: "연어초밥", tags: ["stable", "light", "reward"] },
-    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800", r: "지친 속을 따뜻하게 데워주는 힐링푸드.", s: "쌀국수", tags: ["exhausted", "warm", "after_night"] },
-    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800", r: "든든하게 채우는 입안 가득 행복!", s: "수제버거", tags: ["hungry", "heavy", "meat"] },
-    { n: "등심 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211?q=80&w=800", r: "겉바속촉, 가영이의 미소 치트키.", s: "돈까스", tags: ["stable", "crispy", "reward"] },
-    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800", r: "진한 국물과 고소한 곱창의 조화.", s: "곱창전골", tags: ["stress", "heavy", "warm"] },
-    { n: "에그 샌드위치", i: "https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?q=80&w=800", r: "근무 전, 가볍고 든든한 에너지.", s: "서브웨이", tags: ["before_work", "light", "energy"] },
-    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=800", r: "열 오르는 기분을 시원하게 식혀줘.", s: "망고빙수", tags: ["angry", "cold", "reward"] },
-    { n: "해물찜", i: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800", r: "푸짐한 해산물로 영양 보충!", s: "해물찜", tags: ["meat", "spicy", "heavy"] },
-    { n: "베트남 분짜", i: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800", r: "상큼하고 쫄깃하게 입맛 돋우기.", s: "분짜", tags: ["stable", "light", "stable"] },
-    { n: "스테이크", i: "https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=800", r: "고생한 가영이를 위한 특별한 정찬.", s: "안심스테이크", tags: ["reward", "meat", "stable"] },
-    { n: "라멘", i: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800", r: "진한 국물 한 모금으로 피로 회복.", s: "돈코츠라멘", tags: ["warm", "tired", "after_night"] },
-    { n: "포케 샐러드", i: "https://images.unsplash.com/photo-1546069901-d5bfbd25dd24?q=80&w=800", r: "부담 없이 건강하게 채우는 한 끼.", s: "포케", tags: ["light", "stable", "energy"] },
-    { n: "짜장면&탕수육", i: "https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=800", r: "고민될 땐 역시 바삭하고 든든하게!", s: "짜장면 탕수육", tags: ["hungry", "fried", "heavy"] },
-    { n: "샤브샤브", i: "https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=800", r: "야채와 고기의 완벽한 밸런스.", s: "샤브샤브", tags: ["warm", "mild", "meat"] },
-    { n: "베이글&크림치즈", i: "https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?q=80&w=800", r: "여유로운 오프날 브런치 감성.", s: "베이글", tags: ["off", "light", "reward"] }
+    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?q=80&w=800", r: "스트레스가 확 풀리는 매운맛!", s: "엽기떡볶이", tags: ["stress", "spicy", "heavy", "퇴근"] },
+    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=800", r: "기력 보충엔 역시 지글지글 고기!", s: "삼겹살", tags: ["exhausted", "meat", "heavy", "퇴근", "오프"] },
+    { n: "따뜻한 전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?q=80&w=800", r: "속 편하게 먹고 푹 잠들기 좋아.", s: "전복죽", tags: ["tired", "mild", "warm", "퇴근"] },
+    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1626644496439-af0a4ad2d995?q=80&w=800", r: "행복해지는 마법의 시즈닝 치킨!", s: "BHC 뿌링클", tags: ["reward", "fried", "stress", "퇴근", "오프"] },
+    { n: "마라탕", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?q=80&w=800", r: "알싸한 맛으로 병원 냄새 싹 잊어버려!", s: "마라탕", tags: ["stress", "spicy", "hungry", "퇴근"] },
+    { n: "연어 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800", r: "깔끔하고 고급스럽게 즐기는 한 끼.", s: "연어초밥", tags: ["stable", "light", "reward", "출근 전", "오프"] },
+    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800", r: "지친 속을 따뜻하게 데워주는 힐링푸드.", s: "쌀국수", tags: ["exhausted", "warm", "after_night", "퇴근"] },
+    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800", r: "든든하게 채우는 입안 가득 행복!", s: "수제버거", tags: ["hungry", "heavy", "meat", "퇴근", "오프"] },
+    { n: "바삭한 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211?q=80&w=800", r: "겉바속촉, 가영이의 미소 치트키.", s: "돈까스", tags: ["stable", "crispy", "reward", "퇴근", "오프"] },
+    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800", r: "진한 국물과 고소한 곱창의 조화.", s: "곱창전골", tags: ["stress", "heavy", "warm", "퇴근"] },
+    { n: "에그 샌드위치", i: "https://images.unsplash.com/photo-1539252554452-da001b2d1531?q=80&w=800", r: "근무 전, 가볍고 든든한 에너지.", s: "샌드위치", tags: ["before_work", "light", "energy", "출근 전"] },
+    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=800", r: "열 오르는 기분을 시원하게 식혀줘.", s: "망고빙수", tags: ["angry", "cold", "reward", "퇴근", "오프"] },
+    { n: "해물찜", i: "https://images.unsplash.com/photo-1511910849309-0dffb8785146?q=80&w=800", r: "푸짐한 해산물로 영양 보충!", s: "해물찜", tags: ["meat", "spicy", "heavy", "퇴근"] },
+    { n: "베트남 분짜", i: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800", r: "상큼하고 쫄깃하게 입맛 돋우기.", s: "분짜", tags: ["stable", "light", "오프"] },
+    { n: "안심 스테이크", i: "https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=800", r: "고생한 가영이를 위한 특별한 정찬.", s: "스테이크", tags: ["reward", "meat", "stable", "오프"] },
+    { n: "돈코츠 라멘", i: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800", r: "진한 국물 한 모금으로 피로 회복.", s: "라멘", tags: ["warm", "tired", "after_night", "퇴근"] },
+    { n: "포케 샐러드", i: "https://images.unsplash.com/photo-1546069901-d5bfbd25dd24?q=80&w=800", r: "부담 없이 건강하게 채우는 한 끼.", s: "포케", tags: ["light", "stable", "energy", "출근 전"] },
+    { n: "짜장면&탕수육", i: "https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=800", r: "고민될 땐 역시 바삭하고 든든하게!", s: "짜장면", tags: ["hungry", "fried", "heavy", "퇴근", "오프"] },
+    { n: "소고기 샤브샤브", i: "https://images.unsplash.com/photo-1555126634-323283e090fa?q=80&w=800", r: "야채와 고기의 완벽한 밸런스.", s: "샤브샤브", tags: ["warm", "mild", "meat", "퇴근", "오프"] },
+    { n: "베이글&크림치즈", i: "https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?q=80&w=800", r: "여유로운 오프날 브런치 감성.", s: "베이글", tags: ["off", "light", "reward", "오프"] }
 ];
 
 const BRANCHES = {
@@ -38,10 +38,10 @@ const BRANCHES = {
             { t: "조금 바빴지만 버틸만했어", s: "mild" },
             { t: "정신없어서 영혼 탈탈 털림", s: "stress" },
             { t: "완전 헬파티... 역대급이야", s: "stress" },
-            { t: "이벤트가 너무 많았어 😭", s: "stress" }
+            { t: "이벤트가 너무 많았어 😭", s: "spicy" }
         ]},
         { text: "어느 근무가 끝난 거야?", options: [
-            { t: "데이 (Day) 퇴근!", s: "tired" },
+            { t: "데이 (Day) 퇴근!", s: "energy" },
             { t: "이브닝 (Evening) 퇴근!", s: "tired" },
             { t: "나이트 (Night) 퇴근!", s: "after_night" },
             { t: "연속 근무 드디어 끝...", s: "exhausted" },
@@ -57,9 +57,9 @@ const BRANCHES = {
         { text: "밥 먹을 시간은 좀 있었어?", options: [
             { t: "아예 굶었어... 배고파 죽음", s: "hungry" },
             { t: "중간에 간식만 조금?", s: "hungry" },
-            { t: "병원 밥 대충 넘겼어", s: "hungry" },
+            { t: "병원 밥 대충 넘겼어", s: "mild" },
             { t: "그래도 챙겨 먹긴 했어", s: "light" },
-            { t: "지금 식욕이 아예 없어", s: "mild" }
+            { t: "지금 식욕이 아예 없어", s: "light" }
         ]},
         { text: "지금 가장 땡기는 맛은 뭐야?", options: [
             { t: "무조건 매운 거! 매운 거!!", s: "spicy" },
@@ -157,7 +157,7 @@ const BRANCHES = {
         { text: "가영아, 지금 몸 어디가 뻐근해?", options: [
             { t: "자고 일어났는데도 피곤해", s: "warm" },
             { t: "목이랑 어깨가 뭉쳐있어", s: "meat" },
-            { t: "온몸이 찌뿌둥해", s: "energy" },
+            { t: "온몸이 찌뿐둥해", s: "energy" },
             { t: "다행히 오늘은 컨디션 좋아", s: "stable" },
             { t: "머리가 조금 아파", s: "mild" }
         ]}
@@ -269,7 +269,6 @@ class MoodFoodApp {
                 return this.showResult();
             }
         }
-
         this.renderQuestion(q);
     }
 
@@ -278,9 +277,8 @@ class MoodFoodApp {
         const aGrid = document.getElementById('answer-buttons');
         const pFill = document.getElementById('progress-bar-fill');
         
-        const totalSteps = this.currentPath === 'root' ? 10 : BRANCHES[this.currentPath].length + 1;
         pFill.style.width = `${((this.responses.length + 1) / 10) * 100}%`;
-        document.getElementById('progress-text').innerText = `분석 중... (${this.responses.length + 1}/10)`;
+        document.getElementById('progress-text').innerText = `가영이 기분 분석 중... (${this.responses.length + 1}/10)`;
 
         qText.innerText = q.text;
         aGrid.innerHTML = '';
@@ -329,7 +327,7 @@ class MoodFoodApp {
             card.className = 'food-card';
             card.innerHTML = `
                 <div class="food-img-area">
-                    <img src="${food.i}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800'">
+                    <img src="${food.i}" alt="${food.n}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800'">
                 </div>
                 <div class="food-info">
                     <span class="food-name">${food.n}</span>
@@ -352,7 +350,7 @@ class MoodFoodApp {
     }
 
     sendToBF(foodName) {
-        const msg = `자기야 나 지금 ${this.responses[0]}인데 ${this.responses[1]}해서 너무 힘들어... 😭 가영이의 마음을 읽는 앱으로 분석해보니까 오늘 [${foodName}] 먹어야 한대! 이거 사주면 가영이 기분 싹 풀릴 듯? 💝`;
+        const msg = `자기야 나 지금 ${this.responses[0]}인데 ${this.responses[1]}해서 너무 힘들어... 😭 분석해보니까 오늘 [${foodName}] 먹어야 한대! 이거 사주면 가영이 기분 싹 풀릴 듯? 💝`;
         if (navigator.share) { navigator.share({ title: '가영아밥먹자 🏥💝', text: msg, url: window.location.href }); }
         else { alert("메시지가 복사되었습니다! 남자친구에게 보내주세요:\n\n" + msg); }
     }
