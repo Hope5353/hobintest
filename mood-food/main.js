@@ -1,4 +1,4 @@
-// 가영아밥먹자 Advanced Logic & 200-Food Database
+// 가영아밥먹자 Advanced Logic & 200-Food Database (Image Integrated)
 
 const QUESTIONS = [
     { text: "가영아, 지금 배고픈 정도는 어느 정도야?", options: [{t:"조금 출출해", s:1}, {t:"보통이야", s:2}, {t:"배고파서 기운 없어", s:3}, {t:"지금 당장 먹어야 해!", s:4}] },
@@ -7,38 +7,36 @@ const QUESTIONS = [
     { text: "가영이가 지금 가장 땡기는 맛은?", options: [{t:"달콤한 맛", s:1}, {t:"매콤한 맛", s:2}, {t:"짭짤한 맛", s:3}, {t:"느끼하고 고소한 맛", s:4}] },
     { text: "오늘 가영이의 활동량은 어땠어?", options: [{t:"계속 앉아있었어", s:1}, {t:"보통이었어", s:2}, {t:"많이 돌아다녔어", s:3}, {t:"운동도 했어!", s:4}] },
     { text: "음식의 식감은 어떤 게 좋아?", options: [{t:"부드러운 것", s:1}, {t:"아삭아삭한 것", s:2}, {t:"쫄깃쫄깃한 것", s:3}, {t:"바삭바삭한 것", s:4}] },
-    { text: "지금 생각나는 나라의 음식은?", options: [{t:"한국식", s:1}, {t:"중국/일본식", s:2}, {t:"서양식", s:3}, {t:"동남아/기타", s:4}] },
+    { text: "지금 생각나는 메뉴의 느낌은?", options: [{t:"간단한 분식/스낵", s:1}, {t:"든든한 밥/찌개", s:2}, {t:"특별한 고기/해산물", s:3}, {t:"화려한 파티 음식", s:4}] },
     { text: "가영아, 지금 소화 상태는 어때?", options: [{t:"완전 튼튼해", s:1}, {t:"보통이야", s:2}, {t:"조금 더부룩해", s:3}, {t:"가벼운 게 좋아", s:4}] },
-    { text: "음식을 먹는 분위기는?", options: [{t:"편안하고 익숙한 곳", s:1}, {t:"트렌디하고 힙한 곳", s:2}, {t:"조용하고 고급스러운 곳", s:3}, {t:"그냥 집에서 배달!", s:4}] },
-    { text: "마지막으로, 오늘 가영이 스스로에게 상을 준다면?", options: [{t:"가벼운 간식", s:1}, {t:"맛있는 한 끼", s:2}, {t:"화려한 파티 음식", s:3}, {t:"최고급 요리", s:4}] }
+    { text: "먹고 나서 가영이의 상태는 어땠으면 좋겠어?", options: [{t:"기운이 펄펄 났으면", s:1}, {t:"마음이 편안했으면", s:2}, {t:"입안이 즐거웠으면", s:3}, {t:"깔끔하고 가벼웠으면", s:4}] },
+    { text: "마지막으로, 오늘 가영이 스스로에게 상을 준다면?", options: [{t:"가벼운 보상", s:1}, {t:"맛있는 위로", s:2}, {t:"화려한 칭찬", s:3}, {t:"최고급 선물", s:4}] }
 ];
 
 const FOOD_DATABASE = [
-    { n: "엽기떡볶이", e: "🔥", r: "가영이가 받은 스트레스를 한 방에 날려버릴 매운맛의 끝판왕!", s: "매운 떡볶이" },
-    { n: "뿌링클 치킨", e: "🍗", r: "바삭한 치킨과 달콤 짭짤한 시즈닝의 조화! 가영이의 행복 치트키.", s: "뿌링클" },
-    { n: "마라탕", e: "🍜", r: "가영이가 좋아하는 재료만 골라 담아! 얼큰하고 알싸한 맛이 최고야.", s: "마라탕" },
-    { n: "연어 초밥", e: "🍣", r: "부드럽고 신선한 연어가 입안에서 살살 녹아. 가영이의 기분도 녹아내릴걸?", s: "연어초밥" },
-    { n: "스테이크", e: "🥩", r: "오늘 고생한 가영이를 위한 특별한 보상. 육즙 가득한 스테이크 한 입!", s: "스테이크 전문점" },
-    { n: "파스타", e: "🍝", r: "분위기 내고 싶은 날, 가영이의 감성을 충족시켜줄 부드러운 크림 파스타.", s: "이탈리안 레스토랑" },
-    { n: "삼겹살", e: "🥓", r: "지치고 힘들 땐 역시 고기지! 지글지글 삼겹살에 쌈 싸 먹으면 기운이 펄펄.", s: "삼겹살 배달" },
-    { n: "햄버거", e: "🍔", r: "든든하고 빠르게 당 충전! 가영이가 좋아하는 프랜차이즈 버거 어때?", s: "수제버거" },
-    { n: "돈카츠", e: "🍱", r: "겉바속촉의 정석. 가영이의 입안 가득 바삭함과 고소함이 퍼질 거야.", s: "돈까스" },
-    { n: "쌀국수", e: "🍜", r: "따뜻하고 깔끔한 국물이 생각날 때. 가영이의 속을 편안하게 달래줄 거야.", s: "쌀국수" },
-    { n: "샤브샤브", e: "🍲", r: "건강하고 맛있게! 야채 듬뿍 고기 듬뿍 가영이의 영양 만점 한 끼.", s: "샤브샤브 배달" },
-    { n: "닭발", e: "🐾", r: "콜라겐 가득, 매콤함 가득! 야식으로 가영이가 제일 좋아하는 메뉴 중 하나지.", s: "무뼈닭발" },
-    { n: "와플 & 아이스크림", e: "🧇", r: "달콤한 상이 필요한 시간. 가영이의 미소를 되찾아줄 디저트 타임!", s: "와플" },
-    { n: "아구찜", e: "🐟", r: "매콤하고 쫄깃한 식감. 가족과 함께 혹은 든든하게 먹고 싶을 때 추천!", s: "아구찜" },
-    { n: "평양냉면", e: "🥣", r: "깔끔하고 슴슴한 맛의 매력. 오늘같이 조금 더운 날 가영이에게 딱이야.", s: "냉면" },
-    { n: "피자", e: "🍕", r: "치즈 듬뿍! 가영이와 함께 나눠 먹으면 두 배로 맛있는 피자 파티.", s: "피자" },
-    { n: "짜장면 & 탕수육", e: "🥢", r: "고민될 땐 역시 중식! 바삭한 탕수육은 가영이의 기분을 업시켜줘.", s: "중국집" },
-    { n: "육회", e: "🐄", r: "신선하고 고소한 육회 한 점. 가영이의 입맛을 돋우는 최고의 별미.", s: "육회" },
-    { n: "곱창전골", e: "🥘", r: "뜨끈하고 진한 국물에 고소한 곱창. 가영이의 스트레스가 사르르 녹아.", s: "곱창전골" },
-    { n: "베이글 & 크림치즈", e: "🥯", r: "가볍지만 든든한 브런치 감성. 가영이의 여유로운 오후를 위해.", s: "베이글" }
-    // ... 실제 코드에는 200개 이상의 리스트를 로직으로 생성/관리
+    { n: "엽기떡볶이", r: "가영이가 받은 스트레스를 한 방에 날려버릴 매운맛의 끝판왕!", s: "엽기떡볶이 마라떡볶이" },
+    { n: "뿌링클 치킨", r: "바삭한 치킨과 달콤 짭짤한 시즈닝의 조화! 가영이의 행복 치트키.", s: "BHC 뿌링클 치킨" },
+    { n: "마라탕", r: "가영이가 좋아하는 재료만 골라 담아! 얼큰하고 알싸한 맛이 최고야.", s: "마라탕 꿔바로우" },
+    { n: "연어 초밥", r: "부드럽고 신선한 연어가 입안에서 살살 녹아. 가영이의 기분도 녹아내릴걸?", s: "생연어 초밥 세트" },
+    { n: "스테이크", r: "오늘 고생한 가영이를 위한 특별한 보상. 육즙 가득한 스테이크 한 입!", s: "안심 스테이크 미디엄" },
+    { n: "파스타", r: "분위기 내고 싶은 날, 가영이의 감성을 충족시켜줄 부드러운 크림 파스타.", s: "까르보나라 크림 파스타" },
+    { n: "삼겹살", r: "지치고 힘들 땐 역시 고기지! 지글지글 삼겹살에 쌈 싸 먹으면 기운이 펄펄.", s: "삼겹살 구이 배달" },
+    { n: "햄버거", r: "든든하고 빠르게 당 충전! 가영이가 좋아하는 수제 버거 어때?", s: "수제치즈버거 세트" },
+    { n: "돈카츠", r: "겉바속촉의 정석. 가영이의 입안 가득 바삭함과 고소함이 퍼질 거야.", s: "프리미엄 등심 돈카츠" },
+    { n: "쌀국수", r: "따뜻하고 깔끔한 국물이 생각날 때. 가영이의 속을 편안하게 달래줄 거야.", s: "베트남 소고기 쌀국수" },
+    { n: "샤브샤브", r: "건강하고 맛있게! 야채 듬뿍 고기 듬뿍 가영이의 영양 만점 한 끼.", s: "소고기 샤브샤브 세트" },
+    { n: "닭발", r: "콜라겐 가득, 매콤함 가득! 야식으로 가영이가 제일 좋아하는 메뉴 중 하나지.", s: "무뼈 국물 닭발" },
+    { n: "와플", r: "달콤한 상이 필요한 시간. 가영이의 미소를 되찾아줄 디저트 타임!", s: "벨기에 와플 아이스크림" },
+    { n: "아구찜", r: "매콤하고 쫄깃한 식감. 든든하게 먹고 싶을 때 추천!", s: "매콤 아구찜" },
+    { n: "평양냉면", r: "깔끔하고 슴슴한 맛의 매력. 오늘같이 조금 더운 날 가영이에게 딱이야.", s: "평양물냉면" },
+    { n: "피자", r: "치즈 듬뿍! 가영이와 함께 나눠 먹으면 두 배로 맛있는 피자 파티.", s: "페퍼로니 치즈 피자" },
+    { n: "짜장면 & 탕수육", r: "고민될 땐 역시 중식! 바삭한 탕수육은 가영이의 기분을 업시켜줘.", s: "짜장면 탕수육 세트" },
+    { n: "육회", r: "신선하고 고소한 육회 한 점. 가영이의 입맛을 돋우는 최고의 별미.", s: "한우 육회 한 접시" },
+    { n: "곱창전골", r: "뜨끈하고 진한 국물에 고소한 곱창. 가영이의 스트레스가 사르르 녹아.", s: "소곱창전골" },
+    { n: "베이글", r: "가볍지만 든든한 브런치 감성. 가영이의 여유로운 오후를 위해.", s: "어니언 베이글 크림치즈" }
 ];
 
-// 200개 구성을 위해 다양한 메뉴 추가 로직 (데이터 요약본)
-const SUB_FOODS = ["샌드위치", "포케", "라멘", "텐동", "찜닭", "갈비찜", "족발", "보쌈", "회덮밥", "라자냐", "타코", "나초", "팟타이", "나시고랭", "꿔바로우", "양꼬치", "부대찌개", "김치찜", "간장게장", "보리밥", "비빔밥", "수제비", "칼국수", "만두", "빙수", "도넛", "크로플", "에그타르트", "그릭요거트", "떡갈비", "불고기", "제육볶음", "오징어볶음", "낙지볶음", "장어덮밥", "카레", "하이라이스", "오므라이스", "리조또", "감바스", "에그인헬", "감자탕", "순대국", "뼈해장국", "해물파전", "김치전", "수육", "육전", "편육", "닭강정", "시장통닭", "순살치킨", "지코바", "굽네치킨", "교촌치킨", "노랑통닭", "푸라닭", "신전떡볶이", "청년다방", "배떡", "응급실떡볶이", "국물닭발", "오돌뼈", "닭똥집", "똥집튀김", "돼지게티", "곱창", "대창", "막창", "특수부위", "갈매기살", "항정살", "등갈비", "쪽갈비", "토마호크", "양갈비", "징기스칸", "스키야키", "밀푀유나베", "우츠동", "냉모밀", "소바", "우동", "가츠동", "에비동", "규동", "사케동", "마제소바", "아부라소바", "멘보샤", "크림새우", "칠리새우", "유린기", "깐풍기", "팔보채", "양장피", "고추잡채", "마파두부", "짬뽕", "백짬뽕", "굴짬뽕", "간짜장", "쟁반짜장", "볶음밥", "잡채밥", "마라샹궈", "꿔바로우", "딤섬", "샤오롱바오", "하가우", "고로케", "고구마맛탕", "맛사탕", "탕후루", "젤라또", "소르베", "망고빙수", "멜론빙수", "딸기빙수", "인절미빙수", "허니브레드", "치즈케이크", "티라미수", "초코무스", "몽블랑", "마카롱", "다쿠아즈", "까눌레", "휘낭시에", "마들렌", "스콘", "에그샌드위치", "잠봉뵈르", "반미", "분짜", "짜조", "똠양꿍", "푸팟퐁커리", "그린커리", "레드커리", "팟씨유", "카오팟", "반새오", "월남쌈", "분보후에", "짜조", "인도카레", "난", "탄두리치킨", "라씨", "케밥", "팔라펠", "후무스", "샥슈카", "파에야", "추러스", "감바스알아히요", "미트볼", "뇨끼", "부르스케타", "카프레제", "시저샐러드", "콥샐러드", "리코타치즈샐러드", "연어샐러드", "스테이크샐러드", "쉬림프샐러드", "머쉬룸샐러드", "치킨텐더샐러드", "단호박샐러드", "감자샐러드", "콘샐러드", "코울슬로", "핫도그", "칠리독", "치즈독", "콘독", "어니언링", "감자튀김", "치즈볼", "떡꼬치", "소떡소떡", "닭꼬치", "염통꼬치", "순대", "튀김범벅", "물어묵", "빨간어묵", "매운오뎅", "붕어빵", "호떡", "군고구마", "군밤", "식혜", "수정과", "달고나"];
+const SUB_FOODS = ["치즈 닭갈비", "간장게장", "보쌈 세트", "직화 족발", "로제 찜닭", "부대찌개", "김치찜", "포케 샐러드", "규동", "사케동", "텐동", "냉모밀", "마제소바", "라멘", "나시고랭", "팟타이", "푸팟퐁커리", "타코", "라자냐", "에그인헬", "감바스", "뇨끼", "리조또", "트러플 감자튀김", "에그타르트", "휘낭시에", "마들렌", "스콘", "까눌레", "크로플", "젤라또", "망고 빙수", "생딸기 케이크", "티라미수", "초코 수플레", "그릭 요거트", "베트남 반미", "분짜", "탄두리 치킨", "인도 커리", "샥슈카", "파에야", "미트볼 파스타", "봉골레", "라구 파스타", "뇨끼", "리코타 치즈 샐러드", "콥 샐러드", "잠봉뵈르", "잠실 수제버거", "고추 바사삭", "허니 콤보", "지코바 양념치킨", "가마로 강정", "신전 떡볶이", "청년다방 차돌떡볶이", "응급실 국물 떡볶이", "배떡 로제떡볶이", "직화 오돌뼈", "닭똥집 튀김", "염통 꼬치", "모듬 순대", "튀김 범벅", "물어묵", "매운 오뎅", "붕어빵", "씨앗 호떡", "군고구마", "군밤", "식혜", "수정과", "달고나", "소떡소떡", "멘보샤", "크림 새우", "유린기", "깐풍기", "양장피", "팔보채", "전가복", "딤섬", "샤오롱바오", "하가우", "고구마 맛탕", "츄러스", "소르베", "말차 빙수", "인절미 빙수", "멜론 빙수", "치즈 케이크", "까망베르 크림치즈", "앙버터", "바게트", "소금빵", "무지개 케이크", "도넛", "츄러스", "핫도그", "칠리독", "콘독", "어니언링", "해물 파전", "김치전", "육전", "편육", "제육 볶음", "오징어 소면", "낙지 볶음", "장어 덮밥", "스테이크 덮밥", "우츠동", "가츠동", "에비동", "카레 라이스", "하이 라이스", "오므라이스", "새우 볶음밥", "잡채밥", "마파두부 덮밥", "고추잡채", "물냉면", "비빔냉면", "회냉면", "콩국수", "비빔국수", "잔치국수", "수제비", "칼국수", "모듬 만두", "군만두", "물만두", "갈비탕", "곰탕", "설렁탕", "순대국", "내장탕", "뼈해장국", "감자탕", "추어탕", "육개장", "미역국", "소고기 무국", "북어국", "콩나물 국밥", "선지 국밥", "해장국", "닭개장", "삼계탕", "찜닭", "안동 찜닭", "치즈 찜닭", "간장 치킨", "양념 치킨", "마늘 치킨", "파닭", "뿌링클", "지코바", "굽네", "네네", "처갓집", "또봉이", "시장 통닭", "치킨 강정", "닭갈비", "오리 주물럭", "오리 로스", "훈제 오리", "불고기", "뚝배기 불고기", "갈비찜", "매운 갈비찜", "돼지 갈비", "소갈비", "등갈비", "폭립", "돈까스", "치즈 돈까스", "고구마 돈까스", "카레 돈까스", "냉동 삼겹살", "냉면 삼겹살", "대패 삼겹살", "차돌박이", "우삼겹", "양깃머리", "대창", "막창", "곱창", "염통", "특양", "곱창 전골", "대창 덮밥", "연어장 덮밥", "간장 새우장", "양념 게장", "꼬막 비빔밥", "멍게 비빔밥", "회덮밥", "물회", "조개구이", "굴찜", "과메기", "방어회", "광어회", "우럭회", "도미회", "참치회", "육사시미", "육회 탕탕이", "산낙지", "낙곱새", "쭈꾸미 볶음", "꼼장어", "장어 구이"];
 
 class MoodFoodApp {
     constructor() {
@@ -99,57 +97,86 @@ class MoodFoodApp {
         }
     }
 
-    showResult() {
+    async showResult() {
         document.getElementById('survey-area').classList.add('hidden');
         document.getElementById('survey-progress-container').classList.add('hidden');
         document.getElementById('result-area').classList.remove('hidden');
         document.getElementById('header-subtitle').innerText = "분석 완료! 가영아 이거 어때?";
 
-        // 200가지 메뉴 구성을 위해 데이터 조합/선택
-        // 점수와 질문 답변에 기반한 가중치 부여 (시뮬레이션)
-        let finalIndex = (this.totalScore * 7) % FOOD_DATABASE.length;
-        if (this.totalScore > 30) { // 스트레스/배고픔 높은 경우
-            finalIndex = (this.totalScore) % 10; // 맵고 짠 음식 우선
-        }
-        
-        // 200개 리스트를 위해 SUB_FOODS에서 보충
+        let finalIndex = (this.totalScore * 7) % (FOOD_DATABASE.length + SUB_FOODS.length);
         let food;
         if (finalIndex < FOOD_DATABASE.length) {
             food = FOOD_DATABASE[finalIndex];
         } else {
             const subName = SUB_FOODS[finalIndex % SUB_FOODS.length];
-            food = { n: subName, e: "🍱", r: `오늘 가영이의 기분과 설문 결과에 딱 맞는 ${subName}! 가영이가 맛있게 먹고 행복해졌으면 좋겠어.`, s: subName };
+            food = { n: subName, r: `오늘 가영이의 세밀한 기분 분석 결과, 가장 필요한 메뉴는 ${subName}이야!`, s: subName };
         }
 
-        document.getElementById('res-emoji').innerText = food.e;
         document.getElementById('res-name').innerText = food.n;
         document.getElementById('res-reason').innerText = food.r;
 
-        // Delivery Deep Links
+        // Fetch Real Image
+        this.fetchFoodImage(food.s);
+
+        // Update Delivery Links
         const baeminLink = document.getElementById('link-baemin');
         const coupangLink = document.getElementById('link-coupang');
 
-        // Mobile App Deep Links (Fallback to web if not installed, browser handles)
-        // Baemin Search
         baeminLink.href = `baemin://search?keyword=${encodeURIComponent(food.s)}`;
-        // Coupang Eats Search
         coupangLink.href = `coupangeats://search?q=${encodeURIComponent(food.s)}`;
 
-        // Web Fallback if deep links fail (Optional but recommended)
-        setTimeout(() => {
-            baeminLink.onclick = (e) => {
-                if (!window.confirm("배달의민족 앱이 설치되어 있나요?")) {
-                    e.preventDefault();
-                    window.location.href = `https://www.baemin.com/search?keyword=${encodeURIComponent(food.s)}`;
-                }
+        // Web Fallback if deep links fail
+        baeminLink.onclick = (e) => {
+            if (!window.confirm("배달의민족 앱으로 이동할까요?")) {
+                e.preventDefault();
+                window.location.href = `https://www.baemin.com/search?keyword=${encodeURIComponent(food.s)}`;
+            }
+        };
+        coupangLink.onclick = (e) => {
+            if (!window.confirm("쿠팡이츠 앱으로 이동할까요?")) {
+                e.preventDefault();
+                window.location.href = `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(food.s)}`;
+            }
+        };
+    }
+
+    async fetchFoodImage(foodName) {
+        const img = document.getElementById('res-img');
+        const loader = document.getElementById('img-loader');
+        img.style.display = 'none';
+        loader.style.display = 'block';
+
+        try {
+            // Using a search-based image proxy or reliable free API for demo purposes
+            // In a real high-end app, we'd use Google Custom Search API or Unsplash
+            // Here we use a reliable image fetch strategy
+            const targetUrl = `https://www.google.com/search?q=${encodeURIComponent(foodName + " 맛있는 음식 사진")}&tbm=isch`;
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+            const response = await fetch(proxyUrl);
+            const outerData = await response.json();
+            
+            // Extract the first high-res looking image from search results
+            const html = outerData.contents;
+            const imgRegex = /img data-src="([^"]+)"/g;
+            const matches = [...html.matchAll(imgRegex)];
+            
+            if (matches && matches.length > 2) {
+                img.src = matches[2][1]; // Get the 3rd image usually is cleaner
+            } else {
+                img.src = `https://source.unsplash.com/800x600/?food,${encodeURIComponent(foodName)}`;
+            }
+
+            img.onload = () => {
+                loader.style.display = 'none';
+                img.style.display = 'block';
             };
-            coupangLink.onclick = (e) => {
-                if (!window.confirm("쿠팡이츠 앱이 설치되어 있나요?")) {
-                    e.preventDefault();
-                    window.location.href = `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(food.s)}`;
-                }
+        } catch (e) {
+            img.src = `https://source.unsplash.com/800x600/?gourmet,${encodeURIComponent(foodName)}`;
+            img.onload = () => {
+                loader.style.display = 'none';
+                img.style.display = 'block';
             };
-        }, 100);
+        }
     }
 
     resetApp() {
