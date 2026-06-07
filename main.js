@@ -1,22 +1,22 @@
-// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (FORCED SYNC)
+// 괜찮아, 밥먹자 🏥💝 Master Nurse-Only Edition (HYPER-REALISTIC)
 
 const FOOD_DATABASE = [
-    { n: "마라탕 & 꿔바로우", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?q=80&w=800", r: "알싸한 마라맛으로 병원 냄새와 스트레스 싹!", s: "마라탕", tags: ["stress", "spicy", "heavy"] },
-    { n: "엽기떡볶이 (오리지널)", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?q=80&w=800", r: "빌런 보호자 때문에 오른 혈압을 매운맛으로!", s: "엽기떡볶이", tags: ["angry", "spicy", "heavy"] },
-    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=800", r: "온종일 스테이션 지킨 체력을 고기로 보충!", s: "삼겹살", tags: ["exhausted", "meat", "heavy"] },
-    { n: "전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?q=80&w=800", r: "밤샘 후 지친 위장을 달래주는 따뜻한 위로.", s: "전복죽", tags: ["tired", "mild", "warm"] },
-    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1626644496439-af0a4ad2d995?q=80&w=800", r: "수쌤한테 안 깨지고 무사히 퇴근한 나를 위한 상.", s: "BHC 뿌링클", tags: ["reward", "fried", "stable"] },
-    { n: "모듬 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800", r: "깔끔하고 고급스럽게 기분 전환하고 싶을 때.", s: "연어초밥", tags: ["stable", "light", "reward"] },
-    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800", r: "퇴근 후 으슬으슬한 몸을 데워주는 뜨끈한 국물.", s: "쌀국수", tags: ["exhausted", "warm", "tired"] },
-    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800", r: "든든하게 입안 가득 채우는 육즙의 행복.", s: "수제버거", tags: ["hungry", "heavy", "meat"] },
-    { n: "바삭한 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211?q=80&w=800", r: "겉바속촉, 우울함을 날리는 바삭한 소리.", s: "돈까스", tags: ["stable", "crispy", "mild"] },
-    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800", r: "오늘 받은 스트레스, 진한 국물에 소주 한 잔.", s: "곱창전골", tags: ["stress", "heavy", "warm"] },
-    { n: "서브웨이 샌드위치", i: "https://images.unsplash.com/photo-1539252554452-da001b2d1531?q=80&w=800", r: "출근 전 가볍고 빠르게, 일할 에너지 충전!", s: "샌드위치", tags: ["light", "energy", "before"] },
-    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=800", r: "빌런 때문에 오른 열불을 시원하게 식혀주는 당 충전.", s: "망고빙수", tags: ["angry", "cold", "reward"] }
+    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08", r: "빌런들에게 뺏긴 기를 매운맛으로 복수!", s: "엽기떡볶이", tags: ["stress", "spicy"] },
+    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1", r: "탈탈 털린 체력, 고기로 기름칠!", s: "삼겹살", tags: ["exhausted", "meat"] },
+    { n: "전복죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933", r: "너덜해진 위장을 달래주는 따뜻한 위로.", s: "전복죽", tags: ["tired", "mild"] },
+    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1626644496439-af0a4ad2d995", r: "무사히 인계를 마친 나를 위한 셀프 선물.", s: "BHC 뿌링클", tags: ["reward", "fried"] },
+    { n: "마라탕 & 꿔바로우", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619", r: "얼얼한 마라맛으로 복잡한 생각 싹 잊기!", s: "마라탕", tags: ["stress", "spicy"] },
+    { n: "모듬 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c", r: "깔끔하고 고급스럽게 기분 전환!", s: "초밥", tags: ["stable", "light"] },
+    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43", r: "으슬으슬한 몸을 데워주는 뜨끈한 국물.", s: "쌀국수", tags: ["exhausted", "warm"] },
+    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd", r: "육즙 팡팡! 든든하게 채우는 행복.", s: "수제버거", tags: ["hungry", "heavy"] },
+    { n: "바삭 등심 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211", r: "바삭바삭 소리에 우울함도 다 깨질 거야.", s: "돈까스", tags: ["stable", "crispy"] },
+    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947", r: "진한 국물에 소주 한 잔, 오늘 스트레스 안녕.", s: "곱창전골", tags: ["stress", "heavy"] },
+    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3", r: "열 오르는 기분을 시원하게 식혀주는 당 충전.", s: "망고빙수", tags: ["angry", "cold"] },
+    { n: "직화 보쌈", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1", r: "담백한 고기로 내일 에너지를 미리 충전!", s: "보쌈", tags: ["meat", "heavy"] }
 ];
 
 const SUMMARIES = [
-    "오늘 빌런 보호자 때문에 멘탈이 바스러진 당신, 강력한 매운맛이 시급해요 😭",
+    "오늘 빌런 보호자 때문에 멘탈이 바스러진 당신, 강력한 수혈이 시급해요 😭",
     "스테이션에서 탈탈 털린 오늘... 든든한 고기 수혈로 기력을 보충해야 해요.",
     "오늘은 모든 게 스테이블! 평화로운 기분을 이어갈 깔끔한 한 끼 어때요?",
     "상처받은 마음에 위로가 필요한 시간, 따뜻하고 부드러운 음식이 딱이에요.",
@@ -32,9 +32,9 @@ const BRANCHES = {
     root: {
         text: "고생했어! 지금 어떤 상황이야?",
         options: [
-            { t: "방금 퇴근했어! (지침)", next: "shift_after", s: "after" },
-            { t: "이제 곧 출근해야 해 (긴장)", next: "before", s: "before" },
-            { t: "행복한 오프(Off) 중!", next: "off", s: "off" }
+            { t: "방금 퇴근했어! (지침)", next: "shift_after", s: "퇴근" },
+            { t: "이제 곧 출근해야 해 (긴장)", next: "before", s: "출근 전" },
+            { t: "행복한 오프(Off) 중!", next: "off", s: "오프" }
         ]
     },
     shift_after: {
@@ -109,10 +109,12 @@ const BRANCHES = {
             { t: "이브닝(Evening)", s: "energy" },
             { t: "나이트(Night)", s: "heavy" }
         ]},
-        { text: "출근 전 지금 기분은?", options: [
-            { t: "가기 싫어서 눈물 나", s: "reward" },
-            { t: "무사 스테이블하길 기도 중", s: "stable" },
-            { t: "아무 생각이 없다", s: "mild" }
+        { text: "출근 전 지금 컨디션은?", options: [
+            { t: "오늘 왠지 스테이블할 것 같아", s: "stable" },
+            { t: "벌써부터 다리가 후들거려", s: "meat" },
+            { t: "가기 싫어서 눈물 날 것 같아", s: "reward" },
+            { t: "카페인이 절실하게 필요해", s: "energy" },
+            { t: "그냥 아무 생각이 없다", s: "mild" }
         ]},
         { text: "가장 걱정되는 게 뭐야?", options: [
             { t: "IV 실패", s: "stress" },
@@ -209,7 +211,7 @@ class MoodFoodApp {
                 </div>
                 <div class="food-info">
                     <span class="food-name">${food.n}</span>
-                    <p class="food-reason">💡 추천 이유: ${this.responses[2] || "힘든 하루"} 상황이라 ${food.r}</p>
+                    <p class="food-reason">💡 추천 이유: ${this.responses[2] || "지친 하루"} 상황이라 ${food.r}</p>
                     <div class="order-btn-group">
                         <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}')">배민</a>
                         <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}')">쿠팡</a>
