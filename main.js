@@ -1,38 +1,82 @@
-// 가영아밥먹자 🏥💝 Nurse Edition Logic
-
-const QUESTIONS = [
-    { text: "가영아, 지금 근무 타이밍이 언제야?", options: [{t:"근무 들어가기 전이야", s:10}, {t:"이제 막 퇴근했어!", s:20}] },
-    { text: "오늘(또는 내일) 가영이의 듀티는 뭐야?", options: [{t:"데이 (Day)", s:1}, {t:"이브닝 (Evening)", s:2}, {t:"나이트 (Night)", s:3}, {t:"오프 (Off/쉬는날)", s:4}] },
-    { text: "업무 강도는 어땠어? (환자 상태 등)", options: [{t:"평화로운 스테이션", s:1}, {t:"정신없이 바빴어", s:2}, {t:"완전 헬파티... 탈탈 털림", s:3}, {t:"이벤트가 좀 있었어", s:4}] },
-    { text: "지금 몸에서 어디가 제일 힘들어?", options: [{t:"다리가 부어서 무거워", s:1}, {t:"허리/어깨가 뻐근해", s:2}, {t:"눈이 침침하고 머리 아파", s:3}, {t:"전체적으로 그냥 기절각", s:4}, {t:"배고픈 게 제일 고통이야", s:5}] },
-    { text: "마지막 식사는 언제였어?", options: [{t:"기억도 안 나 (거의 굶음)", s:1}, {t:"6시간 넘게 지났어", s:2}, {t:"중간에 간식 좀 주워먹었어", s:3}, {t:"병원 밥 대충 먹었어", s:4}] },
-    { text: "지금 가영이의 입맛 상태는?", options: [{t:"입맛 없는데 살려고 먹음", s:1}, {t:"매콤한 게 미친듯이 땡겨", s:2}, {t:"달달한 걸로 위로받고 싶어", s:3}, {t:"기름진 걸로 속을 채울래", s:4}, {t:"시원하고 깔끔한 게 좋아", s:5}] },
-    { text: "오늘 보호자나 의사 때문에 스트레스 받았어?", options: [{t:"아니, 괜찮았어", s:1}, {t:"조금? 짜증났어", s:2}, {t:"말도 마... 뒷목 잡음", s:3}, {t:"동료들이랑 수다로 풀었어", s:4}] },
-    { text: "음식을 먹고 나서 바로 잘 거야?", options: [{t:"응, 바로 기절할 예정", s:1}, {t:"씻고 넷플릭스 좀 보다 잘래", s:2}, {t:"잠이 안 와서 좀 놀다 잘래", s:3}, {t:"이제 막 하루를 시작해야 해", s:4}] },
-    { text: "가영아, 지금 속 상태는 어때?", options: [{t:"완전 텅 비어있어", s:1}, {t:"조금 더부룩해", s:2}, {t:"스트레스성 허기짐!", s:3}, {t:"뜨끈한 국물이 필요해", s:4}] },
-    { text: "오늘 고생한 가영이에게 주는 보상 점수는?", options: [{t:"소소한 힐링이면 돼", s:1}, {t:"맛있는 거 먹고 행복해지기", s:2}, {t:"화려하게 한 상 차려먹기", s:3}, {t:"남자친구의 사랑과 야식!", s:4}] }
-];
+// 가영아밥먹자 High-Precision Logic & Branching Database
 
 const FOOD_DATABASE = [
-    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?auto=format&fit=crop&q=80&w=800", r: "나이트 퇴근 후 스트레스 폭발엔 역시 엽떡!", s: "엽기떡볶이" },
-    { n: "삼겹살", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?auto=format&fit=crop&q=80&w=800", r: "데이 근무 후 기력 보충엔 지글지글 삼겹살.", s: "삼겹살" },
-    { n: "전복죽/본죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?auto=format&fit=crop&q=80&w=800", r: "이브닝 퇴근 후 속 편하게 잠들고 싶을 때.", s: "본죽" },
-    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&q=80&w=800", r: "헬듀티 끝내고 맥주 한 잔과 찰떡궁합.", s: "BHC 뿌링클" },
-    { n: "마라탕", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?auto=format&fit=crop&q=80&w=800", r: "알싸한 매운맛으로 병원 냄새 싹 잊어버려!", s: "마라탕" },
-    { n: "육회 비빔밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=800", r: "든든하지만 깔끔하게 먹고 싶은 가영이를 위해.", s: "육회비빔밥" },
-    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&q=80&w=800", r: "밤샘 후 지친 속을 따뜻하게 데워주는 힐링푸드.", s: "쌀국수" },
-    { n: "수제 버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800", r: "입안 가득 차는 행복! 고생한 나를 위한 선물.", s: "수제버거" },
-    { n: "초밥 세트", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=800", r: "깔끔하고 고급스럽게, 기분 전환이 필요할 때.", s: "초밥" },
-    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", r: "진한 국물에 소주 한 잔? 오늘 스트레스 다 날려.", s: "곱창전골" },
-    { n: "샌드위치/서브웨이", i: "https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80&w=800", r: "근무 전, 가볍고 건강하게 에너지를 채워봐.", s: "서브웨이" },
-    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&q=80&w=800", r: "열 오르는 스테이션 일 뒤엔 시원한 당 충전!", s: "망고빙수" }
+    { n: "엽기떡볶이", i: "https://images.unsplash.com/photo-1621310158204-62967f8a7e08?auto=format&fit=crop&q=80&w=800", r: "스트레스가 확 풀리는 매운맛!", s: "엽기떡볶이", tags: ["stress", "spicy"] },
+    { n: "삼겹살 구이", i: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?auto=format&fit=crop&q=80&w=800", r: "기력 보충엔 역시 지글지글 고기!", s: "삼겹살", tags: ["exhausted", "meat"] },
+    { n: "전복죽/본죽", i: "https://images.unsplash.com/photo-1596797038580-2c4658d7c933?auto=format&fit=crop&q=80&w=800", r: "속 편하게 먹고 푹 잠들기 좋아.", s: "본죽", tags: ["tired", "mild"] },
+    { n: "뿌링클 치킨", i: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&q=80&w=800", r: "행복해지는 마법의 시즈닝 치킨!", s: "BHC 뿌링클", tags: ["reward", "fried"] },
+    { n: "마라탕", i: "https://images.unsplash.com/photo-1624514336021-397cc93e9619?auto=format&fit=crop&q=80&w=800", r: "알싸한 맛으로 병원 냄새 싹 잊어버려!", s: "마라탕", tags: ["stress", "spicy"] },
+    { n: "연어 초밥", i: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=800", r: "깔끔하고 고급스럽게 즐기는 한 끼.", s: "연어초밥", tags: ["mood_good", "light"] },
+    { n: "소고기 쌀국수", i: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&q=80&w=800", r: "지친 속을 따뜻하게 데워주는 힐링푸드.", s: "쌀국수", tags: ["after_night", "warm"] },
+    { n: "수제 치즈버거", i: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800", r: "든든하게 채우는 입안 가득 행복!", s: "수제버거", tags: ["hungry", "heavy"] },
+    { n: "등심 돈카츠", i: "https://images.unsplash.com/photo-1591814468924-cafb5d123211?auto=format&fit=crop&q=80&w=800", r: "겉바속촉, 가영이의 미소 치트키.", s: "돈까스", tags: ["reward", "crispy"] },
+    { n: "곱창 전골", i: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800", r: "진한 국물과 고소한 곱창의 조화.", s: "곱창전골", tags: ["stress", "heavy"] },
+    { n: "에그 샌드위치", i: "https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80&w=800", r: "근무 전, 가볍고 든든한 에너지.", s: "서브웨이", tags: ["before_work", "light"] },
+    { n: "망고 빙수", i: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&q=80&w=800", r: "열 오르는 기분을 시원하게 식혀줘.", s: "망고빙수", tags: ["angry", "cold"] },
+    { n: "매콤 해물찜", i: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800", r: "푸짐한 해산물로 영양 보충!", s: "해물찜", tags: ["meat", "spicy"] },
+    { n: "베트남 분짜", i: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800", r: "상큼하고 쫄깃하게 입맛 돋우기.", s: "분짜", tags: ["mood_good", "light"] }
 ];
 
-class NurseFoodApp {
+const BRANCHES = {
+    root: {
+        text: "가영아, 지금 상황이 어떤 거야?",
+        options: [
+            { t: "이제 막 근무 끝났어! (퇴근)", next: "after", s: "퇴근" },
+            { t: "곧 근무 들어가야 해... (출근 전)", next: "before", s: "출근 전" },
+            { t: "오늘은 달콤한 휴식 중! (오프)", next: "off", s: "오프" }
+        ]
+    },
+    after: [
+        { text: "오늘 근무 강도는 어땠어?", options: [
+            { t: "평화로웠어, 천국 스테이션!", s: "mood_good" },
+            { t: "정신없었어, 밥도 못 먹음", s: "hungry" },
+            { t: "완전 헬파티... 탈탈 털렸어", s: "stress" },
+            { t: "몸이 너무 부서질 것 같아", s: "exhausted" },
+            { t: "그냥저냥 무난했어", s: "mild" }
+        ]},
+        { text: "어느 근무를 마친 거야?", options: [
+            { t: "데이 (Day) 마쳤어", s: "energy" },
+            { t: "이브닝 (Evening) 마쳤어", s: "tired" },
+            { t: "나이트 (Night) 마쳤어", s: "after_night" },
+            { t: "연속 근무 끝...", s: "heavy" }
+        ]},
+        { text: "지금 기분을 한마디로?", options: [
+            { t: "매콤한 걸로 다 박살내고 싶어", s: "spicy" },
+            { t: "달달한 게 너무 필요해", s: "reward" },
+            { t: "기름진 걸로 속을 채울래", s: "fried" },
+            { t: "입맛 없고 그냥 눕고 싶어", s: "light" },
+            { t: "시원하게 원샷하고 싶어", s: "cold" }
+        ]}
+    ],
+    before: [
+        { text: "무슨 근무 들어가는 거야?", options: [
+            { t: "데이 (Day)", s: "light" },
+            { t: "이브닝 (Evening)", s: "energy" },
+            { t: "나이트 (Night)", s: "heavy" }
+        ]},
+        { text: "지금 컨디션은 어때?", options: [
+            { t: "가기 싫어서 눈물 나", s: "reward" },
+            { t: "잠이 덜 깨서 몽롱해", s: "spicy" },
+            { t: "아직 에너지가 좀 있어!", s: "meat" },
+            { t: "그냥 아무 생각이 없어", s: "mild" }
+        ]}
+    ],
+    off: [
+        { text: "오늘 가영이의 오프 계획은?", options: [
+            { t: "하루종일 집콕하며 쉴래", s: "mild" },
+            { t: "친구들 만나서 놀 거야", s: "meat" },
+            { t: "밀린 잠 다 자고 일어남", s: "reward" },
+            { t: "대청소나 밀린 일 할래", s: "heavy" }
+        ]}
+    ]
+};
+
+class MoodFoodApp {
     constructor() {
-        this.currentStep = 0;
-        this.totalScore = 0;
+        this.currentPath = 'root';
+        this.stepIdx = -1;
         this.responses = [];
+        this.selectedTags = [];
         this.init();
     }
 
@@ -42,40 +86,61 @@ class NurseFoodApp {
     }
 
     startSurvey() {
-        this.currentStep = 0;
-        this.totalScore = 0;
+        this.currentPath = 'root';
+        this.stepIdx = -1;
         this.responses = [];
+        this.selectedTags = [];
         document.getElementById('start-screen').classList.add('hidden');
         document.getElementById('survey-progress-container').classList.remove('hidden');
         document.getElementById('survey-area').classList.remove('hidden');
-        this.showQuestion();
+        this.nextStep();
     }
 
-    showQuestion() {
-        const q = QUESTIONS[this.currentStep];
-        document.getElementById('progress-text').innerText = `가영이 듀티 분석 (${this.currentStep + 1}/10)`;
-        document.getElementById('progress-bar-fill').style.width = `${((this.currentStep + 1) / 10) * 100}%`;
-        document.getElementById('question-text').innerText = q.text;
-        
+    nextStep(tag) {
+        if (tag) this.selectedTags.push(tag);
+        this.stepIdx++;
+
+        let q;
+        if (this.currentPath === 'root') {
+            q = BRANCHES.root;
+        } else {
+            const branch = BRANCHES[this.currentPath];
+            if (this.stepIdx < branch.length) {
+                q = branch[this.stepIdx];
+            } else {
+                return this.showResult();
+            }
+        }
+
+        this.renderQuestion(q);
+    }
+
+    renderQuestion(q) {
+        const qText = document.getElementById('question-text');
         const aGrid = document.getElementById('answer-buttons');
+        const pFill = document.getElementById('progress-bar-fill');
+        
+        // Progress (Simple estimation)
+        const totalSteps = this.currentPath === 'root' ? 4 : BRANCHES[this.currentPath].length + 1;
+        pFill.style.width = `${((this.stepIdx + 1) / totalSteps) * 100}%`;
+
+        qText.innerText = q.text;
         aGrid.innerHTML = '';
+        
         q.options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'answer-btn';
             btn.innerText = opt.t;
             btn.onclick = () => {
-                this.totalScore += opt.s;
                 this.responses.push(opt.t);
-                this.nextStep();
+                if (opt.next) {
+                    this.currentPath = opt.next;
+                    this.stepIdx = -1; // Start branch steps
+                }
+                this.nextStep(opt.s);
             };
             aGrid.appendChild(btn);
         });
-    }
-
-    nextStep() {
-        this.currentStep++;
-        if (this.currentStep < 10) this.showQuestion();
-        else this.showResult();
     }
 
     showResult() {
@@ -83,29 +148,34 @@ class NurseFoodApp {
         document.getElementById('survey-progress-container').classList.add('hidden');
         document.getElementById('result-area').classList.remove('hidden');
 
+        // Logic: Pick foods matching tags
+        const scores = {};
+        this.selectedTags.forEach(t => scores[t] = (scores[t] || 0) + 1);
+
+        const candidates = FOOD_DATABASE.map(f => {
+            let match = 0;
+            f.tags.forEach(t => { if (scores[t]) match += scores[t]; });
+            return { ...f, score: match + Math.random() * 0.1 }; // Slight random for variety
+        }).sort((a, b) => b.score - a.score);
+
+        const picks = candidates.slice(0, 3);
         const container = document.getElementById('results-container');
         container.innerHTML = '';
 
-        // Pick 3 foods based on nursing scenarios
-        const picks = [
-            (this.totalScore * 7) % FOOD_DATABASE.length,
-            (this.totalScore * 13) % FOOD_DATABASE.length,
-            (this.totalScore * 3) % FOOD_DATABASE.length
-        ];
-        const uniquePicks = [...new Set(picks)].slice(0, 3);
-        while(uniquePicks.length < 3) uniquePicks.push((uniquePicks.length + 2) % FOOD_DATABASE.length);
+        // Final Summary Logic
+        const situation = this.responses[0];
+        const state = this.responses[1];
+        document.getElementById('result-summary').innerText = 
+            `가영아, 지금 "${situation}" 상태에서 "${state}"라니 고생이 많았어 😭\n이럴 땐 아래 3가지 메뉴가 가영이에게 최고의 에너지가 될 거야!`;
 
-        uniquePicks.forEach(idx => {
-            const food = FOOD_DATABASE[idx];
+        picks.forEach(food => {
             const card = document.createElement('div');
             card.className = 'food-card';
             card.innerHTML = `
-                <div class="food-img-area">
-                    <img src="${food.i}" alt="${food.n}">
-                </div>
+                <div class="food-img-area"><img src="${food.i}"></div>
                 <div class="food-info">
                     <span class="food-name">${food.n}</span>
-                    <p class="food-reason">${food.r}</p>
+                    <p class="food-reason">💡 추천 이유: 가영이가 오늘 ${state} 상황이라 ${food.r}</p>
                     <div class="order-btn-group">
                         <a href="#" class="mini-order-btn mini-baemin" onclick="window.game.goOrder('baemin', '${food.s}')">배민</a>
                         <a href="#" class="mini-order-btn mini-coupang" onclick="window.game.goOrder('coupang', '${food.s}')">쿠팡</a>
@@ -118,27 +188,15 @@ class NurseFoodApp {
     }
 
     goOrder(type, search) {
-        const url = type === 'baemin' 
-            ? `baemin://search?keyword=${encodeURIComponent(search)}`
-            : `coupangeats://search?q=${encodeURIComponent(search)}`;
+        const url = type === 'baemin' ? `baemin://search?keyword=${encodeURIComponent(search)}` : `coupangeats://search?q=${encodeURIComponent(search)}`;
         window.location.href = url;
-        setTimeout(() => {
-            const webUrl = type === 'baemin'
-                ? `https://www.baemin.com/search?keyword=${encodeURIComponent(search)}`
-                : `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(search)}`;
-            if (window.confirm("앱이 설치되어 있나요? 아니면 웹으로 이동할까요?")) window.location.href = webUrl;
-        }, 1500);
+        setTimeout(() => { if (window.confirm("앱이 설치되어 있나요? 웹으로 이동할까요?")) window.location.href = type === 'baemin' ? `https://www.baemin.com/search?keyword=${encodeURIComponent(search)}` : `https://eats.coupang.com/hc/search/results?q=${encodeURIComponent(search)}`; }, 1500);
     }
 
     sendToBF(foodName) {
-        const msg = `자기야 나 오늘 듀티 너무 힘들었어... 😭 분석해봤는데 오늘 나한테 필요한 음식은 [${foodName}]이래! 이거 사주면 안돼? 💝`;
-        const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=YOUR_KEY&message=${encodeURIComponent(msg)}`;
-        // Fallback to generic message share
-        if (navigator.share) {
-            navigator.share({ title: '가영아밥먹자 🏥💝', text: msg, url: window.location.href });
-        } else {
-            alert("메시지가 복사되었습니다! 남자친구에게 보내주세요:\n\n" + msg);
-        }
+        const msg = `자기야 나 지금 ${this.responses[0]}인데 ${this.responses[1]}해서 너무 힘들어... 😭 분석해보니까 오늘 [${foodName}] 먹어야 한대! 이거 사주면 가영이 기분 싹 풀릴 듯? 💝`;
+        if (navigator.share) { navigator.share({ title: '가영아밥먹자 🏥💝', text: msg, url: window.location.href }); }
+        else { alert("메시지가 복사되었습니다! 남자친구에게 보내주세요:\n\n" + msg); }
     }
 
     resetApp() {
@@ -148,4 +206,4 @@ class NurseFoodApp {
     }
 }
 
-window.game = new NurseFoodApp();
+window.game = new MoodFoodApp();
