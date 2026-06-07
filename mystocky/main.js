@@ -1,4 +1,4 @@
-// MyStocky: Archetype-Based Tamagotchi Logic
+// MyStocky: Improved Tamagotchi Logic (Fixed Text & Korean Support)
 
 const ARCHETYPES = [
     { type: "puffy", feature: "none", animation: "walking" },
@@ -27,6 +27,7 @@ class Stocky {
         this.vy = (Math.random() - 0.5) * 0.25;
         
         this.element = null;
+        this.characterContainer = null;
         this.bubble = null;
         this.render();
     }
@@ -60,17 +61,20 @@ class Stocky {
         
         wrapper.onclick = (e) => { e.stopPropagation(); this.react(); };
         this.element = wrapper;
+        this.characterContainer = wrapper.querySelector('.stocky-character-container');
         this.bubble = wrapper.querySelector('.stocky-bubble');
         document.getElementById('village').appendChild(wrapper);
         this.updateElementPosition();
     }
 
     updateElementPosition() {
-        if (!this.element) return;
+        if (!this.element || !this.characterContainer) return;
         this.element.style.left = `${this.x}px`;
         this.element.style.top = `${this.y}px`;
-        if (this.vx > 0) this.element.style.transform = 'scaleX(1)';
-        else if (this.vx < 0) this.element.style.transform = 'scaleX(-1)';
+        
+        // Flip ONLY the character visual, not the whole wrapper (to keep text readable)
+        if (this.vx > 0) this.characterContainer.style.transform = 'scaleX(1)';
+        else if (this.vx < 0) this.characterContainer.style.transform = 'scaleX(-1)';
     }
 
     move(bounds) {
@@ -97,16 +101,18 @@ class Stocky {
             const outerData = await response.json();
             const data = JSON.parse(outerData.contents);
             if (data.quotes && data.quotes.length > 0) {
-                // In a real app we'd fetch actual % change, simulating mood variance for now
+                // Fetch mood based on condition (simulated change %)
                 this.condition = (Math.random() * 10 - 5).toFixed(2);
             }
-            if (data.news && data.news.length > 0) this.news = data.news.map(n => n.title);
+            if (data.news && data.news.length > 0) {
+                this.news = data.news.map(n => n.title);
+            }
         } catch (e) { console.error("Fetch failed", this.ticker); }
     }
 
     showNews() {
         if (!this.bubble) return;
-        const msg = this.news.length > 0 ? this.news[Math.floor(Math.random() * this.news.length)] : `${this.ticker} 소식 찾는 중... ☁️`;
+        const msg = this.news.length > 0 ? this.news[Math.floor(Math.random() * this.news.length)] : `${this.ticker} 관련 한국어 소식을 찾는 중이에요! ☁️`;
         this.bubble.innerText = msg;
         this.bubble.style.display = 'block';
         setTimeout(() => { if (this.bubble) this.bubble.style.display = 'none'; }, 6000);
@@ -150,11 +156,12 @@ class MyStockyVillage {
 
     toggleModal(id, show) {
         document.getElementById(id).style.display = show ? 'flex' : 'none';
+        if (show && id === 'market-modal') document.getElementById('market-search').focus();
     }
 
     async searchGlobal(query) {
         try {
-            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=10&enableFuzzyQuery=true`;
+            const targetUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=15&enableFuzzyQuery=true`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
             const response = await fetch(proxyUrl);
             const outerData = await response.json();
@@ -174,20 +181,20 @@ class MyStockyVillage {
 
     renderSearchResults(results) {
         const list = document.getElementById('market-list');
-        if (results.length === 0) { list.innerHTML = '<p style="padding:20px;">결과가 없어요!</p>'; return; }
+        if (results.length === 0) { list.innerHTML = '<p style="padding:20px; text-align:center;">찾으시는 주식이 없어요 😢</p>'; return; }
         list.innerHTML = results.map(q => `
             <div class="search-item" onclick="window.game.prepareAdoption('${q.ticker}', '${q.name.replace(/'/g, "\\'")}')">
                 <div style="text-align: left;">
-                    <strong style="font-size:1rem;">${q.country || ""} ${q.name}</strong>
-                    <div style="font-size:0.8rem; color:#888;">${q.ticker} | ${q.type}</div>
+                    <strong style="font-size:1rem; display:block;">${q.country || ""} ${q.name}</strong>
+                    <div style="font-size:0.8rem; color:#666;">${q.ticker} | ${q.type}</div>
                 </div>
-                <span class="adopt-badge">선택하기</span>
+                <span class="adopt-badge">입양하기</span>
             </div>
         `).join('');
     }
 
     prepareAdoption(ticker, fullName) {
-        if (this.stockies.length >= 5) { alert("마을이 꽉 찼어요!"); return; }
+        if (this.stockies.length >= 5) { alert("마을에는 최대 5마리까지만 살 수 있어요!"); return; }
         this.pendingAdoption = { ticker, fullName };
         this.candidates = [];
         for (let i = 0; i < 3; i++) {
@@ -212,7 +219,7 @@ class MyStockyVillage {
             
             return `
                 <div class="candidate-item ${idx === 0 ? 'selected' : ''}" onclick="window.game.selectCandidate(${idx}, this)">
-                    <div class="stocky-character-container" style="transform: scale(0.5);">
+                    <div class="stocky-character-container" style="transform: scale(0.6);">
                         <div class="stocky-features">${featuresHTML}</div>
                         <div class="stocky-body type-${c.archetype.type}" style="background-color: ${c.color}">
                             <div class="face-container">
@@ -234,7 +241,7 @@ class MyStockyVillage {
 
     confirmAdoption() {
         const nickname = document.getElementById('naming-input').value.trim();
-        if (!nickname) { alert("이름을 지어주세요!"); return; }
+        if (!nickname) { alert("이름을 꼭 지어주세요!"); return; }
         const choice = this.candidates[this.selectedCandidateIdx];
         const newStocky = new Stocky({ name: nickname, ticker: this.pendingAdoption.ticker, color: choice.color, archetype: choice.archetype }, this);
         this.stockies.push(newStocky);
