@@ -29,8 +29,8 @@ class Stocky {
         // Random initial position within village bounds
         this.x = Math.random() * (window.innerWidth - 100);
         this.y = Math.random() * (window.innerHeight - 300);
-        this.vx = (Math.random() - 0.5) * 1.5;
-        this.vy = (Math.random() - 0.5) * 1.5;
+        this.vx = (Math.random() - 0.5) * 0.4; // Much slower
+        this.vy = (Math.random() - 0.5) * 0.4; // Much slower
         
         this.element = null;
         this.bubble = null;
@@ -55,8 +55,8 @@ class Stocky {
                     <div class="stocky-emoji-face">${this.icon}</div>
                 </div>
                 <div class="stocky-feet">
-                    <div class="stocky-foot left"></div>
-                    <div class="stocky-foot right"></div>
+                    <div class="stocky-foot"></div>
+                    <div class="stocky-foot"></div>
                 </div>
             </div>
             <div class="stocky-name-tag">${this.name}</div>
@@ -87,17 +87,18 @@ class Stocky {
     }
 
     move(bounds) {
-        const speedMultiplier = 1 + Math.abs(this.condition) * 0.1;
+        const speedMultiplier = 1 + Math.abs(this.condition) * 0.05; // Less speed boost from condition
         this.x += this.vx * speedMultiplier;
         this.y += this.vy * speedMultiplier;
 
-        if (this.x < 0 || this.x > bounds.width - 80) {
+        // Adjusted boundaries for larger character (100x120)
+        if (this.x < 0 || this.x > bounds.width - 100) {
             this.vx *= -1;
-            this.x = Math.max(0, Math.min(this.x, bounds.width - 80));
+            this.x = Math.max(0, Math.min(this.x, bounds.width - 100));
         }
-        if (this.y < 0 || this.y > bounds.height - 100) {
+        if (this.y < 0 || this.y > bounds.height - 120) {
             this.vy *= -1;
-            this.y = Math.max(0, Math.min(this.y, bounds.height - 100));
+            this.y = Math.max(0, Math.min(this.y, bounds.height - 120));
         }
 
         this.updateElementPosition();
